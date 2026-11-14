@@ -65,7 +65,6 @@ export function PlansPanel({ result, priorities, onPriorities, econ, onEcon }: {
         <div className="split-head">
           <div>
             <h3>{t('econ.title')}</h3>
-            <p className="note">{t('econ.lead')}</p>
           </div>
           {Object.keys(econ).length > 0 && (
             <button className="btn ghost small" onClick={() => onEcon({})}>{t('econ.clear')}</button>
@@ -88,14 +87,12 @@ export function PlansPanel({ result, priorities, onPriorities, econ, onEcon }: {
             </div>
           ))}
         </div>
-        {!incomeOn && <p className="note small">{t('econ.disabled')}</p>}
       </section>
 
       <section className="card">
         <div className="split-head">
           <div>
             <h3>{t('plans.title')}</h3>
-            <p className="note">{t('plans.lead')}</p>
           </div>
           <span className="engine-tag">{t('plans.engine', { v: result.engine_version })}</span>
         </div>
