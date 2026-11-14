@@ -115,6 +115,15 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         rf_pct = scenario_req.get("rainfall_change_percent")
         if rf_pct is not None and (rf_pct < -100 or rf_pct > 500):
             raise ValueError("Scenario rainfall_change_percent must be >= -100")
+        fert = scenario_req.get("fertilizer")
+        if fert is not None and fert not in ("normal", "expensive", "unavailable"):
+            raise ValueError("Scenario fertilizer must be one of: normal, expensive, unavailable")
+        pest = scenario_req.get("pesticide")
+        if pest is not None and pest not in ("available", "unavailable"):
+            raise ValueError("Scenario pesticide must be one of: available, unavailable")
+        cash = scenario_req.get("cash")
+        if cash is not None and cash not in ("normal", "tight"):
+            raise ValueError("Scenario cash must be one of: normal, tight")
 
     processing = [
         {"step": "input_validation", "status": "complete", "details": "Validated request payload and constraints"}
@@ -254,11 +263,20 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         if scenario_req.get("planting_delay_days"):
             limitations.append(f"Planting delay (+{scenario_req['planting_delay_days']} days) tested: delayed sowing compresses post-monsoon establishment window.")
 
+        # Farmer-reported input shocks (Rule 9). The satellite cannot see input
+        # prices or availability, so these come from the farmer, never inferred.
+        if scenario_req.get("fertilizer") in ("expensive", "unavailable"):
+            limitations.append(f"Scenario assumes fertilizer {scenario_req['fertilizer']} (farmer-reported); rankings favour low-input rotations.")
+        if scenario_req.get("pesticide") == "unavailable":
+            limitations.append("Scenario assumes pesticide unavailable (farmer-reported); the rotation break is the pest control.")
+        if scenario_req.get("cash") == "tight":
+            limitations.append("Scenario assumes cash is tight (farmer-reported); rankings favour low bought-input rotations.")
+
         if supported and scenario_field.get("climatology"):
-            scenario_plan = planner.plan(scenario_field, priorities, returns)
+            scenario_plan = planner.plan(scenario_field, priorities, returns, scenario=scenario_req)
             scenario_status = "complete"
         else:
-            scenario_plan = planner.plan(scenario_field, priorities, returns)
+            scenario_plan = planner.plan(scenario_field, priorities, returns, scenario=scenario_req)
             scenario_status = "insufficient_data"
             for p in scenario_plan.get("plans", []):
                 p["score"] = None
@@ -271,6 +289,31 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         processing.append({"step": "scenario_projection", "status": "complete", "details": "Calculated scenario response under explicit assumptions"})
     else:
         processing.append({"step": "scenario_projection", "status": "unavailable", "details": "No scenario requested"})
+
+    # 5. Time context: what happened, what is happening, what will happen.
+    # Present is the main decision input; past is dated evidence from the
+    # cleaned series; future is the physics projection (assumptions stated,
+    # never an ML forecast and never a prediction of rain).
+    stored_tc = field.get("time_context") or {}
+    time_context = {
+        "present": stored_tc.get("present"),
+        "past": stored_tc.get("past", []),
+        "future": None,
+    }
+    if hydrological_nowcast:
+        time_context["future"] = {
+            "days_forward": hydrological_nowcast["days_forward"],
+            "initial_wetness": hydrological_nowcast["initial_wetness"],
+            "terminal_wetness_point": hydrological_nowcast["terminal_wetness_point"],
+            "critical_desaturation_day": hydrological_nowcast["critical_desaturation_day"],
+            "desaturation_risk": hydrological_nowcast["desaturation_risk"],
+            "assumptions": "Physics bucket recession (FAO-56 PET), dry-season rain assumed 0.0 mm/day, "
+                           "starting mid-November; conformal 90% intervals in the trajectory. "
+                           "A projection, not a forecast of rain.",
+            "trajectory": hydrological_nowcast["trajectory"],
+        }
+    processing.append({"step": "time_context", "status": "complete",
+                       "details": "Assembled past events, present state and 28-day projection"})
 
     # Deterministic analysis ID based on canonical input hash
     hash_key = json.dumps({
@@ -290,6 +333,7 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         "baseline": baseline_result,
         "scenario": scenario_result,
         "hydrological_trajectory": hydrological_nowcast,
+        "time_context": time_context,
         "iot_telemetry": iot_telemetry,
         "limitations": limitations,
         "processing": processing,

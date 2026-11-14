@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parents[3]
 MANIFEST_PATH = ROOT / "data" / "reports" / "model_evaluation.json"
 
 DEFAULT_TRACKS = [

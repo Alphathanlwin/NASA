@@ -47,6 +47,7 @@ export interface FieldDetail extends FieldProps {
   }
   smap: null | { as_of: string; value: number }
   ndvi: null | { as_of: string; value: number }
+  time_context?: TimeContext | null
   power_cell?: string
   climatology?: any
   provenance: Record<string, Provenance>
@@ -128,6 +129,58 @@ export interface ScenarioRequest {
   planting_delay_days?: number
   irrigation?: 'available' | 'unavailable' | 'unknown'
   drainage?: 'good' | 'moderate' | 'poor' | 'unknown'
+  // Farmer-reported input conditions (Rule 9). The satellite cannot see input
+  // prices or availability, so these come from the farmer, never inferred.
+  fertilizer?: 'normal' | 'expensive' | 'unavailable'
+  pesticide?: 'available' | 'unavailable'
+  cash?: 'normal' | 'tight'
+}
+
+export interface TimeContextEvent {
+  type: 'dry_spell' | 'wet_spell' | 'ndvi_drop'
+  start?: string
+  end?: string
+  date?: string
+  days?: number
+  min_gwetroot?: number
+  max_gwetroot?: number
+  change?: number
+  from?: number
+  to?: number
+}
+
+export interface TimeContextPresent {
+  as_of: string
+  gwetroot: number | null
+  gwettop: number | null
+  rain_7d: number | null
+  rain_30d: number | null
+  rain_30d_vs_climatology_mm: number | null
+  t2m_30d_mean: number | null
+  stress: string[]
+}
+
+export interface TimeContextFuture {
+  days_forward: number
+  initial_wetness: number
+  terminal_wetness_point: number
+  critical_desaturation_day: number | null
+  desaturation_risk: string
+  assumptions: string
+  trajectory: {
+    day: number
+    doy: number
+    wetness_point: number
+    wetness_lower_ci: number
+    wetness_upper_ci: number
+    pet_mm: number
+  }[]
+}
+
+export interface TimeContext {
+  present: TimeContextPresent | null
+  past: TimeContextEvent[]
+  future: TimeContextFuture | null
 }
 
 export interface AnalysisRequest {
@@ -185,6 +238,7 @@ export interface AnalysisResult {
   baseline: PlanResult
   scenario: (PlanResult & { assumptions: ScenarioRequest }) | null
   hydrological_trajectory?: any
+  time_context?: TimeContext
   iot_telemetry?: IoTTelemetry | null
   limitations: string[]
   processing: { step: string; status: 'complete' | 'unavailable'; details?: string }[]

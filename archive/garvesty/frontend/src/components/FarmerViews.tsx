@@ -265,6 +265,7 @@ export const F3Environment: React.FC<CommonProps> = ({ field, iotData }) => {
   const wet = field.wetness
   const s = field.soil
   const prov = field.provenance || {}
+  const tc = field.time_context
 
   return (
     <div className="view-panel">
@@ -390,6 +391,67 @@ export const F3Environment: React.FC<CommonProps> = ({ field, iotData }) => {
               <span className="d-val">Clay {s?.clay_pct || 42}% · Silt {s?.silt_pct || 38}% · Sand {s?.sand_pct || 20}%</span>
             </div>
           </div>
+        </div>
+
+        <div className="evidence-card">
+          <div className="card-top">
+            <h4>🕐 {t('happeningNow')}</h4>
+            <span className="badge badge-live">{tc?.present ? tc.present.as_of : 'NOT COMPUTED'}</span>
+          </div>
+          {tc?.present ? (
+            <>
+              <div className="detail-grid">
+                <div>
+                  <span className="d-label">Root-zone wetness (0–1):</span>
+                  <span className="d-val tabular">{tc.present.gwetroot != null ? tc.present.gwetroot.toFixed(3) : '–'}</span>
+                </div>
+                <div>
+                  <span className="d-label">30-day rain vs normal:</span>
+                  <span className="d-val tabular">
+                    {tc.present.rain_30d_vs_climatology_mm != null
+                      ? `${tc.present.rain_30d_vs_climatology_mm > 0 ? '+' : ''}${tc.present.rain_30d_vs_climatology_mm.toFixed(1)} mm`
+                      : '–'}
+                  </span>
+                </div>
+                <div>
+                  <span className="d-label">30-day rain:</span>
+                  <span className="d-val tabular">{tc.present.rain_30d != null ? `${tc.present.rain_30d.toFixed(1)} mm` : '–'}</span>
+                </div>
+                <div>
+                  <span className="d-label">30-day mean temp:</span>
+                  <span className="d-val tabular">{tc.present.t2m_30d_mean != null ? `${tc.present.t2m_30d_mean.toFixed(1)} °C` : '–'}</span>
+                </div>
+              </div>
+              {tc.present.stress.length > 0 && (
+                <div style={{ marginTop: '0.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {tc.present.stress.map((s) => (
+                    <span key={s} className="badge badge-warn">{s.replace(/_/g, ' ')}</span>
+                  ))}
+                </div>
+              )}
+            </>
+          ) : (
+            <p className="hint">{t('timeContextMissing')}</p>
+          )}
+        </div>
+
+        <div className="evidence-card">
+          <div className="card-top">
+            <h4>📅 {t('whatHappened')}</h4>
+            <span className="badge badge-cached">PAST 2 YEARS</span>
+          </div>
+          {!tc || tc.past.length === 0 ? (
+            <p className="hint">{tc ? t('noEvents') : t('timeContextMissing')}</p>
+          ) : (
+            <ul className="checklist">
+              {tc.past.map((e, i) => (
+                <li key={i} className="tabular">
+                  <strong>{e.type === 'dry_spell' ? t('drySpell') : e.type === 'wet_spell' ? t('wetSpell') : t('ndviDrop')}</strong>
+                  {e.start ? ` ${e.start} → ${e.end} (${e.days} days)` : ` ${e.date} (${e.change})`}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>
@@ -563,7 +625,7 @@ export const F5Scenarios: React.FC<F5Props> = ({
       <div className="panel-header">
         <div>
           <h2>{t('f5Title')}</h2>
-          <p className="subtext">Simulate drought, planting delays, and irrigation constraints.</p>
+          <p className="subtext">Simulate drought, planting delays, irrigation constraints — and input shocks (fertilizer, pesticide, cash).</p>
         </div>
       </div>
 
@@ -630,6 +692,53 @@ export const F5Scenarios: React.FC<F5Props> = ({
             </select>
           </div>
         </div>
+
+        <div className="form-row">
+          <div className="form-group">
+            <label>{t('fertilizerStatus')}</label>
+            <select
+              className="select-box"
+              value={scenario.fertilizer ?? 'normal'}
+              onChange={(e) =>
+                onUpdateScenario({ ...scenario, fertilizer: e.target.value as any })
+              }
+            >
+              <option value="normal">{t('fertilizerNormal')}</option>
+              <option value="expensive">{t('fertilizerExpensive')}</option>
+              <option value="unavailable">{t('fertilizerUnavailable')}</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>{t('pesticideStatus')}</label>
+            <select
+              className="select-box"
+              value={scenario.pesticide ?? 'available'}
+              onChange={(e) =>
+                onUpdateScenario({ ...scenario, pesticide: e.target.value as any })
+              }
+            >
+              <option value="available">{t('available')}</option>
+              <option value="unavailable">{t('unavailable')}</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label>{t('cashStatus')}</label>
+            <select
+              className="select-box"
+              value={scenario.cash ?? 'normal'}
+              onChange={(e) =>
+                onUpdateScenario({ ...scenario, cash: e.target.value as any })
+              }
+            >
+              <option value="normal">{t('cashNormal')}</option>
+              <option value="tight">{t('cashTight')}</option>
+            </select>
+          </div>
+        </div>
+
+        <p className="hint">{t('farmerReportedNote')}</p>
 
         <button className="primary-action-btn" onClick={onRunScenarioAnalysis}>
           ⚡ Run Scenario Projection
