@@ -8,18 +8,17 @@ Raw files are never edited. The backend reads only clean/ and snapshots/.
     python pipeline/clean_all.py
 """
 import calendar
+import hashlib
 import json
+import sys
+from pathlib import Path
 
 import pandas as pd
 
 from common import CLEAN, RAW, REPORTS, SNAPSHOTS, cell_key, load_fields, utc_now, write_json
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from backend.app.services.power import normalize_daily, summarize_daily, clean_value
 
-POWER_FILL = [-999.0, -99.0]
-RANGES = {
-    "T2M": (-10, 50), "T2M_MAX": (-10, 55), "T2M_MIN": (-15, 45),
-    "PRECTOTCORR": (0, 500), "RH2M": (0, 100), "WS2M": (0, 40),
-    "ALLSKY_SFC_SW_DWN": (0, 45), "GWETTOP": (0, 1), "GWETROOT": (0, 1),
-}
 MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"]
 # Season windows used by the rotation engine (design doc 8.1).
 SEASONS = {"monsoon": [5, 6, 7, 8, 9, 10], "winter": [11, 12, 1, 2], "summer": [3, 4]}
@@ -36,22 +35,16 @@ def clean_power_daily(report):
         key = path.stem.replace("daily_", "")
         raw = json.loads(path.read_text(encoding="utf-8"))
         resp = raw["response"]
-        df = pd.DataFrame(resp["properties"]["parameter"])
-        rows_in = len(df)
-        df.index = pd.to_datetime(df.index, format="%Y%m%d")
-        fill = int(df.isin(POWER_FILL).sum().sum())
-        df = df.mask(df.isin(POWER_FILL))
-        out_of_range = 0
-        for col, (lo, hi) in RANGES.items():
-            if col in df:
-                bad = (df[col] < lo) | (df[col] > hi)
-                out_of_range += int(bad.sum())
-                df.loc[bad, col] = float("nan")
+        rows, counts = normalize_daily(resp)
+        if not rows:
+            report["sources"][f"power_daily:{key}"] = {**counts, "status": "INVALID", "rows_out": 0}
+            continue
+        df = pd.DataFrame(rows).set_index("date")
+        df.index = pd.to_datetime(df.index)
         dead = df["T2M"].isna() & df["PRECTOTCORR"].isna()
-        df = df[~dead]
         df["GDD10"] = ((df["T2M_MAX"] + df["T2M_MIN"]) / 2 - 10).clip(lower=0)
-        df["rain_7d"] = df["PRECTOTCORR"].rolling(7, min_periods=5).sum()
-        df["rain_30d"] = df["PRECTOTCORR"].rolling(30, min_periods=24).sum()
+        df["rain_7d"] = df["PRECTOTCORR"].rolling(7, min_periods=7).sum()
+        df["rain_30d"] = df["PRECTOTCORR"].rolling(30, min_periods=30).sum()
         df = df.reset_index(names="date")
         df["cell"] = key
         df = df.drop_duplicates(subset=["cell", "date"]).sort_values(["cell", "date"])
@@ -61,11 +54,21 @@ def clean_power_daily(report):
             "retrieved_utc": raw["retrieved_utc"],
             "api_version": header.get("api", {}).get("version"),
             "sources": header.get("sources"),
+            "time_standard": header.get("time_standard"),
+            "parameters": resp.get("parameters", {}),
+            "requested_range": [header.get("start"), header.get("end")],
+            "sample_geometry": resp.get("geometry"),
+            "request": raw.get("request"),
+            "raw_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "transform_version": "power-calendar-v1",
+            "summary": summarize_daily(rows),
         }
         report["sources"][f"power_daily:{key}"] = {
-            "rows_in": rows_in, "rows_out": len(df),
-            "fill_values_nulled": fill, "out_of_range_nulled": out_of_range,
-            "rows_dropped_no_data": int(dead.sum()),
+            **counts, "rows_out": len(df), "rows_dropped_no_data": 0,
+            "calendar_days_without_temperature_or_rain": int(dead.sum()),
+            "raw_sha256": meta[key]["raw_sha256"],
+            "time_standard": header.get("time_standard"),
+            "transform_version": "power-calendar-v1",
             "date_range": [str(df["date"].min().date()), str(df["date"].max().date())],
             "note": "Most recent days can be missing until POWER's near-real-time feed catches up.",
         }
@@ -73,7 +76,10 @@ def clean_power_daily(report):
         return None, meta
     daily = pd.concat(frames, ignore_index=True)
     CLEAN.mkdir(parents=True, exist_ok=True)
-    daily.to_parquet(CLEAN / "power_daily.parquet", engine="pyarrow", compression="snappy", index=False)
+    target = CLEAN / "power_daily.parquet"
+    temporary = target.with_suffix(".parquet.tmp")
+    daily.to_parquet(temporary, engine="pyarrow", compression="snappy", index=False)
+    temporary.replace(target)
     return daily, meta
 
 
@@ -90,7 +96,7 @@ def clean_power_climatology(report, daily=None):
         for i, name in enumerate(MONTHS, start=1):
             def val(p):
                 v = params.get(p, {}).get(name)
-                return None if v is None or v in POWER_FILL else float(v)
+                return clean_value(v, p, header.get("fill_value", -999.0))
             rain_rate = val("PRECTOTCORR")  # mm/day, monthly mean
             days = calendar.monthrange(2023, i)[1]
             months.append({
@@ -106,7 +112,9 @@ def clean_power_climatology(report, daily=None):
             temps = [m["t2m"] for m in sel if m["t2m"] is not None]
             seasons[season] = {
                 "rain_mm": r(sum(rains), 0) if len(rains) == len(sel) else None,
-                "t2m": r(sum(temps) / len(temps), 1) if temps else None,
+                "t2m": r(sum(m["t2m"] * calendar.monthrange(2023, m["month"])[1] for m in sel)
+                         / sum(calendar.monthrange(2023, m["month"])[1] for m in sel), 1)
+                        if len(temps) == len(sel) else None,
                 # The climatology's T2M_MAX is a period extreme, so the typical daily
                 # maximum is taken from the cleaned daily series instead (see below).
                 "t2m_max": None,
@@ -124,6 +132,10 @@ def clean_power_climatology(report, daily=None):
             "period": header.get("range"),
             "retrieved_utc": raw["retrieved_utc"],
             "api_version": header.get("api", {}).get("version"),
+            "time_standard": header.get("time_standard"),
+            "parameters": resp.get("parameters", {}),
+            "raw_sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+            "calendar_basis": "non-leap reference year (365 days)",
         }
         report["sources"][f"power_climatology:{key}"] = {
             "months": 12, "period": out[key]["period"],
@@ -185,20 +197,29 @@ def clean_appeears(report):
         rows_in = len(df)
         c_ndvi, c_evi = _find_col(df, "16_days_NDVI"), _find_col(df, "16_days_EVI")
         c_rel = _find_col(df, "pixel_reliability")
+        if not c_rel:
+            report["sources"]["modis_mod13q1"] = {
+                "status": "INVALID",
+                "reason": "Missing pixel_reliability QA column",
+                "rows_in": rows_in,
+                "retrieved_utc": retrieved,
+            }
+            continue
+
         df["date"] = pd.to_datetime(df["Date"])
         # AppEEARS point CSVs are already scaled; anything outside the product's valid
         # NDVI range (-0.2 to 1) is a fill value.
         bad_range = (df[c_ndvi] < -0.2) | (df[c_ndvi] > 1)
         # pixel_reliability: 0 good, 1 marginal, 2 snow/ice, 3 cloud, -1 fill
-        bad_quality = ~df[c_rel].isin([0, 1]) if c_rel else pd.Series(False, index=df.index)
+        bad_quality = ~df[c_rel].isin([0, 1])
         keep = df[~bad_range & ~bad_quality].drop_duplicates(subset=["ID", "date"]).sort_values(["ID", "date"])
         for fid, grp in keep.groupby("ID"):
             ndvi[fid] = [{"date": str(d.date()), "ndvi": round(float(v), 3),
                           "evi": None if c_evi is None or pd.isna(e) else round(float(e), 3),
-                          "marginal": bool(q == 1) if c_rel else False}
+                          "marginal": bool(q == 1)}
                          for d, v, e, q in zip(grp["date"], grp[c_ndvi],
                                                grp[c_evi] if c_evi else grp[c_ndvi],
-                                               grp[c_rel] if c_rel else grp[c_ndvi])]
+                                               grp[c_rel])]
         report["sources"]["modis_mod13q1"] = {
             "rows_in": rows_in, "rows_out": len(keep),
             "dropped_fill_or_out_of_range": int(bad_range.sum()),
@@ -210,15 +231,44 @@ def clean_appeears(report):
         df = pd.read_csv(path)
         rows_in = len(df)
         df["date"] = pd.to_datetime(df["Date"])
-        cols = [c for c in df.columns if c.lower().endswith(("soil_moisture", "soil_moisture_pm"))]
-        long = df.melt(id_vars=["ID", "date"], value_vars=cols, value_name="sm").dropna(subset=["sm"])
-        bad = (long["sm"] < 0) | (long["sm"] > 0.6)  # fill (-9999) and unphysical values
-        keep = long[~bad].groupby(["ID", "date"], as_index=False)["sm"].mean().sort_values(["ID", "date"])
-        for fid, grp in keep.groupby("ID"):
-            smap[fid] = [{"date": str(d.date()), "sm": round(float(v), 3)} for d, v in zip(grp["date"], grp["sm"])]
+        c_sm = _find_col(df, "soil_moisture")
+        c_qf = _find_col(df, "retrieval_qual_flag")
+        c_sm_pm = _find_col(df, "soil_moisture_pm")
+        c_qf_pm = _find_col(df, "retrieval_qual_flag_pm")
+
+        records = []
+        dropped_bad = 0
+        for _, row in df.iterrows():
+            fid = row["ID"]
+            d = row["date"]
+            # AM measurement
+            if c_sm and pd.notna(row[c_sm]):
+                sm_val = float(row[c_sm])
+                qf_val = int(row[c_qf]) if c_qf and pd.notna(row[c_qf]) else 0
+                if qf_val in (0, 8) and 0 <= sm_val <= 0.6:
+                    records.append({"ID": fid, "date": d, "sm": sm_val})
+                else:
+                    dropped_bad += 1
+            # PM measurement
+            if c_sm_pm and pd.notna(row[c_sm_pm]):
+                sm_val_pm = float(row[c_sm_pm])
+                qf_val_pm = int(row[c_qf_pm]) if c_qf_pm and pd.notna(row[c_qf_pm]) else 0
+                if qf_val_pm in (0, 8) and 0 <= sm_val_pm <= 0.6:
+                    records.append({"ID": fid, "date": d, "sm": sm_val_pm})
+                else:
+                    dropped_bad += 1
+
+        if records:
+            rec_df = pd.DataFrame(records)
+            keep = rec_df.groupby(["ID", "date"], as_index=False)["sm"].mean().sort_values(["ID", "date"])
+            for fid, grp in keep.groupby("ID"):
+                smap[fid] = [{"date": str(d.date()), "sm": round(float(v), 3)} for d, v in zip(grp["date"], grp["sm"])]
+        else:
+            keep = []
+
         report["sources"]["smap_spl3smp_e"] = {
             "rows_in": rows_in, "field_days_out": len(keep),
-            "retrievals_dropped_fill_or_out_of_range": int(bad.sum()),
+            "retrievals_dropped_fill_or_out_of_range": dropped_bad,
             "retrieved_utc": retrieved,
             "note": "9 km cells: district-scale, several fields can share one cell.",
         }
@@ -277,6 +327,16 @@ def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved
                     "status": "CACHED",
                 }
 
+            # Reuse the exact live summary; calendar gaps must behave identically offline.
+            summary = power_meta.get(key, {}).get("summary")
+            if summary:
+                rec["weather"] = {**summary["weather"], "clim_month": (rec["weather"] or {}).get("clim_month")}
+                rec["wetness"] = summary["wetness"]
+                for layer in ("weather", "wetness"):
+                    if layer in rec["provenance"]:
+                        rec["provenance"][layer].update({name: value for name, value in power_meta[key].items()
+                                                        if name not in ("summary", "retrieved_utc", "api_version")})
+
         if f["id"] in soil:
             rec["soil"] = soil[f["id"]]["values"]
             rec["provenance"]["soil"] = {
@@ -313,7 +373,7 @@ def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved
         rec["provenance"]["field"] = {"source": "Illustrative layout", "status": "DEMO",
                                       "detail": "Field shape, name, crop history and irrigation flag are demo values."}
         fields[f["id"]] = rec
-    return {"generated_utc": utc_now(), "fields": fields}
+    return {"generated_utc": utc_now(), "transform_version": "power-calendar-v1", "fields": fields}
 
 
 def main():
