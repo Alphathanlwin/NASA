@@ -55,7 +55,6 @@ export function FertiliserGuide({ planId }: { planId: string }) {
           )
         })}
       </svg>
-      <p className="note small">{t('fert.perAcre')}</p>
       {plan.dry !== 'rice' && crop.legume?.value && <p className="fert-legume">{t('fert.legume')}</p>}
       <p className="note small">
         {t('fert.source')}{' '}
