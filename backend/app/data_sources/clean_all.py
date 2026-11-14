@@ -193,11 +193,80 @@ def clean_modis(report):
     return out, retrieved
 
 
+def clean_smap(report):
+    """SMAP SPL3SMP_E point samples from AppEEARS. AM and PM passes; a retrieval is kept only when its
+    quality flag says 'recommended' (bit 0 clear) and the value is inside the product's 0.02-0.5 range."""
+    files = sorted((RAW / "appeears").glob("*SPL3SMP*results.csv"))
+    if not files:
+        report["sources"]["smap_spl3smp_e"] = {"status": "UNAVAILABLE", "rows_in": 0, "rows_out": 0, "dropped": [],
+                                               "note": "No SMAP files in data/raw/appeears.", "retrieved_at": None}
+        return {}, None
+    retrieved = (read_json(RAW / "appeears" / "retrieved.json") or {}).get("retrieved_at")
+    df = pd.read_csv(files[0])
+    rows_in = len(df) * 2
+    pairs = []
+    for col in df.columns:
+        low = col.lower()
+        if low.endswith("_soil_moisture") or low.endswith("_soil_moisture_pm"):
+            pm = low.endswith("_pm")
+            flag = next((c for c in df.columns if c.lower().endswith("retrieval_qual_flag" + ("_pm" if pm else ""))), None)
+            pairs.append((col, flag, "PM" if pm else "AM"))
+    long = []
+    fill = qual = 0
+    for col, flag, pas in pairs:
+        for fid, day, v, q in zip(df["ID"], df["Date"], df[col], df[flag] if flag else [None] * len(df)):
+            if pd.isna(v) or not 0.02 <= v <= 0.5:
+                fill += 1
+                continue
+            if q is not None and (pd.isna(q) or int(q) == 65534 or int(q) & 1):
+                qual += 1
+                continue
+            long.append({"field": fid, "date": str(day)[:10], "pass": pas, "sm": float(v)})
+    out = {}
+    if long:
+        ldf = pd.DataFrame(long).groupby(["field", "date"], as_index=False)["sm"].mean().sort_values(["field", "date"])
+        for fid, g in ldf.groupby("field"):
+            out[fid] = [{"date": d, "sm": round(v, 3)} for d, v in zip(g["date"], g["sm"])]
+    dates = [s["date"] for series in out.values() for s in series]
+    report["sources"]["smap_spl3smp_e"] = {
+        "rows_in": rows_in, "rows_out": sum(len(s) for s in out.values()),
+        "dropped": [{"reason": "fill value or outside 0.02-0.5 m3/m3", "rows": fill},
+                    {"reason": "retrieval quality flag not 'recommended'", "rows": qual}],
+        "note": "AM and PM retrievals averaged per day. 9 km grid cell: district scale.",
+        "date_range": [min(dates), max(dates)] if dates else None, "retrieved_at": retrieved}
+    if out:
+        write_json(CLEAN / "smap.json", out)
+    return out, retrieved
+
+
+def clean_imerg(report):
+    raw = read_json(RAW / "imerg" / "daily_late.json")
+    if not raw:
+        report["sources"]["gpm_imerg_late"] = {"status": "UNAVAILABLE", "rows_in": 0, "rows_out": 0, "dropped": [],
+                                               "note": "No IMERG file in data/raw/imerg.", "retrieved_at": None}
+        return None, None
+    df = pd.DataFrame(raw["rows"])
+    rows_in = len(df)
+    missing = int(df["precip_mm"].isna().sum())
+    df = df.dropna(subset=["precip_mm"]).drop_duplicates(subset=["town", "date"]).sort_values(["town", "date"])
+    runs = sorted(df["run"].unique().tolist())
+    report["sources"]["gpm_imerg_late"] = {
+        "rows_in": rows_in, "rows_out": len(df),
+        "dropped": [{"reason": "fill value or outside 0-500 mm/day", "rows": missing}],
+        "runs": runs, "date_range": [df["date"].min(), df["date"].max()] if len(df) else None,
+        "retrieved_at": raw["retrieved_at"]}
+    CLEAN.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(CLEAN / "imerg_daily.parquet", index=False)
+    return df, raw["retrieved_at"]
+
+
 def obs(value, unit, variable, period, source, digits=2):
     return {"value": r(value, digits), "unit": unit, "variable": variable, "period": period, "source": source}
 
 
-def build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrieved):
+def build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrieved,
+                   smap=None, smap_retrieved=None, imerg=None, imerg_retrieved=None):
+    smap = smap or {}
     fields, climatology = {}, {}
     if clim is not None:
         for town, g in clim.groupby("town"):
@@ -271,7 +340,29 @@ def build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrie
             prov["modis"] = {"dataset": "NASA MODIS Terra", "product": "MOD13Q1 v061 (via ORNL DAAC subset service)", "spatial_resolution": "250 m pixel",
                              "retrieved_at": ndvi_retrieved, "status": "CACHED", "scale": "One 250 m pixel at the field centre; it can include neighbouring land."}
             values["ndvi"] = obs(series[-1]["ndvi"], "index -1 to 1", "250m_16_days_NDVI", f"16-day composite from {series[-1]['date']}", "modis", 3)
-        fields[f["id"]] = {**f, "values": values, "provenance": prov, "ndvi_series": (series or [])[-24:]}
+        sm = smap.get(f["id"])
+        if smap and not sm:
+            prov["smap"]["retrieved_at"] = smap_retrieved
+            prov["smap"]["scale"] = ("Retrieved, but no recommended-quality reading for this 9 km cell in the last 120 days "
+                                     "(SMAP often cannot retrieve over flooded paddy or dense vegetation).")
+        if sm:
+            prov["smap"] = {"dataset": "NASA SMAP", "product": "SPL3SMP_E v006 (L3 enhanced, via AppEEARS)", "spatial_resolution": "9 km grid cell",
+                            "retrieved_at": smap_retrieved, "status": "CACHED",
+                            "scale": "Surface soil moisture (top ~5 cm) for a 9 km grid cell: district scale, not a field measurement."}
+            values["smap_soil_moisture"] = obs(sm[-1]["sm"], "m3/m3", "soil_moisture (AM/PM mean)", sm[-1]["date"], "smap", 3)
+        if imerg is not None:
+            g = imerg[imerg["town"] == town].sort_values("date")
+            if len(g):
+                last_day = g["date"].iloc[-1]
+                window = g[pd.to_datetime(g["date"]) > pd.to_datetime(last_day) - pd.Timedelta(days=30)]
+                prov["imerg"] = {"dataset": "NASA GPM IMERG", "product": "GPM_3IMERGDL V07 (Late run, via OPeNDAP)",
+                                 "spatial_resolution": "0.1 degree grid cell (about 11 km)", "retrieved_at": imerg_retrieved, "status": "CACHED",
+                                 "scale": f"Satellite rainfall estimate for the 0.1 degree cell nearest {f['town_name']}; not a rain-gauge reading."}
+                # A 30-day total is only shown when at least 24 of the 30 days have data.
+                total = window["precip_mm"].sum() if len(window) >= 24 else None
+                values["imerg_rain_30d"] = obs(total, "mm", "precipitation", f"30 days to {last_day} ({len(window)} days with data)", "imerg", 1)
+        fields[f["id"]] = {**f, "values": values, "provenance": prov, "ndvi_series": (series or [])[-24:],
+                           "smap_series": (sm or [])[-60:]}
     now = utc_now()
     return {"generated_at": now, "retrieved_at": now, "fields": fields, "climatology": climatology}
 
@@ -299,13 +390,18 @@ def source_catalogue(report):
          "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/", "files": "not stored (loaded by the map)",
          "licence": "NASA open data; acknowledge NASA GIBS", "retrieved_at": None, "used_for": "optional satellite layer on the map"},
         {"id": "imerg", "name": "NASA GPM IMERG (Late run)", "nasa": True, "product": "GPM_3IMERGDL", "version": "V07",
-         "variables": "precipitation", "spatial_resolution": "0.1 degree, daily", "period": "not retrieved",
-         "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary", "files": "data/raw/imerg/daily_late.json (run is recorded on every row)",
-         "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE in this build: needs an Earthdata login"},
+         "variables": "precipitation", "spatial_resolution": "0.1 degree, daily",
+         "period": " to ".join((report["sources"].get("gpm_imerg_late") or {}).get("date_range") or []) or "not retrieved",
+         "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
+         "files": "data/raw/imerg/daily_late.json (run is recorded on every row) -> data/clean/imerg_daily.parquet",
+         "licence": "NASA open data", "retrieved_at": latest("gpm_imerg_late"),
+         "used_for": "observed satellite rainfall, last 30 days" if latest("gpm_imerg_late") else "UNAVAILABLE in this build"},
         {"id": "smap", "name": "NASA SMAP soil moisture", "nasa": True, "product": "SPL3SMP_E", "version": "006",
-         "variables": "soil_moisture", "spatial_resolution": "9 km, daily", "period": "not retrieved",
-         "url": "https://appeears.earthdatacloud.nasa.gov/", "files": "none",
-         "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE in this build: needs an Earthdata login"},
+         "variables": "soil_moisture (AM, PM), retrieval_qual_flag", "spatial_resolution": "9 km, daily",
+         "period": " to ".join((report["sources"].get("smap_spl3smp_e") or {}).get("date_range") or []) or "not retrieved",
+         "url": "https://appeears.earthdatacloud.nasa.gov/", "files": "data/raw/appeears/*SPL3SMP*results.csv -> data/clean/smap.json",
+         "licence": "NASA open data (NSIDC DAAC)", "retrieved_at": latest("smap_spl3smp_e"),
+         "used_for": "district-scale surface soil moisture" if latest("smap_spl3smp_e") else "UNAVAILABLE in this build"},
         {"id": "soilgrids", "name": "ISRIC SoilGrids", "nasa": False, "product": "SoilGrids", "version": "2.0",
          "variables": "phh2o, soc, sand, silt, clay, cec (0-5 cm mean)", "spatial_resolution": "250 m", "period": "static map",
          "url": "https://rest.isric.org/soilgrids/v2.0/properties/query", "files": "data/raw/soilgrids/F-*.json -> data/clean/soil.json",
@@ -346,10 +442,10 @@ def main():
     clim, clim_meta = clean_power_climatology(report)
     soil = clean_soilgrids(report)
     ndvi, ndvi_retrieved = clean_modis(report)
-    for name in ("gpm_imerg_late", "smap_spl3smp_e"):
-        report["sources"][name] = {"status": "UNAVAILABLE", "rows_in": 0, "rows_out": 0, "dropped": [],
-                                   "note": "Not retrieved: needs an Earthdata login.", "retrieved_at": None}
-    write_json(SNAPSHOTS / "fields_snapshot.json", build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrieved))
+    smap, smap_retrieved = clean_smap(report)
+    imerg, imerg_retrieved = clean_imerg(report)
+    write_json(SNAPSHOTS / "fields_snapshot.json", build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrieved,
+                                                                  smap, smap_retrieved, imerg, imerg_retrieved))
     write_json(REPORTS / "cleaning_report.json", report)
     source_catalogue(report)
     for k, v in report["sources"].items():

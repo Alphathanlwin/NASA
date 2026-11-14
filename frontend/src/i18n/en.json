@@ -155,7 +155,7 @@
   "quality.noReport": "No cleaning report in this build.",
   "quality.pipeline": "Missing-value checks · range checks · duplicate date checks · unit checks · source-to-UI traceability.",
   "footer.disclaimer": "Decision support only — not a yield forecast or agronomic prescription. Check with local extension officers before deciding.",
-  "footer.data": "Data: NASA POWER, NASA MODIS, NASA GIBS, ISRIC SoilGrids. Demo field geometry.",
+  "footer.data": "Data: NASA POWER, NASA GPM IMERG, NASA SMAP, NASA MODIS, NASA GIBS, ISRIC SoilGrids. Demo field geometry.",
   "footer.built": "Built for NASA Space Apps Challenge 2026, Yangon.",
   "common.loading": "Loading field data…",
   "common.error": "Could not load the field snapshot.",
@@ -197,5 +197,7 @@
   "cat.worth_investigating": "Worth investigating",
   "cat.possible_with_caution": "Possible with caution",
   "cat.weak_fit": "Weak fit",
-  "cat.not_workable": "Not workable here"
+  "cat.not_workable": "Not workable here",
+  "overview.imergHint": "Last 30 days, observed by satellite (0.1° cell, about 11 km). Compare with the modelled POWER rain.",
+  "overview.smapHint": "Top 5 cm, 9 km grid cell: district scale, not a field measurement."
 }

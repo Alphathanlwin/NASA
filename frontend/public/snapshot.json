@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14T05:06:08Z",
-  "retrieved_at": "2026-11-14T05:06:08Z",
+  "generated_at": "2026-11-14T07:56:15Z",
+  "retrieved_at": "2026-11-14T07:56:15Z",
   "engine_version": "1.0.0",
   "mode": "CACHED — offline mode",
   "geojson": {
@@ -252,17 +252,17 @@
       "status": "DEMO",
       "values": {
         "smap_soil_moisture": {
-          "value": null,
+          "value": 0.153,
           "unit": "m3/m3",
-          "variable": "soil_moisture",
-          "period": null,
+          "variable": "soil_moisture (AM/PM mean)",
+          "period": "2026-11-10",
           "source": "smap"
         },
         "imerg_rain_30d": {
-          "value": null,
+          "value": 85.6,
           "unit": "mm",
           "variable": "precipitation",
-          "period": null,
+          "period": "30 days to 2026-11-12 (30 days with data)",
           "source": "imerg"
         },
         "t2m": {
@@ -382,19 +382,19 @@
         },
         "smap": {
           "dataset": "NASA SMAP",
-          "product": "SPL3SMP_E v006",
+          "product": "SPL3SMP_E v006 (L3 enhanced, via AppEEARS)",
           "spatial_resolution": "9 km grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "retrieved_at": "2026-11-14T07:55:42Z",
+          "status": "CACHED",
+          "scale": "Surface soil moisture (top ~5 cm) for a 9 km grid cell: district scale, not a field measurement."
         },
         "imerg": {
           "dataset": "NASA GPM IMERG",
-          "product": "GPM_3IMERGDL V07 (Late run)",
-          "spatial_resolution": "0.1 degree grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "product": "GPM_3IMERGDL V07 (Late run, via OPeNDAP)",
+          "spatial_resolution": "0.1 degree grid cell (about 11 km)",
+          "retrieved_at": "2026-11-14T07:54:39Z",
+          "status": "CACHED",
+          "scale": "Satellite rainfall estimate for the 0.1 degree cell nearest Myaungmya; not a rain-gauge reading."
         },
         "power_recent": {
           "dataset": "NASA POWER",
@@ -519,6 +519,76 @@
           "date": "2026-10-16",
           "ndvi": 0.599,
           "marginal": false
+        }
+      ],
+      "smap_series": [
+        {
+          "date": "2026-07-18",
+          "sm": 0.273
+        },
+        {
+          "date": "2026-07-21",
+          "sm": 0.298
+        },
+        {
+          "date": "2026-07-29",
+          "sm": 0.194
+        },
+        {
+          "date": "2026-08-03",
+          "sm": 0.401
+        },
+        {
+          "date": "2026-08-06",
+          "sm": 0.187
+        },
+        {
+          "date": "2026-08-14",
+          "sm": 0.231
+        },
+        {
+          "date": "2026-08-27",
+          "sm": 0.17
+        },
+        {
+          "date": "2026-08-30",
+          "sm": 0.266
+        },
+        {
+          "date": "2026-09-02",
+          "sm": 0.193
+        },
+        {
+          "date": "2026-09-23",
+          "sm": 0.159
+        },
+        {
+          "date": "2026-09-28",
+          "sm": 0.167
+        },
+        {
+          "date": "2026-10-09",
+          "sm": 0.134
+        },
+        {
+          "date": "2026-10-20",
+          "sm": 0.092
+        },
+        {
+          "date": "2026-10-30",
+          "sm": 0.159
+        },
+        {
+          "date": "2026-11-02",
+          "sm": 0.125
+        },
+        {
+          "date": "2026-11-05",
+          "sm": 0.124
+        },
+        {
+          "date": "2026-11-10",
+          "sm": 0.153
         }
       ],
       "nearest_reference": "Nearest reference: Myaungmya, 3.9 km. Grid-cell value, not a field measurement.",
@@ -2807,17 +2877,17 @@
       "status": "DEMO",
       "values": {
         "smap_soil_moisture": {
-          "value": null,
+          "value": 0.169,
           "unit": "m3/m3",
-          "variable": "soil_moisture",
-          "period": null,
+          "variable": "soil_moisture (AM/PM mean)",
+          "period": "2026-11-10",
           "source": "smap"
         },
         "imerg_rain_30d": {
-          "value": null,
+          "value": 130.1,
           "unit": "mm",
           "variable": "precipitation",
-          "period": null,
+          "period": "30 days to 2026-11-12 (30 days with data)",
           "source": "imerg"
         },
         "t2m": {
@@ -2937,19 +3007,19 @@
         },
         "smap": {
           "dataset": "NASA SMAP",
-          "product": "SPL3SMP_E v006",
+          "product": "SPL3SMP_E v006 (L3 enhanced, via AppEEARS)",
           "spatial_resolution": "9 km grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "retrieved_at": "2026-11-14T07:55:42Z",
+          "status": "CACHED",
+          "scale": "Surface soil moisture (top ~5 cm) for a 9 km grid cell: district scale, not a field measurement."
         },
         "imerg": {
           "dataset": "NASA GPM IMERG",
-          "product": "GPM_3IMERGDL V07 (Late run)",
-          "spatial_resolution": "0.1 degree grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "product": "GPM_3IMERGDL V07 (Late run, via OPeNDAP)",
+          "spatial_resolution": "0.1 degree grid cell (about 11 km)",
+          "retrieved_at": "2026-11-14T07:54:39Z",
+          "status": "CACHED",
+          "scale": "Satellite rainfall estimate for the 0.1 degree cell nearest Pathein; not a rain-gauge reading."
         },
         "power_recent": {
           "dataset": "NASA POWER",
@@ -3074,6 +3144,48 @@
           "date": "2026-10-16",
           "ndvi": 0.778,
           "marginal": false
+        }
+      ],
+      "smap_series": [
+        {
+          "date": "2026-07-21",
+          "sm": 0.472
+        },
+        {
+          "date": "2026-07-28",
+          "sm": 0.155
+        },
+        {
+          "date": "2026-08-06",
+          "sm": 0.138
+        },
+        {
+          "date": "2026-09-02",
+          "sm": 0.4
+        },
+        {
+          "date": "2026-09-18",
+          "sm": 0.376
+        },
+        {
+          "date": "2026-10-20",
+          "sm": 0.099
+        },
+        {
+          "date": "2026-10-30",
+          "sm": 0.069
+        },
+        {
+          "date": "2026-11-02",
+          "sm": 0.079
+        },
+        {
+          "date": "2026-11-08",
+          "sm": 0.099
+        },
+        {
+          "date": "2026-11-10",
+          "sm": 0.169
         }
       ],
       "nearest_reference": "Nearest reference: Pathein, 5.8 km. Grid-cell value, not a field measurement.",
@@ -5378,17 +5490,17 @@
       "status": "DEMO",
       "values": {
         "smap_soil_moisture": {
-          "value": null,
+          "value": 0.201,
           "unit": "m3/m3",
-          "variable": "soil_moisture",
-          "period": null,
+          "variable": "soil_moisture (AM/PM mean)",
+          "period": "2026-11-10",
           "source": "smap"
         },
         "imerg_rain_30d": {
-          "value": null,
+          "value": 66.2,
           "unit": "mm",
           "variable": "precipitation",
-          "period": null,
+          "period": "30 days to 2026-11-12 (30 days with data)",
           "source": "imerg"
         },
         "t2m": {
@@ -5508,19 +5620,19 @@
         },
         "smap": {
           "dataset": "NASA SMAP",
-          "product": "SPL3SMP_E v006",
+          "product": "SPL3SMP_E v006 (L3 enhanced, via AppEEARS)",
           "spatial_resolution": "9 km grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "retrieved_at": "2026-11-14T07:55:42Z",
+          "status": "CACHED",
+          "scale": "Surface soil moisture (top ~5 cm) for a 9 km grid cell: district scale, not a field measurement."
         },
         "imerg": {
           "dataset": "NASA GPM IMERG",
-          "product": "GPM_3IMERGDL V07 (Late run)",
-          "spatial_resolution": "0.1 degree grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "product": "GPM_3IMERGDL V07 (Late run, via OPeNDAP)",
+          "spatial_resolution": "0.1 degree grid cell (about 11 km)",
+          "retrieved_at": "2026-11-14T07:54:39Z",
+          "status": "CACHED",
+          "scale": "Satellite rainfall estimate for the 0.1 degree cell nearest Bogale; not a rain-gauge reading."
         },
         "power_recent": {
           "dataset": "NASA POWER",
@@ -5615,6 +5727,76 @@
           "date": "2026-09-30",
           "ndvi": 0.772,
           "marginal": false
+        }
+      ],
+      "smap_series": [
+        {
+          "date": "2026-07-18",
+          "sm": 0.466
+        },
+        {
+          "date": "2026-07-21",
+          "sm": 0.369
+        },
+        {
+          "date": "2026-07-24",
+          "sm": 0.216
+        },
+        {
+          "date": "2026-07-29",
+          "sm": 0.29
+        },
+        {
+          "date": "2026-08-01",
+          "sm": 0.26
+        },
+        {
+          "date": "2026-08-03",
+          "sm": 0.246
+        },
+        {
+          "date": "2026-08-05",
+          "sm": 0.468
+        },
+        {
+          "date": "2026-08-19",
+          "sm": 0.236
+        },
+        {
+          "date": "2026-08-21",
+          "sm": 0.281
+        },
+        {
+          "date": "2026-08-22",
+          "sm": 0.332
+        },
+        {
+          "date": "2026-08-27",
+          "sm": 0.288
+        },
+        {
+          "date": "2026-08-30",
+          "sm": 0.365
+        },
+        {
+          "date": "2026-09-06",
+          "sm": 0.185
+        },
+        {
+          "date": "2026-10-16",
+          "sm": 0.075
+        },
+        {
+          "date": "2026-10-22",
+          "sm": 0.168
+        },
+        {
+          "date": "2026-11-05",
+          "sm": 0.184
+        },
+        {
+          "date": "2026-11-10",
+          "sm": 0.201
         }
       ],
       "nearest_reference": "Nearest reference: Bogale, 3.1 km. Grid-cell value, not a field measurement.",
@@ -7920,10 +8102,10 @@
           "source": "smap"
         },
         "imerg_rain_30d": {
-          "value": null,
+          "value": 67.7,
           "unit": "mm",
           "variable": "precipitation",
-          "period": null,
+          "period": "30 days to 2026-11-12 (30 days with data)",
           "source": "imerg"
         },
         "t2m": {
@@ -8045,17 +8227,17 @@
           "dataset": "NASA SMAP",
           "product": "SPL3SMP_E v006",
           "spatial_resolution": "9 km grid cell",
-          "retrieved_at": null,
+          "retrieved_at": "2026-11-14T07:55:42Z",
           "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "scale": "Retrieved, but no recommended-quality reading for this 9 km cell in the last 120 days (SMAP often cannot retrieve over flooded paddy or dense vegetation)."
         },
         "imerg": {
           "dataset": "NASA GPM IMERG",
-          "product": "GPM_3IMERGDL V07 (Late run)",
-          "spatial_resolution": "0.1 degree grid cell",
-          "retrieved_at": null,
-          "status": "UNAVAILABLE",
-          "scale": "Not retrieved: needs an Earthdata login."
+          "product": "GPM_3IMERGDL V07 (Late run, via OPeNDAP)",
+          "spatial_resolution": "0.1 degree grid cell (about 11 km)",
+          "retrieved_at": "2026-11-14T07:54:39Z",
+          "status": "CACHED",
+          "scale": "Satellite rainfall estimate for the 0.1 degree cell nearest Twante; not a rain-gauge reading."
         },
         "power_recent": {
           "dataset": "NASA POWER",
@@ -8182,6 +8364,7 @@
           "marginal": false
         }
       ],
+      "smap_series": [],
       "nearest_reference": "Nearest reference: Twante, 2.9 km. Grid-cell value, not a field measurement.",
       "plans": {
         "engine_version": "1.0.0",
@@ -16482,12 +16665,12 @@
       "version": "V07",
       "variables": "precipitation",
       "spatial_resolution": "0.1 degree, daily",
-      "period": "not retrieved",
+      "period": "2026-09-15 to 2026-11-12",
       "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
-      "files": "data/raw/imerg/daily_late.json (run is recorded on every row)",
+      "files": "data/raw/imerg/daily_late.json (run is recorded on every row) -> data/clean/imerg_daily.parquet",
       "licence": "NASA open data",
-      "retrieved_at": null,
-      "used_for": "UNAVAILABLE in this build: needs an Earthdata login"
+      "retrieved_at": "2026-11-14T07:54:39Z",
+      "used_for": "observed satellite rainfall, last 30 days"
     },
     {
       "id": "smap",
@@ -16495,14 +16678,14 @@
       "nasa": true,
       "product": "SPL3SMP_E",
       "version": "006",
-      "variables": "soil_moisture",
+      "variables": "soil_moisture (AM, PM), retrieval_qual_flag",
       "spatial_resolution": "9 km, daily",
-      "period": "not retrieved",
+      "period": "2026-07-18 to 2026-11-10",
       "url": "https://appeears.earthdatacloud.nasa.gov/",
-      "files": "none",
-      "licence": "NASA open data",
-      "retrieved_at": null,
-      "used_for": "UNAVAILABLE in this build: needs an Earthdata login"
+      "files": "data/raw/appeears/*SPL3SMP*results.csv -> data/clean/smap.json",
+      "licence": "NASA open data (NSIDC DAAC)",
+      "retrieved_at": "2026-11-14T07:55:42Z",
+      "used_for": "district-scale surface soil moisture"
     },
     {
       "id": "soilgrids",
@@ -16576,14 +16759,14 @@
       "url": "n/a",
       "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
       "licence": "project team; source licences still apply",
-      "retrieved_at": "2026-11-14T05:06:08Z",
+      "retrieved_at": "2026-11-14T07:56:15Z",
       "used_for": "served by the API and the static snapshot"
     }
   ],
-  "sources_retrieved_at": "2026-11-14T05:06:08Z",
+  "sources_retrieved_at": "2026-11-14T07:56:15Z",
   "cleaning_report": {
-    "generated_at": "2026-11-14T05:06:08Z",
-    "retrieved_at": "2026-11-14T05:06:08Z",
+    "generated_at": "2026-11-14T07:56:15Z",
+    "retrieved_at": "2026-11-14T07:56:15Z",
     "sources": {
       "power_recent:myaungmya": {
         "rows_in": 401,
@@ -17136,21 +17319,43 @@
         ],
         "retrieved_at": "2026-11-14T03:37:45Z"
       },
-      "gpm_imerg_late": {
-        "status": "UNAVAILABLE",
-        "rows_in": 0,
-        "rows_out": 0,
-        "dropped": [],
-        "note": "Not retrieved: needs an Earthdata login.",
-        "retrieved_at": null
-      },
       "smap_spl3smp_e": {
-        "status": "UNAVAILABLE",
-        "rows_in": 0,
-        "rows_out": 0,
-        "dropped": [],
-        "note": "Not retrieved: needs an Earthdata login.",
-        "retrieved_at": null
+        "rows_in": 944,
+        "rows_out": 44,
+        "dropped": [
+          {
+            "reason": "fill value or outside 0.02-0.5 m3/m3",
+            "rows": 796
+          },
+          {
+            "reason": "retrieval quality flag not 'recommended'",
+            "rows": 100
+          }
+        ],
+        "note": "AM and PM retrievals averaged per day. 9 km grid cell: district scale.",
+        "date_range": [
+          "2026-07-18",
+          "2026-11-10"
+        ],
+        "retrieved_at": "2026-11-14T07:55:42Z"
+      },
+      "gpm_imerg_late": {
+        "rows_in": 236,
+        "rows_out": 236,
+        "dropped": [
+          {
+            "reason": "fill value or outside 0-500 mm/day",
+            "rows": 0
+          }
+        ],
+        "runs": [
+          "Late"
+        ],
+        "date_range": [
+          "2026-09-15",
+          "2026-11-12"
+        ],
+        "retrieved_at": "2026-11-14T07:54:39Z"
       }
     }
   },

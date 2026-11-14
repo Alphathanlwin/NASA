@@ -5,9 +5,10 @@ import { StatusPill } from './Provenance'
 
 const STATUS: Record<string, Status> = {
   power_recent: 'CACHED', power_history: 'CACHED', modis: 'CACHED', soilgrids: 'CACHED',
-  outputs: 'CACHED', ecocrop: 'CACHED', gibs: 'LIVE', osm: 'LIVE', imerg: 'UNAVAILABLE',
-  smap: 'UNAVAILABLE', fields: 'DEMO',
+  outputs: 'CACHED', ecocrop: 'CACHED', gibs: 'LIVE', osm: 'LIVE', fields: 'DEMO',
 }
+// Sources that need an Earthdata login: CACHED once a retrieval is recorded, otherwise UNAVAILABLE.
+const LOGIN_SOURCES = new Set(['imerg', 'smap'])
 
 function entryId(key: string) {
   return key.split(':')[0]
@@ -27,7 +28,9 @@ export function DataQuality({ snap }: { snap: Snapshot }) {
         <h3>{t('quality.sources')}</h3>
         <div className="source-list">
           {snap.sources.map((s) => {
-            const status = STATUS[s.id] ?? 'CACHED'
+            const status: Status = LOGIN_SOURCES.has(s.id)
+              ? (s.retrieved_at ? 'CACHED' : 'UNAVAILABLE')
+              : (STATUS[s.id] ?? 'CACHED')
             return (
               <article className="source" key={s.id}>
                 <div className="source-head">

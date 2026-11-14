@@ -73,9 +73,9 @@ def cmd_layers():
 
 def cmd_submit():
     end = date.today()
-    start = end - timedelta(days=400)
-    layers = [{"product": MODIS, "layer": l} for l in MODIS_LAYERS]
-    layers += [{"product": SMAP, "layer": l} for l in smap_layers()]
+    start = end - timedelta(days=120)
+    # SMAP only: MODIS NDVI already comes from the ORNL DAAC service (fetch_modis_ornl.py).
+    layers = [{"product": SMAP, "layer": l} for l in smap_layers()]
     coords = [{"id": f["id"], "category": "field", "latitude": f["centroid"][0], "longitude": f["centroid"][1]}
               for f in load_fields()]
     task = {

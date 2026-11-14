@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14T05:06:08Z",
-  "retrieved_at": "2026-11-14T05:06:08Z",
+  "generated_at": "2026-11-14T07:56:15Z",
+  "retrieved_at": "2026-11-14T07:56:15Z",
   "sources": {
     "power_recent:myaungmya": {
       "rows_in": 401,
@@ -553,21 +553,43 @@
       ],
       "retrieved_at": "2026-11-14T03:37:45Z"
     },
-    "gpm_imerg_late": {
-      "status": "UNAVAILABLE",
-      "rows_in": 0,
-      "rows_out": 0,
-      "dropped": [],
-      "note": "Not retrieved: needs an Earthdata login.",
-      "retrieved_at": null
-    },
     "smap_spl3smp_e": {
-      "status": "UNAVAILABLE",
-      "rows_in": 0,
-      "rows_out": 0,
-      "dropped": [],
-      "note": "Not retrieved: needs an Earthdata login.",
-      "retrieved_at": null
+      "rows_in": 944,
+      "rows_out": 44,
+      "dropped": [
+        {
+          "reason": "fill value or outside 0.02-0.5 m3/m3",
+          "rows": 796
+        },
+        {
+          "reason": "retrieval quality flag not 'recommended'",
+          "rows": 100
+        }
+      ],
+      "note": "AM and PM retrievals averaged per day. 9 km grid cell: district scale.",
+      "date_range": [
+        "2026-07-18",
+        "2026-11-10"
+      ],
+      "retrieved_at": "2026-11-14T07:55:42Z"
+    },
+    "gpm_imerg_late": {
+      "rows_in": 236,
+      "rows_out": 236,
+      "dropped": [
+        {
+          "reason": "fill value or outside 0-500 mm/day",
+          "rows": 0
+        }
+      ],
+      "runs": [
+        "Late"
+      ],
+      "date_range": [
+        "2026-09-15",
+        "2026-11-12"
+      ],
+      "retrieved_at": "2026-11-14T07:54:39Z"
     }
   }
 }

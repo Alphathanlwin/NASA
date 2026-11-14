@@ -94,9 +94,9 @@ export function FieldOverview({ snap, field, onAnalyse, calendar }: {
           <Metric label={t('overview.ndvi')} value={ndvi ? String(ndvi.value ?? '—') : '—'}
             hint={t('overview.ndviHint')} value_rec={ndvi} prov={prov(field, 'ndvi')} />
           <Metric label={t('overview.smap')} value={smap?.value == null ? '—' : String(smap.value)} unit={smap?.unit}
-            value_rec={smap} prov={prov(field, 'smap_soil_moisture')} />
+            hint={t('overview.smapHint')} value_rec={smap} prov={prov(field, 'smap_soil_moisture')} />
           <Metric label={t('overview.imerg')} value={imerg?.value == null ? '—' : String(imerg.value)} unit={imerg?.unit}
-            value_rec={imerg} prov={prov(field, 'imerg_rain_30d')} />
+            hint={t('overview.imergHint')} value_rec={imerg} prov={prov(field, 'imerg_rain_30d')} />
         </div>
         <p className="note small">
           {t('footer.data')} · {snap.sources_retrieved_at?.slice(0, 10)}

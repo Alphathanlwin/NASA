@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-11-14T05:06:08Z",
+  "retrieved_at": "2026-11-14T07:56:15Z",
   "sources": [
     {
       "id": "power_recent",
@@ -69,12 +69,12 @@
       "version": "V07",
       "variables": "precipitation",
       "spatial_resolution": "0.1 degree, daily",
-      "period": "not retrieved",
+      "period": "2026-09-15 to 2026-11-12",
       "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary",
-      "files": "data/raw/imerg/daily_late.json (run is recorded on every row)",
+      "files": "data/raw/imerg/daily_late.json (run is recorded on every row) -> data/clean/imerg_daily.parquet",
       "licence": "NASA open data",
-      "retrieved_at": null,
-      "used_for": "UNAVAILABLE in this build: needs an Earthdata login"
+      "retrieved_at": "2026-11-14T07:54:39Z",
+      "used_for": "observed satellite rainfall, last 30 days"
     },
     {
       "id": "smap",
@@ -82,14 +82,14 @@
       "nasa": true,
       "product": "SPL3SMP_E",
       "version": "006",
-      "variables": "soil_moisture",
+      "variables": "soil_moisture (AM, PM), retrieval_qual_flag",
       "spatial_resolution": "9 km, daily",
-      "period": "not retrieved",
+      "period": "2026-07-18 to 2026-11-10",
       "url": "https://appeears.earthdatacloud.nasa.gov/",
-      "files": "none",
-      "licence": "NASA open data",
-      "retrieved_at": null,
-      "used_for": "UNAVAILABLE in this build: needs an Earthdata login"
+      "files": "data/raw/appeears/*SPL3SMP*results.csv -> data/clean/smap.json",
+      "licence": "NASA open data (NSIDC DAAC)",
+      "retrieved_at": "2026-11-14T07:55:42Z",
+      "used_for": "district-scale surface soil moisture"
     },
     {
       "id": "soilgrids",
@@ -163,7 +163,7 @@
       "url": "n/a",
       "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
       "licence": "project team; source licences still apply",
-      "retrieved_at": "2026-11-14T05:06:08Z",
+      "retrieved_at": "2026-11-14T07:56:15Z",
       "used_for": "served by the API and the static snapshot"
     }
   ]

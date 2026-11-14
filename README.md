@@ -48,14 +48,14 @@ text is set in a self-hosted Noto Sans Myanmar font, not a font CDN.
 | MODIS NDVI | `CACHED` | MOD13Q1 v061, one 250 m pixel at each field centre via the ORNL DAAC subset service. Cloudy composites removed. |
 | Topsoil pH and texture | `CACHED` | ISRIC SoilGrids v2.0, 250 m, 0-5 cm mean. Predicted map value, not a soil test. Not a NASA product. |
 | NASA GIBS imagery | `LIVE` when the layer is switched on | MODIS Terra corrected reflectance, WMTS `epsg3857`, one fixed date (2026-01-10) chosen for relatively clear conditions. Not cloud-free. |
-| GPM IMERG Late V07 rainfall | `UNAVAILABLE` | Not retrieved: needs an Earthdata login. The fetch script records the Late run on every row if it is run. |
-| SMAP soil moisture | `UNAVAILABLE` | Not retrieved: needs an Earthdata login. |
+| GPM IMERG Late V07 rainfall | `CACHED` | Real NASA data, 15 Sep - 12 Nov 2026, 0.1° cell nearest each town, via NASA OPeNDAP (Earthdata token). Shown as a 30-day total; every row records the Late run. Observed by satellite, next to the modelled POWER rain. |
+| SMAP soil moisture | `CACHED` (3 fields) / `UNAVAILABLE` (Twante) | Real NASA SPL3SMP_E v006 via AppEEARS, last 120 days, 9 km cell (district scale). Only retrievals flagged "recommended quality" are kept (44 of 944); the Twante cell had none, so it shows UNAVAILABLE with that reason. |
 | Field shape, name, crop history, irrigation flag | `DEMO` | Illustrative polygons at real coordinates, one per reference town. |
 | Farmer prices and costs | `USER-INPUT` | Only what the farmer types. Used for ranking only; never turned into a profit forecast. |
 | Rotation scores | engine output | Deterministic rules applied to the data above. Rule weights are the team's design choices, not measurements. |
 
 Missing data never becomes a number. It becomes an entry under "Missing information" and, where
-relevant, an "unknown" reason in the plan. The SMAP and IMERG gaps are shown the same way.
+relevant, an "unknown" reason in the plan. A missing SMAP reading is shown the same way.
 
 ---
 
