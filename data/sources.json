@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-11-14T08:04:15Z",
+  "retrieved_at": "2026-11-14T18:10:35Z",
   "sources": [
     {
       "id": "power_recent",
@@ -163,7 +163,7 @@
       "url": "n/a",
       "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
       "licence": "project team; source licences still apply",
-      "retrieved_at": "2026-11-14T08:04:15Z",
+      "retrieved_at": "2026-11-14T18:10:35Z",
       "used_for": "served by the API and the static snapshot"
     }
   ]
