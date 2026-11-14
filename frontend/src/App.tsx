@@ -162,9 +162,6 @@ export default function App() {
             )}
           </div>
           <div className="head-actions">
-            <span className={`mode ${online ? 'mode-online' : 'mode-offline'}`}>
-              {online ? t('mode.backend') : t('mode.cached')}
-            </span>
             <div className="lang-toggle" role="group" aria-label={t('lang.label')}>
               <button className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
               <button className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
