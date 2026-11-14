@@ -6,10 +6,11 @@ import * as THREE from 'three'
 import type { Stage } from '../sim/types'
 import { PLANTS, actionPose } from './layout'
 import type { Action } from './layout'
+import { toon } from './toon'
 
 const tmp = new THREE.Object3D()
 const col = new THREE.Color()
-const stressCol = new THREE.Color('#b9a14a')
+const stressCol = new THREE.Color('#d9b84e')
 
 function growth(progress: number) {
   return Math.min(1, Math.max(0, progress / 0.6))
@@ -17,16 +18,16 @@ function growth(progress: number) {
 
 function cropColor(crop: string, stage: Stage, progress: number, health: number | null, out: THREE.Color) {
   if (crop === 'rice') {
-    out.set('#4f9a3a')
-    if (stage === 'fill') out.lerp(new THREE.Color('#b7b13c'), 0.45)
-    if (stage === 'mature' || stage === 'harvested') out.set('#d6b04a')
+    out.set('#6ccf45')
+    if (stage === 'fill') out.lerp(new THREE.Color('#e2d94a'), 0.45)
+    if (stage === 'mature' || stage === 'harvested') out.set('#f6c94e')
   } else {
-    out.set('#3f8a3a')
-    if (stage === 'flowering') out.lerp(new THREE.Color('#e3d25a'), 0.25)
-    if (stage === 'fill') out.set('#2f6f33')
-    if (stage === 'mature' || stage === 'harvested') out.set('#7c7a3a')
+    out.set('#58c447')
+    if (stage === 'flowering') out.lerp(new THREE.Color('#ffe66a'), 0.25)
+    if (stage === 'fill') out.set('#3fa847')
+    if (stage === 'mature' || stage === 'harvested') out.set('#b3a944')
   }
-  if (stage === 'sown' || stage === 'germination') out.lerp(new THREE.Color('#9ccf6a'), 0.4 - progress)
+  if (stage === 'sown' || stage === 'germination') out.lerp(new THREE.Color('#b4f07c'), 0.4 - progress)
   if (health !== null && health < 100) out.lerp(stressCol, ((100 - health) / 100) * 0.75)
   return out
 }
@@ -47,17 +48,19 @@ export function CropRows({ crop, stage, progress, health, action, sweepMode }: {
   const rice = useRef<THREE.InstancedMesh>(null)
   const bean = useRef<THREE.InstancedMesh>(null)
   const riceGeo = useMemo(() => {
-    const g = new THREE.ConeGeometry(0.08, 1, 5)
+    // a soft tuft: rounded base tapering to a point
+    const g = new THREE.ConeGeometry(0.11, 1, 8)
     g.translate(0, 0.5, 0)
     return g
   }, [])
   const beanGeo = useMemo(() => {
-    const g = new THREE.IcosahedronGeometry(0.26, 0)
-    g.scale(1, 0.75, 1)
+    // a round, puffy bush
+    const g = new THREE.SphereGeometry(0.26, 14, 10)
+    g.scale(1, 0.8, 1)
     g.translate(0, 0.26, 0)
     return g
   }, [])
-  const mat = useMemo(() => new THREE.MeshStandardMaterial({ roughness: 0.85, flatShading: true }), [])
+  const mat = useMemo(() => toon('#ffffff'), [])
 
   const shownCrop = sweepMode === 'sow' ? action?.crop ?? crop : crop
 
