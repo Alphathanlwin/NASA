@@ -173,7 +173,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
                   )
                 })}
               </ol>
-              <p className="note small">{t('cal.note')}</p>
             </section>
           )}
 
