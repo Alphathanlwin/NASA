@@ -1,71 +1,45 @@
-// Every user-facing string in the UI goes through t(). Adding Burmese later is
-// a second dictionary, not a refactor. Sentences produced by the rules engine
-// come from the backend in English for now.
-const en = {
-  appName: 'Field Shift',
-  tagline: 'Rotation planning with NASA data',
-  demoBanner:
-    'Demo fields near Twante, Yangon Region. Values are real data for these coordinates unless badged DEMO.',
-  offlineBanner: 'No connection to NASA POWER. Showing cached data.',
-  tilesOffline: 'Map tiles unavailable. Field outlines are still shown.',
-  mapHelp: 'Drag to rotate · scroll to zoom · right-drag to move',
-  pickField: 'Click a field on the map to send the agent.',
-  pickFieldHint: 'The agent visits the field, reads the data for it and compares rotations.',
-  agentEnRoute: 'Agent en route…',
-  eventLog: 'Agent log',
-  simTime: 'sim time',
-  baseMap: 'Map',
-  satellite: 'NASA satellite',
-  usualRotation: 'Usual rotation',
-  irrigated: 'Irrigated',
-  rainfed: 'Rain-fed',
-  conditions: 'Field conditions',
-  rain7: 'Rain, last 7 days',
-  rain30: 'Last 30 days: {v} mm. {month} average: {c} mm',
-  temperature: 'Temperature',
-  tempRange: 'Day range {min} to {max} °C',
-  wetness: 'Root-zone wetness',
-  wetnessHint: '0 = dry, 1 = saturated. Modelled, grid-cell scale',
-  wetnessChange: '{v} over 7 days',
-  soil: 'Topsoil pH',
-  soilTexture: 'Clay {clay}% · silt {silt}% · sand {sand}%',
-  smap: 'Satellite soil moisture',
-  smapHint: 'District scale (9 km)',
-  ndvi: 'Vegetation index (NDVI)',
-  notConnected: 'Not connected yet',
-  noData: 'No data for this location',
-  priorities: 'Your priorities',
-  income: 'Income',
-  soilHealth: 'Soil health',
-  waterSaving: 'Water saving',
-  returnsTitle: 'Your expected returns (optional)',
-  returnsHint:
-    'Enter your own estimate per acre for each crop, in any currency. Without it, income counts the same for every plan.',
-  plans: 'Rotations compared',
-  plansSub: '{n} valid rotations scored. Top 3 plus your usual rotation.',
-  existing: 'Your usual rotation',
-  rank: 'Rank {n} of {total}',
-  score: 'Score',
-  why: 'Why it scores well',
-  whyNot: 'What counts against it',
-  evidence: 'Evidence used',
-  gaps: 'Information gaps',
-  checkLocally: 'Check locally',
-  rejected: 'Rejected before scoring ({n})',
-  disclaimer: 'Decision support, not a yield forecast. It does not replace your judgment or local advice.',
-  dataSources: 'Data sources',
-  asOf: 'as of {d}',
-  loadError: 'Could not reach the Field Shift server.',
-  acres: '{a} acres ({h} ha)',
-  adjustment: 'Climate fit',
-} as const
+// AI-assisted: Claude Code
+// English is the default. ?lang=my switches the whole interface to Burmese.
+import en from './i18n/en.json'
+import my from './i18n/my.json'
 
+export type Lang = 'en' | 'my'
 export type Key = keyof typeof en
-const dictionaries = { en } as const
-let lang: keyof typeof dictionaries = 'en'
+
+const dictionaries: Record<Lang, Record<string, string>> = { en, my }
+let current: Lang = 'en'
+
+export function initialLang(): Lang {
+  const q = new URLSearchParams(window.location.search).get('lang')
+  return q === 'my' ? 'my' : 'en'
+}
+
+export function setLang(lang: Lang) {
+  current = lang
+  const url = new URL(window.location.href)
+  if (lang === 'my') url.searchParams.set('lang', 'my')
+  else url.searchParams.delete('lang')
+  window.history.replaceState(null, '', url)
+  document.documentElement.lang = lang === 'my' ? 'my' : 'en'
+}
+
+export function getLang(): Lang {
+  return current
+}
 
 export function t(key: Key, params?: Record<string, string | number | null | undefined>): string {
-  let s: string = dictionaries[lang][key] ?? en[key]
-  if (params) for (const [k, v] of Object.entries(params)) s = s.replace(`{${k}}`, v == null ? '–' : String(v))
+  let s = dictionaries[current][key] ?? en[key] ?? key
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      s = s.split(`{${k}}`).join(v == null ? '–' : String(v))
+    }
+  }
   return s
+}
+
+export function fmtDate(value: string | null | undefined): string {
+  if (!value) return '—'
+  const d = new Date(value)
+  if (Number.isNaN(d.getTime())) return value
+  return d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
 }

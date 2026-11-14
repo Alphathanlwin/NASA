@@ -1,9 +1,14 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
-export default defineConfig({
+// The judge-facing build is served from https://alphathanlwin.github.io/NASA/.
+// The FastAPI backend is optional: the static build falls back to snapshot.json.
+export default defineConfig(({ mode }) => ({
+  // The judge-facing build is served from https://alphathanlwin.github.io/NASA/.
+  // The FastAPI backend is optional: the static build falls back to snapshot.json.
+  base: mode === 'production' ? '/NASA/' : '/',
   plugins: [react()],
   server: {
     proxy: { '/api': 'http://127.0.0.1:8000' },
   },
-})
+}))
