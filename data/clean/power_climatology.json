@@ -130,7 +130,7 @@
       },
       "winter": {
         "rain_mm": 33.0,
-        "t2m": 26.7,
+        "t2m": 26.6,
         "t2m_max": 32.6
       },
       "summer": {
@@ -138,11 +138,44 @@
         "t2m": 31.1,
         "t2m_max": 38.5
       },
-      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-10"
+      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
     },
     "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
     "retrieved_utc": "2026-11-14T02:30:31Z",
-    "api_version": "v2.10.1"
+    "api_version": "v2.10.1",
+    "time_standard": "LST",
+    "parameters": {
+      "ALLSKY_SFC_SW_DWN": {
+        "units": "MJ/m^2/day",
+        "longname": "All Sky Surface Shortwave Downward Irradiance"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "RH2M": {
+        "units": "%",
+        "longname": "Relative Humidity at 2 Meters"
+      },
+      "T2M": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters"
+      },
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "raw_sha256": "e1d272f4af817a8e46e78e267bc6085526712748998a639f9de0daae659c76ef",
+    "calendar_basis": "non-leap reference year (365 days)"
   },
   "16.500_96.250": {
     "months": [
@@ -283,10 +316,43 @@
         "t2m": 30.3,
         "t2m_max": 35.8
       },
-      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-10"
+      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
     },
     "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
     "retrieved_utc": "2026-11-14T02:30:25Z",
-    "api_version": "v2.10.1"
+    "api_version": "v2.10.1",
+    "time_standard": "LST",
+    "parameters": {
+      "ALLSKY_SFC_SW_DWN": {
+        "units": "MJ/m^2/day",
+        "longname": "All Sky Surface Shortwave Downward Irradiance"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "RH2M": {
+        "units": "%",
+        "longname": "Relative Humidity at 2 Meters"
+      },
+      "T2M": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters"
+      },
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+    "calendar_basis": "non-leap reference year (365 days)"
   }
 }

@@ -187,6 +187,16 @@ def clean_appeears(report):
     """MODIS NDVI and SMAP soil moisture point samples. Returns ({}, {}) when the
     AppEEARS CSVs are not present, and the app shows those layers as not connected."""
     ndvi, smap = {}, {}
+    # AppEEARS normalizes coordinate IDs (lowercase, punctuation stripped), so a
+    # submitted 'F-01' comes back as 'f01'. Map returned IDs back to field IDs so
+    # the snapshot lookup by field ID finds the series. Unknown IDs pass through
+    # unchanged and simply match no field.
+    _field_lookup = {"".join(ch for ch in f["id"] if ch.isalnum()).upper(): f["id"]
+                     for f in load_fields()}
+
+    def _field_id(raw_id):
+        return _field_lookup.get("".join(ch for ch in str(raw_id) if ch.isalnum()).upper(), raw_id)
+
     folder = RAW / "appeears"
     retrieved = None
     if (folder / "retrieved.json").exists():
@@ -214,7 +224,7 @@ def clean_appeears(report):
         bad_quality = ~df[c_rel].isin([0, 1])
         keep = df[~bad_range & ~bad_quality].drop_duplicates(subset=["ID", "date"]).sort_values(["ID", "date"])
         for fid, grp in keep.groupby("ID"):
-            ndvi[fid] = [{"date": str(d.date()), "ndvi": round(float(v), 3),
+            ndvi[_field_id(fid)] = [{"date": str(d.date()), "ndvi": round(float(v), 3),
                           "evi": None if c_evi is None or pd.isna(e) else round(float(e), 3),
                           "marginal": bool(q == 1)}
                          for d, v, e, q in zip(grp["date"], grp[c_ndvi],
@@ -227,7 +237,7 @@ def clean_appeears(report):
             "retrieved_utc": retrieved,
         }
 
-    for path in folder.glob("*SPL3SMP_E*results.csv"):
+    for path in folder.glob("*SPL3SMP*results.csv"):
         df = pd.read_csv(path)
         rows_in = len(df)
         df["date"] = pd.to_datetime(df["Date"])
@@ -262,7 +272,7 @@ def clean_appeears(report):
             rec_df = pd.DataFrame(records)
             keep = rec_df.groupby(["ID", "date"], as_index=False)["sm"].mean().sort_values(["ID", "date"])
             for fid, grp in keep.groupby("ID"):
-                smap[fid] = [{"date": str(d.date()), "sm": round(float(v), 3)} for d, v in zip(grp["date"], grp["sm"])]
+                smap[_field_id(fid)] = [{"date": str(d.date()), "sm": round(float(v), 3)} for d, v in zip(grp["date"], grp["sm"])]
         else:
             keep = []
 
@@ -281,13 +291,105 @@ def clean_appeears(report):
 
 
 # ------------------------------------------------------------------- snapshot
+def _runs(mask):
+    """Consecutive True runs in a boolean list: [(start_idx, end_idx), ...]."""
+    runs, start = [], None
+    for i, v in enumerate(mask):
+        if v and start is None:
+            start = i
+        elif not v and start is not None:
+            runs.append((start, i - 1))
+            start = None
+    if start is not None:
+        runs.append((start, len(mask) - 1))
+    return runs
+
+
+def detect_time_context(cell, clim_months, ndvi_series):
+    """Past events + present state for one field's POWER cell.
+
+    Past: dry spells (GWETROOT < 0.5 for >= 7 days), wet spells (GWETROOT
+    >= 0.9 for >= 7 days), NDVI drops (>= 0.10 between consecutive composites).
+    Present: latest valid day values, stress flags, and 30-day rain vs the
+    climatological month normal. The present is the main decision input; the
+    past is dated evidence. Thresholds 0.5 / 0.7 / 0.9 match the rules
+    engine's water-budget thresholds; they are team parameters, not measurements.
+    """
+    cell = cell.sort_values("date")
+    dates = [str(d.date()) for d in cell["date"]]
+    gwet = cell["GWETROOT"].tolist()
+    events = []
+    for s, e in _runs([v == v and v < 0.5 for v in gwet]):
+        if e - s + 1 >= 7:
+            vals = [v for v in gwet[s:e + 1] if v == v]
+            events.append({"type": "dry_spell", "start": dates[s], "end": dates[e],
+                           "days": e - s + 1, "min_gwetroot": round(min(vals), 3)})
+    for s, e in _runs([v == v and v >= 0.9 for v in gwet]):
+        if e - s + 1 >= 7:
+            vals = [v for v in gwet[s:e + 1] if v == v]
+            events.append({"type": "wet_spell", "start": dates[s], "end": dates[e],
+                           "days": e - s + 1, "max_gwetroot": round(max(vals), 3)})
+    series = sorted(ndvi_series or [], key=lambda p: p["date"])
+    for prev, cur in zip(series, series[1:]):
+        drop = round(prev["ndvi"] - cur["ndvi"], 3)
+        if drop >= 0.10:
+            events.append({"type": "ndvi_drop", "date": cur["date"], "change": -drop,
+                           "from": prev["ndvi"], "to": cur["ndvi"]})
+    events.sort(key=lambda ev: ev.get("start") or ev.get("date"), reverse=True)
+    events = events[:10]
+
+    present = None
+    valid = cell.dropna(subset=["T2M"])
+    if len(valid):
+        last = valid.iloc[-1]
+        last30 = valid.tail(30)
+        month = int(last["date"].month)
+        clim_m = next((m for m in (clim_months or []) if m["month"] == month), None)
+        rain_30d = r(last["rain_30d"], 1)
+        clim_rain = (clim_m or {}).get("rain_mm")
+        gwetroot = r(last["GWETROOT"], 3)
+        gwettop = r(last["GWETTOP"], 3)
+        trailing_dry = trailing_wet = 0
+        for v in reversed(gwet):
+            if v == v and v < 0.5:
+                trailing_dry += 1
+            else:
+                break
+        for v in reversed(gwet):
+            if v == v and v >= 0.9:
+                trailing_wet += 1
+            else:
+                break
+        stress = []
+        if trailing_dry >= 7:
+            stress.append("in_dry_spell")
+        elif gwetroot is not None and gwetroot < 0.5:
+            stress.append("root_zone_dry")
+        if trailing_wet >= 7:
+            stress.append("in_wet_spell")
+        elif gwettop is not None and gwettop >= 0.9:
+            stress.append("surface_waterlogged")
+        if gwetroot is not None and gwetroot >= 0.7:
+            stress.append("root_zone_wet")
+        present = {
+            "as_of": str(last["date"].date()),
+            "gwetroot": gwetroot, "gwettop": gwettop,
+            "rain_7d": r(last["rain_7d"], 1), "rain_30d": rain_30d,
+            "rain_30d_vs_climatology_mm": None if (rain_30d is None or clim_rain is None) else round(rain_30d - clim_rain, 1),
+            "t2m_30d_mean": r(last30["T2M"].mean(), 1),
+            "stress": stress,
+        }
+    return {"past": events, "present": present}
+
+
 def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved):
     fields = {}
     for f in load_fields():
         lat, lon = f["centroid"]
         key = cell_key(lat, lon)
         rec = {**f, "power_cell": key, "weather": None, "wetness": None, "soil": None,
-               "ndvi": None, "smap": None, "climatology": clim.get(key), "provenance": {}}
+               "ndvi": None, "smap": None, "time_context": None,
+               "climatology": clim.get(key), "provenance": {}}
 
         if daily is not None:
             cell = daily[daily["cell"] == key]
@@ -326,6 +428,19 @@ def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved
                     "as_of": rec["wetness"]["as_of"], "retrieved_utc": power_meta.get(key, {}).get("retrieved_utc"),
                     "status": "CACHED",
                 }
+
+            # Time context: what happened (dated events) + what is happening now
+            # (present state, the main decision input). The future projection
+            # lives in the analysis service, not the snapshot.
+            tc = detect_time_context(cell, (clim.get(key) or {}).get("months", []),
+                                     ndvi.get(f["id"]))
+            rec["time_context"] = tc
+            rec["provenance"]["time_context"] = {
+                "source": "NASA POWER daily + MODIS/SMAP when connected",
+                "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+                "as_of": (tc.get("present") or {}).get("as_of"),
+                "status": "CACHED",
+            }
 
             # Reuse the exact live summary; calendar gaps must behave identically offline.
             summary = power_meta.get(key, {}).get("summary")

@@ -1,27 +1,35 @@
 {
-  "generated_utc": "2026-11-14T02:41:18Z",
+  "generated_utc": "2026-11-14T07:19:43Z",
   "sources": {
     "power_daily:16.500_95.625": {
       "rows_in": 731,
-      "rows_out": 728,
       "fill_values_nulled": 28,
       "out_of_range_nulled": 0,
-      "rows_dropped_no_data": 3,
+      "rows_out": 731,
+      "rows_dropped_no_data": 0,
+      "calendar_days_without_temperature_or_rain": 3,
+      "raw_sha256": "dd7588f876f236224a6f05c0633a76a07377180d6416af7b76fac6b420e534d5",
+      "time_standard": "LST",
+      "transform_version": "power-calendar-v1",
       "date_range": [
         "2024-11-13",
-        "2026-11-10"
+        "2026-11-13"
       ],
       "note": "Most recent days can be missing until POWER's near-real-time feed catches up."
     },
     "power_daily:16.500_96.250": {
       "rows_in": 731,
-      "rows_out": 728,
       "fill_values_nulled": 28,
       "out_of_range_nulled": 0,
-      "rows_dropped_no_data": 3,
+      "rows_out": 731,
+      "rows_dropped_no_data": 0,
+      "calendar_days_without_temperature_or_rain": 3,
+      "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+      "time_standard": "LST",
+      "transform_version": "power-calendar-v1",
       "date_range": [
         "2024-11-13",
-        "2026-11-10"
+        "2026-11-13"
       ],
       "note": "Most recent days can be missing until POWER's near-real-time feed catches up."
     },
