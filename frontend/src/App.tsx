@@ -187,7 +187,7 @@ export default function App() {
           <div>
             {page === 'home' ? (
               <>
-                <p className="hello">မင်္ဂလာပါ! <span>Mingalaba!</span> <span aria-hidden="true">☀</span></p>
+                <p className="hello">{t('home.hello')} <span aria-hidden="true">☀</span></p>
                 <h1>{greet}</h1>
               </>
             ) : (
