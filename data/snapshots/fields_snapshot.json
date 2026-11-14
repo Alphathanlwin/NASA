@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-14T08:10:01Z",
+  "generated_utc": "2026-11-14T08:26:18Z",
   "transform_version": "power-calendar-v1",
   "fields": {
     "F-01": {
@@ -69,7 +69,121 @@
         "silt_pct": 37.9,
         "soc_g_per_kg": 36.3
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.795,
+        "series": [
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.795,
+            "evi": 0.48,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.756,
+            "evi": 0.463,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.763,
+            "evi": 0.471,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.7,
+            "evi": 0.382,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.691,
+            "evi": 0.399,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.654,
+            "evi": 0.337,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.708,
+            "evi": 0.351,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.763,
+            "evi": 0.486,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.647,
+            "evi": 0.413,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.743,
+            "evi": 0.48,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.646,
+            "evi": 0.388,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.613,
+            "evi": 0.354,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.673,
+            "evi": 0.533,
+            "marginal": false
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.822,
+            "evi": 0.547,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.799,
+            "evi": 0.472,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.803,
+            "evi": 0.437,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.805,
+            "evi": 0.535,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.795,
+            "evi": 0.527,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.008
+      },
       "smap": null,
       "time_context": {
         "past": [
@@ -79,6 +193,13 @@
             "end": "2026-10-01",
             "days": 130,
             "max_gwetroot": 1.0
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-02-18",
+            "change": -0.116,
+            "from": 0.763,
+            "to": 0.647
           },
           {
             "type": "dry_spell",
@@ -462,9 +583,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",
@@ -546,10 +669,137 @@
         "silt_pct": 36.6,
         "soc_g_per_kg": 34.5
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.599,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.624,
+            "evi": 0.168,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.547,
+            "evi": 0.263,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.505,
+            "evi": 0.261,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.353,
+            "evi": 0.167,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.468,
+            "evi": 0.233,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.647,
+            "evi": 0.291,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.592,
+            "evi": 0.338,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.682,
+            "evi": 0.423,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.669,
+            "evi": 0.395,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.594,
+            "evi": 0.38,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.75,
+            "evi": 0.51,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.685,
+            "evi": 0.416,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.563,
+            "evi": 0.333,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.543,
+            "evi": 0.395,
+            "marginal": false
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.676,
+            "evi": 0.3,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.64,
+            "evi": 0.343,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.18,
+            "evi": 0.072,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.602,
+            "evi": 0.301,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.599,
+            "evi": 0.327,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.419
+      },
       "smap": null,
       "time_context": {
         "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-08-29",
+            "change": -0.46,
+            "from": 0.64,
+            "to": 0.18
+          },
           {
             "type": "wet_spell",
             "start": "2026-05-25",
@@ -558,11 +808,25 @@
             "max_gwetroot": 1.0
           },
           {
+            "type": "ndvi_drop",
+            "date": "2026-04-07",
+            "change": -0.122,
+            "from": 0.685,
+            "to": 0.563
+          },
+          {
             "type": "dry_spell",
             "start": "2026-02-08",
             "end": "2026-05-07",
             "days": 89,
             "min_gwetroot": 0.45
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2025-11-17",
+            "change": -0.152,
+            "from": 0.505,
+            "to": 0.353
           },
           {
             "type": "wet_spell",
@@ -939,9 +1203,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",
@@ -1023,10 +1289,131 @@
         "silt_pct": 40.4,
         "soc_g_per_kg": 34.9
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.734,
+        "series": [
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.701,
+            "evi": 0.405,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.772,
+            "evi": 0.422,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.776,
+            "evi": 0.47,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.761,
+            "evi": 0.45,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.671,
+            "evi": 0.354,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.681,
+            "evi": 0.374,
+            "marginal": true
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.628,
+            "evi": 0.324,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.658,
+            "evi": 0.364,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.605,
+            "evi": 0.304,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.627,
+            "evi": 0.341,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.567,
+            "evi": 0.4,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.556,
+            "evi": 0.318,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.568,
+            "evi": 0.329,
+            "marginal": true
+          },
+          {
+            "date": "2026-07-12",
+            "ndvi": 0.461,
+            "evi": 0.296,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.742,
+            "evi": 0.458,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.702,
+            "evi": 0.398,
+            "marginal": true
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.702,
+            "evi": 0.386,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.734,
+            "evi": 0.486,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.032
+      },
       "smap": null,
       "time_context": {
         "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-07-12",
+            "change": -0.107,
+            "from": 0.568,
+            "to": 0.461
+          },
           {
             "type": "wet_spell",
             "start": "2026-05-25",
@@ -1416,9 +1803,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",
@@ -1500,7 +1889,121 @@
         "silt_pct": 43.4,
         "soc_g_per_kg": 36.1
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.826,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.841,
+            "evi": 0.638,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.787,
+            "evi": 0.511,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.792,
+            "evi": 0.519,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.795,
+            "evi": 0.5,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.801,
+            "evi": 0.513,
+            "marginal": true
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.738,
+            "evi": 0.441,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.753,
+            "evi": 0.445,
+            "marginal": true
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.736,
+            "evi": 0.414,
+            "marginal": true
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.674,
+            "evi": 0.375,
+            "marginal": true
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.699,
+            "evi": 0.526,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.687,
+            "evi": 0.536,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.664,
+            "evi": 0.507,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.578,
+            "evi": 0.347,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.64,
+            "evi": 0.5,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.827,
+            "evi": 0.578,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.858,
+            "evi": 0.59,
+            "marginal": true
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.852,
+            "evi": 0.631,
+            "marginal": true
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.826,
+            "evi": 0.596,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.032
+      },
       "smap": null,
       "time_context": {
         "past": [
@@ -1893,9 +2396,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",
@@ -1977,10 +2482,131 @@
         "silt_pct": 39.8,
         "soc_g_per_kg": 33.4
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.665,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.433,
+            "evi": 0.32,
+            "marginal": false
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.614,
+            "evi": 0.304,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.53,
+            "evi": 0.236,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.577,
+            "evi": 0.261,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.618,
+            "evi": 0.357,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.576,
+            "evi": 0.264,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.453,
+            "evi": 0.183,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.507,
+            "evi": 0.223,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.527,
+            "evi": 0.246,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.273,
+            "evi": 0.126,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.517,
+            "evi": 0.253,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.572,
+            "evi": 0.373,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.477,
+            "evi": 0.227,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.579,
+            "evi": 0.298,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.463,
+            "evi": 0.189,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.518,
+            "evi": 0.254,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.679,
+            "evi": 0.391,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.665,
+            "evi": 0.365,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.147
+      },
       "smap": null,
       "time_context": {
         "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-08-13",
+            "change": -0.116,
+            "from": 0.579,
+            "to": 0.463
+          },
           {
             "type": "wet_spell",
             "start": "2026-07-05",
@@ -1996,11 +2622,25 @@
             "min_gwetroot": 0.48
           },
           {
+            "type": "ndvi_drop",
+            "date": "2026-02-18",
+            "change": -0.254,
+            "from": 0.527,
+            "to": 0.273
+          },
+          {
             "type": "dry_spell",
             "start": "2026-01-27",
             "end": "2026-03-10",
             "days": 43,
             "min_gwetroot": 0.48
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-01-01",
+            "change": -0.123,
+            "from": 0.576,
+            "to": 0.453
           },
           {
             "type": "wet_spell",
@@ -2377,9 +3017,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",
@@ -2461,7 +3103,127 @@
         "silt_pct": 41.2,
         "soc_g_per_kg": 28.7
       },
-      "ndvi": null,
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.71,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.779,
+            "evi": 0.433,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.769,
+            "evi": 0.511,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.724,
+            "evi": 0.466,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.77,
+            "evi": 0.512,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.712,
+            "evi": 0.507,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.612,
+            "evi": 0.287,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.5,
+            "evi": 0.211,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.644,
+            "evi": 0.358,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.593,
+            "evi": 0.337,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.618,
+            "evi": 0.441,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.556,
+            "evi": 0.361,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.571,
+            "evi": 0.322,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.655,
+            "evi": 0.41,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.608,
+            "evi": 0.409,
+            "marginal": true
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.514,
+            "evi": 0.26,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.75,
+            "evi": 0.513,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.823,
+            "evi": 0.537,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.768,
+            "evi": 0.412,
+            "marginal": true
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.71,
+            "evi": 0.385,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.113
+      },
       "smap": null,
       "time_context": {
         "past": [
@@ -2478,6 +3240,20 @@
             "end": "2026-05-07",
             "days": 89,
             "min_gwetroot": 0.45
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-01-01",
+            "change": -0.112,
+            "from": 0.612,
+            "to": 0.5
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2025-12-19",
+            "change": -0.1,
+            "from": 0.712,
+            "to": 0.612
           },
           {
             "type": "wet_spell",
@@ -2854,9 +3630,11 @@
         },
         "ndvi": {
           "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
           "version": "061",
-          "status": "NOT_CONNECTED",
-          "detail": "No data pulled yet (needs Earthdata login)."
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
         },
         "smap": {
           "source": "SMAP SPL3SMP_E",

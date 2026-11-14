@@ -19,47 +19,28 @@
       "id": "regional_wetness",
       "name": "Regional root-zone wetness",
       "description": "7-day forward prediction of root-zone wetness from NASA POWER time series",
-      "status": "validated",
-      "used_in_recommendations": true,
+      "status": "experimental",
+      "used_in_recommendations": false,
       "metrics": {
         "ridge": {
           "mae": 0.0337,
           "rmse": 0.0535
         },
         "persistence": {
-          "mae": 0.055,
-          "rmse": 0.0979
+          "mae": 0.038,
+          "rmse": 0.0622
         },
         "seasonal": {
           "mae": 0.078,
           "rmse": 0.1078
-        },
-        "pinn_hybrid": {
-          "mae": 0.0661,
-          "rmse": 0.1019
-        },
-        "pure_physics": {
-          "mae": 0.0835,
-          "rmse": 0.1274
-        },
-        "nash_sutcliffe_efficiency": 0.6731,
-        "skill_score_vs_persistence": -0.0834
+        }
       },
       "evaluation": {
         "split": "chronological, shared date cutoff across cells",
         "train_samples": 950,
         "test_samples": 414,
         "train_last_target_available": "2026-04-10",
-        "test_first_issue": "2026-04-11",
-        "pinn_conformal_coverage": 0.588,
-        "unphysical_violation_rate": 0.0038,
-        "horizon_mae": {
-          "day_1": 0.0282,
-          "day_7": 0.0542,
-          "day_14": 0.0725,
-          "day_21": 0.078,
-          "day_28": 0.0834
-        }
+        "test_first_issue": "2026-04-11"
       }
     },
     {
@@ -68,7 +49,7 @@
       "description": "Seasonal baseline deviations from quality-screened MODIS MOD13Q1 observations",
       "status": "blocked",
       "used_in_recommendations": false,
-      "reason": "MODIS NDVI series not yet retrieved (AppEEARS task in progress); anomaly evaluation requires the quality-screened NDVI series"
+      "reason": "MODIS NDVI retrieved and quality-screened (236 composites passing QA: 110 across F-01..F-06, 126 across 7 Paw San townships, 2025-09-30 to 2026-10-16). Vegetation-anomaly evaluation not yet run; status stays blocked until an evaluation runs and its gates are met."
     },
     {
       "id": "yield_feasibility",

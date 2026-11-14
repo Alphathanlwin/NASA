@@ -5,6 +5,8 @@ from app.engine.timeseries_hybrid import (
     SoilPhysicsBucketModel,
     ConformalTimeSeriesCalibrator,
     ExtendedKalmanSatelliteFilter,
+    compute_dynamic_kc,
+    get_climatology_day_context,
     predict_rootzone_recession,
 )
 from app.services import iot
@@ -157,4 +159,42 @@ def test_api_timeseries_and_iot_endpoints():
     assert len(data_pawsan["modis_townships"]) == 7
     assert len(data_pawsan["smap_townships_passing"]) == 3
     assert len(data_pawsan["smap_townships_zero_passing"]) == 4
+
+
+def test_dynamic_kc_and_climatology_integration():
+    # Full canopy NDVI (heading/flowering rice ~0.80) -> high Kc
+    kc_high = compute_dynamic_kc(0.80)
+    assert 1.0 <= kc_high <= 1.15
+
+    # Bare soil / dry fallow NDVI (~0.25) -> low Kc
+    kc_low = compute_dynamic_kc(0.25)
+    assert 0.35 <= kc_low <= 0.45
+    assert kc_low < kc_high
+
+    # Test climatology DOY lookup
+    mock_clim = [
+        {"month": 11, "t2m": 27.5, "t2m_max": 36.2, "t2m_min": 19.3, "rain_mm": 26.1},
+        {"month": 12, "t2m": 25.8, "t2m_max": 34.5, "t2m_min": 16.5, "rain_mm": 8.0},
+    ]
+    # DOY 320 is in November
+    t, t_max, t_min, r_daily = get_climatology_day_context(320, mock_clim)
+    assert t == 27.5
+    assert t_max == 36.2
+    assert t_min == 19.3
+    assert 0.5 <= r_daily <= 1.0
+
+    # Test predict_rootzone_recession with dynamic NDVI and climatology
+    res = predict_rootzone_recession(
+        current_rootzone_wetness=0.75,
+        recent_weather={"t2m": 26.5},
+        climatology_monthly=mock_clim,
+        days_forward=28,
+        soil_texture="clay",
+        current_ndvi=0.795,
+    )
+    assert res["dynamic_kc"] == compute_dynamic_kc(0.795)
+    assert res["current_ndvi"] == 0.795
+    assert res["climatology_incorporated"] is True
+    assert len(res["trajectory"]) == 28
+
 

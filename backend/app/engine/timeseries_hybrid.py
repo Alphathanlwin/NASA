@@ -196,6 +196,55 @@ class ExtendedKalmanSatelliteFilter:
         return self.x, self.p
 
 
+def compute_dynamic_kc(ndvi_val: Optional[float] = None) -> float:
+    """Computes dynamic FAO-56 crop coefficient Kc from satellite NDVI observations.
+    
+    FAO-56 Dual Kc framework (Allen et al., 1998; Glenn et al., 2011):
+    - Full canopy / rice flowering-heading (NDVI ~0.75-0.85): Kc ~ 1.05 - 1.15
+    - Ripening / post-harvest stubble (NDVI ~0.40-0.60): Kc ~ 0.65 - 0.80
+    - Dry fallow / bare soil (NDVI <0.30): Kc ~ 0.35 - 0.45
+    """
+    if ndvi_val is None or math.isnan(ndvi_val):
+        return 0.65
+    clamped_ndvi = max(0.20, min(0.85, float(ndvi_val)))
+    kc = 0.35 + ((clamped_ndvi - 0.20) / (0.85 - 0.20)) * (1.10 - 0.35)
+    return round(float(kc), 3)
+
+
+def get_climatology_day_context(
+    doy: int,
+    climatology_monthly: Optional[List[Dict[str, Any]]],
+    fallback_t2m: float = 27.0,
+    fallback_t2m_max: float = 31.0,
+    fallback_t2m_min: float = 23.0
+) -> Tuple[float, float, float, float]:
+    """Retrieves climatological (t2m, t2m_max, t2m_min, rain_mm) for a given DOY.
+    
+    Converts day of year to calendar month and extracts NASA POWER 25-year baseline.
+    """
+    month_cum_days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+    month = 1
+    for m in range(1, 13):
+        if doy <= month_cum_days[m]:
+            month = m
+            break
+
+    if not climatology_monthly:
+        return fallback_t2m, fallback_t2m_max, fallback_t2m_min, 0.0
+
+    for m_entry in climatology_monthly:
+        if m_entry.get("month") == month:
+            t = m_entry.get("t2m") if m_entry.get("t2m") is not None else fallback_t2m
+            t_max = m_entry.get("t2m_max") if m_entry.get("t2m_max") is not None else fallback_t2m_max
+            t_min = m_entry.get("t2m_min") if m_entry.get("t2m_min") is not None else fallback_t2m_min
+            rain_m = m_entry.get("rain_mm") if m_entry.get("rain_mm") is not None else 0.0
+            days_in_m = month_cum_days[month] - month_cum_days[month - 1]
+            daily_rain = rain_m / max(1, days_in_m)
+            return float(t), float(t_max), float(t_min), float(daily_rain)
+
+    return fallback_t2m, fallback_t2m_max, fallback_t2m_min, 0.0
+
+
 def predict_rootzone_recession(
     current_rootzone_wetness: float,
     recent_weather: Dict[str, Any],
@@ -203,19 +252,22 @@ def predict_rootzone_recession(
     days_forward: int = 28,
     soil_texture: str = "clay",
     latitude: float = 16.73,
-    confidence_level: float = 0.90
+    confidence_level: float = 0.90,
+    current_ndvi: Optional[float] = None,
+    ndvi_series: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
-    """Generates a 28-day forward root-zone soil moisture trajectory with conformal intervals.
+    """Generates a forward root-zone soil moisture trajectory with conformal intervals.
     
     Combines:
-    1. Physics-based FAO-56 PET energy calculations.
-    2. Exponential water-table recession dynamics.
+    1. Physics-based FAO-56 PET energy calculations & dynamic NDVI canopy Kc.
+    2. Exponential water-table recession dynamics & deep drainage loss.
     3. Distribution-free conformal prediction bounds.
     4. Sowing-window threshold analysis (critical threshold for pulse germination: 0.35 - 0.40).
     """
     alpha = 1.0 - confidence_level
     conformal = ConformalTimeSeriesCalibrator(alpha=alpha)
     physics = SoilPhysicsBucketModel(soil_texture=soil_texture, root_depth_m=0.6)
+    dynamic_kc = compute_dynamic_kc(current_ndvi)
 
     # Initial state
     t2m = recent_weather.get("t2m", 27.0)
@@ -232,11 +284,17 @@ def predict_rootzone_recession(
         try:
             import torch
             init_w = torch.tensor([[current_s]], dtype=torch.float32)
-            t_seq = [float(t2m)] * days_forward
-            t_max_seq = [float(t2m_max)] * days_forward
-            t_min_seq = [float(t2m_min)] * days_forward
-            rain_seq = [0.0] * days_forward
-            doy_seq = [float((start_doy + h) % 365) for h in range(1, days_forward + 1)]
+            t_seq, t_max_seq, t_min_seq, rain_seq, doy_seq = [], [], [], [], []
+            for h in range(1, days_forward + 1):
+                doy = (start_doy + h) % 365
+                t_day, t_max_d, t_min_d, _ = get_climatology_day_context(
+                    doy, climatology_monthly, fallback_t2m=t2m, fallback_t2m_max=t2m_max, fallback_t2m_min=t2m_min
+                )
+                t_seq.append(t_day)
+                t_max_seq.append(t_max_d)
+                t_min_seq.append(t_min_d)
+                rain_seq.append(0.0)
+                doy_seq.append(float(doy))
 
             weather_seq = {
                 "t_mean": torch.tensor([t_seq], dtype=torch.float32),
@@ -301,6 +359,9 @@ def predict_rootzone_recession(
                 "conformal_calibrated": True,
                 "conformal_q90_margin": conf_margin,
                 "confidence_level": confidence_level,
+                "dynamic_kc": dynamic_kc,
+                "current_ndvi": current_ndvi,
+                "climatology_incorporated": bool(climatology_monthly),
                 "critical_desaturation_day": crit_day,
                 "desaturation_risk": risk,
                 "terminal_wetness_point": pinn_traj[-1]["wetness_point"],
@@ -317,14 +378,14 @@ def predict_rootzone_recession(
 
     for h in range(1, days_forward + 1):
         doy = (start_doy + h) % 365
+        t_day, t_max_d, t_min_d, _ = get_climatology_day_context(
+            doy, climatology_monthly, fallback_t2m=t2m, fallback_t2m_max=t2m_max, fallback_t2m_min=t2m_min
+        )
         # Compute PET
-        pet = physics.compute_hargreaves_samani_pet(t2m, t2m_max, t2m_min, latitude, doy)
+        pet = physics.compute_hargreaves_samani_pet(t_day, t_max_d, t_min_d, latitude, doy)
         
-        # Projected dry season daily rain (statistically minimal in Nov-Jan delta: 0.0 - 0.5 mm)
-        rain_proj = 0.0
-        
-        # Advance physics
-        current_s = physics.step(current_s, rain_proj, pet, kc=0.65)
+        # Advance physics using dynamic Kc
+        current_s = physics.step(current_s, 0.0, pet, kc=dynamic_kc)
         
         # Conformal uncertainty intervals
         q_low, q_high = conformal.get_prediction_interval(current_s, h)
@@ -353,6 +414,9 @@ def predict_rootzone_recession(
         "soil_texture": soil_texture,
         "model_architecture": "Physics-Informed Bucket (FAO-56 PET) + Inductive Conformal Calibration",
         "confidence_level": confidence_level,
+        "dynamic_kc": dynamic_kc,
+        "current_ndvi": current_ndvi,
+        "climatology_incorporated": bool(climatology_monthly),
         "critical_desaturation_day": critical_stress_day,
         "desaturation_risk": desaturation_risk,
         "terminal_wetness_point": trajectory[-1]["wetness_point"],

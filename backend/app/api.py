@@ -141,16 +141,22 @@ def hybrid_nowcast(field_id: str = "F-01", days_forward: int = Query(28, ge=7, l
     wetness = rec.get("wetness") or {}
     weather = rec.get("weather") or {}
     soil = rec.get("soil") or {}
+    ndvi = rec.get("ndvi") or {}
     
     current_wet = float(wetness.get("gwetroot", 0.70))
     texture = str(soil.get("texture", "clay")).lower()
+    ndvi_val = float(ndvi.get("value")) if ndvi.get("value") is not None else None
+    clim_months = (rec.get("climatology") or {}).get("months")
     
     return timeseries_hybrid.predict_rootzone_recession(
         current_rootzone_wetness=current_wet,
         recent_weather=weather,
+        climatology_monthly=clim_months,
         soil_texture=texture,
         days_forward=days_forward,
-        confidence_level=0.90
+        confidence_level=0.90,
+        current_ndvi=ndvi_val,
+        ndvi_series=ndvi.get("series") or [],
     )
 
 
@@ -184,13 +190,14 @@ def get_pawsan_coverage():
     ndvi_data = json.loads(ndvi_path.read_text(encoding="utf-8")) if ndvi_path.exists() else {}
     smap_data = json.loads(smap_path.read_text(encoding="utf-8")) if smap_path.exists() else {}
 
+    pawsan_townships = [t for t in ndvi_data.keys() if not t.startswith("F-")]
     return {
         "dataset": "pawsan-ayeyarwady",
         "task_id": "14cb26b2-28d6-4415-b328-38c29df7865e",
         "spatial_scope": "Ayeyarwady Delta (7 Townships)",
-        "modis_townships": list(ndvi_data.keys()),
-        "smap_townships_passing": list(smap_data.keys()),
-        "smap_townships_zero_passing": [t for t in ndvi_data.keys() if t not in smap_data],
+        "modis_townships": pawsan_townships,
+        "smap_townships_passing": [t for t in smap_data.keys() if not t.startswith("F-")],
+        "smap_townships_zero_passing": [t for t in pawsan_townships if t not in smap_data],
         "phenology_verdict": "Single monsoon rice cycle (sown Jun-Jul, flower Oct-Nov, harvest Dec-Jan). Severe dry-season soil moisture floor (0.02-0.09 VWC) Feb-Apr dictates dry-season pulse rotation.",
         "ndvi_series": ndvi_data,
         "smap_series": smap_data,

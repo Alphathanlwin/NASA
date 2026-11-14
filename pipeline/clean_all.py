@@ -202,18 +202,16 @@ def clean_appeears(report):
     if (folder / "retrieved.json").exists():
         retrieved = json.loads((folder / "retrieved.json").read_text(encoding="utf-8"))["retrieved_utc"]
 
+    modis_in = modis_out = modis_bad_range = modis_bad_quality = 0
+    modis_files = 0
+    modis_invalid = []
     for path in folder.glob("*MOD13Q1*results.csv"):
         df = pd.read_csv(path)
         rows_in = len(df)
         c_ndvi, c_evi = _find_col(df, "16_days_NDVI"), _find_col(df, "16_days_EVI")
         c_rel = _find_col(df, "pixel_reliability")
         if not c_rel:
-            report["sources"]["modis_mod13q1"] = {
-                "status": "INVALID",
-                "reason": "Missing pixel_reliability QA column",
-                "rows_in": rows_in,
-                "retrieved_utc": retrieved,
-            }
+            modis_invalid.append({"file": path.name, "rows_in": rows_in})
             continue
 
         df["date"] = pd.to_datetime(df["Date"])
@@ -230,13 +228,35 @@ def clean_appeears(report):
                          for d, v, e, q in zip(grp["date"], grp[c_ndvi],
                                                grp[c_evi] if c_evi else grp[c_ndvi],
                                                grp[c_rel])]
+        # Accumulate across files: the report entry is written once after the loop,
+        # so staging several AppEEARS CSVs reports cumulative totals instead of
+        # only the last file processed.
+        modis_in += rows_in
+        modis_out += len(keep)
+        modis_bad_range += int(bad_range.sum())
+        modis_bad_quality += int((bad_quality & ~bad_range).sum())
+        modis_files += 1
+    if modis_files:
+        entry = {
+            "rows_in": modis_in, "rows_out": modis_out,
+            "dropped_fill_or_out_of_range": modis_bad_range,
+            "dropped_cloud_snow_or_fill_quality": modis_bad_quality,
+            "retrieved_utc": retrieved,
+        }
+        if modis_invalid:
+            entry["invalid_files"] = modis_invalid
+        report["sources"]["modis_mod13q1"] = entry
+    elif modis_invalid:
         report["sources"]["modis_mod13q1"] = {
-            "rows_in": rows_in, "rows_out": len(keep),
-            "dropped_fill_or_out_of_range": int(bad_range.sum()),
-            "dropped_cloud_snow_or_fill_quality": int((bad_quality & ~bad_range).sum()),
+            "status": "INVALID",
+            "reason": "Missing pixel_reliability QA column",
+            "rows_in": sum(f["rows_in"] for f in modis_invalid),
+            "invalid_files": modis_invalid,
             "retrieved_utc": retrieved,
         }
 
+    smap_in = smap_dropped = 0
+    smap_files = 0
     for path in folder.glob("*SPL3SMP*results.csv"):
         df = pd.read_csv(path)
         rows_in = len(df)
@@ -276,9 +296,17 @@ def clean_appeears(report):
         else:
             keep = []
 
+        # Accumulate across files (see MODIS above): field_days_out is counted
+        # from the final output so overlapping files cannot double-count a day.
+        smap_in += rows_in
+        smap_dropped += dropped_bad
+        smap_files += 1
+
+    if smap_files:
         report["sources"]["smap_spl3smp_e"] = {
-            "rows_in": rows_in, "field_days_out": len(keep),
-            "retrievals_dropped_fill_or_out_of_range": dropped_bad,
+            "rows_in": smap_in,
+            "field_days_out": sum(len(v) for v in smap.values()),
+            "retrievals_dropped_fill_or_out_of_range": smap_dropped,
             "retrieved_utc": retrieved,
             "note": "9 km cells: district-scale, several fields can share one cell.",
         }
