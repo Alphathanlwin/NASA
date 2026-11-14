@@ -1,64 +1,67 @@
+# AI-assisted: Claude Code
+"""FastAPI routes. The backend owns the calculations; the frontend only displays them.
+
+The same engine is ported to TypeScript so the static GitHub Pages build can run with
+no backend. scripts/parity_test.mjs keeps the two in step.
+"""
 import copy
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from .engine import agent, planner
-from .engine.crops import CROPS, SLOTS
-from .services import power, store
+from .engine import agent, engine
+from .services import store
 
 router = APIRouter(prefix="/api")
 
 
 class Priorities(BaseModel):
     income: float = Field(40, ge=0, le=100)
-    soil: float = Field(30, ge=0, le=100)
-    water: float = Field(30, ge=0, le=100)
+    soil_health: float = Field(30, ge=0, le=100)
+    water_saving: float = Field(30, ge=0, le=100)
+
+
+class Econ(BaseModel):
+    price: float | None = None
+    cost: float | None = None
 
 
 class PlanRequest(BaseModel):
     priorities: Priorities = Priorities()
-    # The farmer's own expected return per acre, per crop id. Never filled in by the app.
-    returns: dict[str, float] | None = None
+    econ: dict[str, Econ] | None = None
+    scenario: dict | None = None
+
+
+class ScenarioRequest(BaseModel):
+    assumptions: dict = Field(default_factory=dict)
+    priorities: Priorities = Priorities()
+    econ: dict[str, Econ] | None = None
 
 
 def field_or_404(field_id: str) -> dict:
     rec = store.field(field_id)
     if rec is None:
         raise HTTPException(404, f"Unknown field {field_id}")
-    return rec
+    return copy.deepcopy(rec)
 
 
-def with_live_weather(rec: dict, live: bool = True) -> dict:
-    """Copy of the snapshot record; weather and wetness replaced by a live POWER read when it works."""
-    out = copy.deepcopy(rec)
-    if not live:
-        return out
-    lat, lon = rec["centroid"]
-    fresh = power.fetch_recent(rec["power_cell"], lat, lon)
-    if not fresh:
-        return out
-    clim_month = (rec.get("weather") or {}).get("clim_month")
-    month = int(fresh["weather"]["as_of"][5:7])
-    months = (rec.get("climatology") or {}).get("months") or []
-    clim_month = next((m for m in months if m["month"] == month), clim_month)
-    out["weather"] = {**fresh["weather"], "clim_month": clim_month}
-    for name, block in (("weather", fresh["weather"]), ("wetness", fresh["wetness"])):
-        if block is None:
-            continue
-        if name == "wetness":
-            out["wetness"] = block
-        out["provenance"][name] = {**(out["provenance"].get(name) or {}), "status": "LIVE",
-                                   "as_of": block["as_of"], "retrieved_utc": fresh["retrieved_utc"],
-                                   "version": fresh["api_version"] or (out["provenance"].get(name) or {}).get("version")}
-    return out
+def engine_inputs(rec: dict) -> dict:
+    clim = (store.snapshot().get("climatology") or {}).get(rec["town_id"])
+    return engine.inputs_from_profile(rec, clim)
+
+
+def econ_dict(econ: dict[str, Econ] | None) -> dict:
+    if not econ:
+        return {}
+    return {k: {"price": v.price, "cost": v.cost} for k, v in econ.items()}
 
 
 @router.get("/health")
 def health():
     snap = store.snapshot()
-    return {"status": "ok", "fields": len(snap["fields"]), "snapshot_generated_utc": snap["generated_utc"],
-            "power_live": power.last_status}
+    return {"status": "ok", "fields": len(snap.get("fields") or {}),
+            "snapshot_generated_utc": snap.get("generated_at"), "engine_version": engine.ENGINE_VERSION,
+            "backend": "online"}
 
 
 @router.get("/fields")
@@ -66,52 +69,40 @@ def fields():
     return store.geojson()
 
 
-@router.get("/crops")
-def crops():
-    return {"slots": SLOTS,
-            "crops": [{"id": c.id, "name": c.name, "family": c.family, "slots": c.slots,
-                       "duration_days": c.duration_days, "water_class": c.water_class, "legume": c.legume}
-                      for c in CROPS.values()]}
+@router.get("/scenarios")
+def scenarios():
+    return {"scenarios": engine.TABLE.get("scenarios", [])}
 
 
 @router.get("/fields/{field_id}")
-def field_detail(field_id: str, live: bool = True):
-    return with_live_weather(field_or_404(field_id), live)
-
-
-@router.get("/fields/{field_id}/timeseries")
-def timeseries(field_id: str, param: str = Query("PRECTOTCORR"), days: int = Query(120, ge=7, le=731)):
+def field_detail(field_id: str):
     rec = field_or_404(field_id)
-    df = store.power_daily()
-    if df is None or param not in df.columns:
-        raise HTTPException(404, f"No series for {param}")
-    cell = df[df["cell"] == rec["power_cell"]].tail(days)
-    values = [None if v != v else round(float(v), 2) for v in cell[param]]
-    return {"field_id": field_id, "param": param, "dates": [str(d.date()) for d in cell["date"]],
-            "values": values, "source": "NASA POWER daily (modelled), cleaned", "status": "CACHED"}
+    rec["nearest_reference"] = (f"Nearest reference: {rec['town_name']}, {rec['town_distance_km']} km. "
+                                "Grid-cell value, not a field measurement.")
+    return rec
 
 
-@router.post("/fields/{field_id}/plan")
-def plan(field_id: str, body: PlanRequest, live: bool = True):
-    rec = with_live_weather(field_or_404(field_id), live)
-    return planner.plan(rec, body.priorities.model_dump(), body.returns)
+@router.post("/fields/{field_id}/plans")
+def plans(field_id: str, body: PlanRequest):
+    rec = field_or_404(field_id)
+    return engine.evaluate(engine_inputs(rec), body.scenario, body.priorities.model_dump(), econ_dict(body.econ))
+
+
+@router.post("/fields/{field_id}/scenarios")
+def scenarios_run(field_id: str, body: ScenarioRequest):
+    rec = field_or_404(field_id)
+    return engine.compare(engine_inputs(rec), body.assumptions, body.priorities.model_dump(), econ_dict(body.econ))
 
 
 @router.get("/fields/{field_id}/agent-run")
-def agent_run(field_id: str, live: bool = True):
-    rec = with_live_weather(field_or_404(field_id), live)
-    return agent.build_run(rec, store.agent_base())
+def agent_run(field_id: str, scenario: str | None = None):
+    rec = field_or_404(field_id)
+    return agent.build_run(rec, store.agent_base(), scenario_label=scenario)
 
 
-@router.get("/datasets/status")
-def datasets_status():
-    snap = store.snapshot()
-    first = next(iter(snap["fields"].values()), {})
-    prov = first.get("provenance") or {}
-    layers = []
-    for name in ("weather", "wetness", "soil", "smap", "ndvi", "field"):
-        p = dict(prov.get(name) or {})
-        if name in ("weather", "wetness") and power.last_status["ok"]:
-            p["status"] = "LIVE"
-        layers.append({"layer": name, **p})
-    return {"layers": layers, "power_live": power.last_status, "cleaning_report": store.cleaning_report()}
+@router.get("/datasets")
+def datasets():
+    """Everything the one Analyst Mode screen shows: source catalogue + cleaning report."""
+    report = store.cleaning_report()
+    return {"sources": store.sources().get("sources", []), "retrieved_at": store.sources().get("retrieved_at"),
+            "cleaning_report": report, "engine_version": engine.ENGINE_VERSION}

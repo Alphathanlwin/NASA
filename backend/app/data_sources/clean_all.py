@@ -272,7 +272,8 @@ def build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrie
                              "retrieved_at": ndvi_retrieved, "status": "CACHED", "scale": "One 250 m pixel at the field centre; it can include neighbouring land."}
             values["ndvi"] = obs(series[-1]["ndvi"], "index -1 to 1", "250m_16_days_NDVI", f"16-day composite from {series[-1]['date']}", "modis", 3)
         fields[f["id"]] = {**f, "values": values, "provenance": prov, "ndvi_series": (series or [])[-24:]}
-    return {"generated_at": utc_now(), "fields": fields, "climatology": climatology}
+    now = utc_now()
+    return {"generated_at": now, "retrieved_at": now, "fields": fields, "climatology": climatology}
 
 
 def source_catalogue(report):
@@ -283,42 +284,49 @@ def source_catalogue(report):
     cat = [
         {"id": "power_recent", "name": "NASA POWER daily (recent)", "nasa": True, "product": "POWER Daily API, community AG", "version": "v2 API; MERRA-2 / GEOS",
          "variables": "T2M, T2M_MAX, T2M_MIN, PRECTOTCORR, RH2M, WS2M, ALLSKY_SFC_SW_DWN, GWETTOP, GWETROOT", "spatial_resolution": POWER_RES,
-         "period": "last 400 days", "url": "https://power.larc.nasa.gov/api/temporal/daily/point", "files": "data/raw/power/recent_<town>.json",
+         "period": "last 400 days", "url": "https://power.larc.nasa.gov/api/temporal/daily/point", "files": "data/raw/power/recent_<town>.json -> data/clean/power_recent.parquet",
          "licence": "NASA open data; cite the NASA POWER project", "retrieved_at": latest("power_recent"), "used_for": "current weather and soil wetness per reference town"},
         {"id": "power_history", "name": "NASA POWER daily (history)", "nasa": True, "product": "POWER Daily API, community AG", "version": "v2 API; MERRA-2",
          "variables": "PRECTOTCORR, T2M_MAX, T2M_MIN, RH2M", "spatial_resolution": POWER_RES, "period": "1996-2025",
-         "url": "https://power.larc.nasa.gov/api/temporal/daily/point", "files": "data/raw/power/history_<town>.json",
-         "licence": "NASA open data; cite the NASA POWER project", "retrieved_at": latest("power_history"), "used_for": "day-of-year climatology for planting-window checks"},
+         "url": "https://power.larc.nasa.gov/api/temporal/daily/point", "files": "data/raw/power/history_<town>.json -> data/clean/power_doy_climatology.parquet",
+         "licence": "NASA open data; cite the NASA POWER project", "retrieved_at": latest("power_history"), "used_for": "day-of-year climatology (means of daily values) for planting-window checks"},
         {"id": "modis", "name": "NASA MODIS Terra vegetation indices", "nasa": True, "product": "MOD13Q1", "version": "061",
          "variables": "250m_16_days_NDVI, pixel_reliability", "spatial_resolution": "250 m, 16-day composite", "period": "last 420 days",
-         "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1", "files": "data/raw/modis_ornl/F-*.json",
+         "url": "https://modis.ornl.gov/rst/api/v1/MOD13Q1", "files": "data/raw/modis_ornl/F-*.json, bands.json -> data/clean/ndvi.json",
          "licence": "NASA open data (LP DAAC / ORNL DAAC)", "retrieved_at": latest("modis"), "used_for": "vegetation index shown in the field profile"},
         {"id": "gibs", "name": "NASA GIBS imagery", "nasa": True, "product": "MODIS_Terra_CorrectedReflectance_TrueColor", "version": "WMTS epsg3857, best",
-         "variables": "true-colour imagery", "spatial_resolution": "250 m (tile level 9)", "period": "one fixed date",
-         "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/", "files": "not stored (loaded by the map)", "licence": "NASA open data; acknowledge NASA GIBS",
-         "retrieved_at": None, "used_for": "optional satellite layer on the map"},
+         "variables": "true-colour imagery", "spatial_resolution": "250 m (tile level 9 native)", "period": "one fixed clear-sky date",
+         "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/", "files": "not stored (loaded by the map)",
+         "licence": "NASA open data; acknowledge NASA GIBS", "retrieved_at": None, "used_for": "optional satellite layer on the map"},
         {"id": "imerg", "name": "NASA GPM IMERG (Late run)", "nasa": True, "product": "GPM_3IMERGDL", "version": "V07",
-         "variables": "precipitation", "spatial_resolution": "0.1 degree, daily", "period": "not retrieved", "url": "https://disc.gsfc.nasa.gov/",
-         "files": "none", "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE: needs an Earthdata login"},
+         "variables": "precipitation", "spatial_resolution": "0.1 degree, daily", "period": "not retrieved",
+         "url": "https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary", "files": "data/raw/imerg/daily_late.json (run is recorded on every row)",
+         "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE in this build: needs an Earthdata login"},
         {"id": "smap", "name": "NASA SMAP soil moisture", "nasa": True, "product": "SPL3SMP_E", "version": "006",
-         "variables": "soil_moisture", "spatial_resolution": "9 km, daily", "period": "not retrieved", "url": "https://appeears.earthdatacloud.nasa.gov/",
-         "files": "none", "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE: needs an Earthdata login"},
+         "variables": "soil_moisture", "spatial_resolution": "9 km, daily", "period": "not retrieved",
+         "url": "https://appeears.earthdatacloud.nasa.gov/", "files": "none",
+         "licence": "NASA open data", "retrieved_at": None, "used_for": "UNAVAILABLE in this build: needs an Earthdata login"},
         {"id": "soilgrids", "name": "ISRIC SoilGrids", "nasa": False, "product": "SoilGrids", "version": "2.0",
          "variables": "phh2o, soc, sand, silt, clay, cec (0-5 cm mean)", "spatial_resolution": "250 m", "period": "static map",
-         "url": "https://rest.isric.org/soilgrids/v2.0/properties/query", "files": "data/raw/soilgrids/F-*.json", "licence": "CC BY 4.0",
-         "retrieved_at": latest("soilgrids"), "used_for": "topsoil pH and texture"},
+         "url": "https://rest.isric.org/soilgrids/v2.0/properties/query", "files": "data/raw/soilgrids/F-*.json -> data/clean/soil.json",
+         "licence": "CC BY 4.0 (non-NASA)", "retrieved_at": latest("soilgrids"), "used_for": "topsoil pH and texture"},
         {"id": "ecocrop", "name": "FAO EcoCrop", "nasa": False, "product": "EcoCrop database", "version": "mirror at github.com/OpenCLIM/ecocrop",
          "variables": "crop cycle, pH, temperature, texture and drainage ranges", "spatial_resolution": "n/a (global crop table)", "period": "n/a",
-         "url": "https://github.com/OpenCLIM/ecocrop", "files": "data/reference/ecocrop_ranges.json", "licence": "FAO; see the mirror repository",
-         "retrieved_at": (read_json(DATA / "reference" / "ecocrop_ranges.json") or {}).get("extracted_utc"), "used_for": "crop tolerance ranges in the rotation rules"},
-        {"id": "osm", "name": "OpenStreetMap tiles", "nasa": False, "product": "Standard tile layer", "version": "live",
-         "variables": "base map", "spatial_resolution": "zoom 14", "period": "live", "url": "https://tile.openstreetmap.org/",
-         "files": "not stored", "licence": "ODbL, (c) OpenStreetMap contributors", "retrieved_at": None, "used_for": "base map"},
+         "url": "https://github.com/OpenCLIM/ecocrop", "files": "data/reference/ecocrop_ranges.json -> backend/app/engine/crops.json",
+         "licence": "FAO; see the mirror repository (non-NASA)", "retrieved_at": (read_json(DATA / "reference" / "ecocrop_ranges.json") or {}).get("extracted_utc"),
+         "used_for": "crop tolerance ranges in the rotation rules"},
+        {"id": "carto", "name": "CARTO light basemap", "nasa": False, "product": "CartoDB Positron", "version": "live",
+         "variables": "base map", "spatial_resolution": "tiles", "period": "live", "url": "https://basemaps.cartocdn.com/",
+         "files": "not stored", "licence": "OpenStreetMap data ODbL; CARTO attribution required", "retrieved_at": None, "used_for": "base map"},
         {"id": "fields", "name": "Demo fields", "nasa": False, "product": "hand-made polygons", "version": "n/a", "variables": "shape, crop history, irrigation",
-         "spatial_resolution": "n/a", "period": "n/a", "url": "n/a", "files": "data/fields.geojson, data/reference/towns.json", "licence": "project team",
-         "retrieved_at": None, "used_for": "DEMO: illustrative fields, one per reference town"},
+         "spatial_resolution": "n/a", "period": "n/a", "url": "n/a", "files": "data/reference/towns.json -> data/fields.geojson",
+         "licence": "project team", "retrieved_at": None, "used_for": "DEMO: illustrative fields, one per reference town"},
+        {"id": "outputs", "name": "Processed outputs", "nasa": False, "product": "this project's pipeline", "version": "n/a",
+         "variables": "field profiles, climatology, cleaning report", "spatial_resolution": "n/a", "period": "derived from the sources above",
+         "url": "n/a", "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
+         "licence": "project team; source licences still apply", "retrieved_at": report.get("retrieved_at"), "used_for": "served by the API and the static snapshot"},
     ]
-    write_json(DATA / "sources.json", cat)
+    write_json(DATA / "sources.json", {"retrieved_at": report.get("retrieved_at"), "sources": cat})
     lines = ["# Data sources", "", "Generated by `backend/app/data_sources/clean_all.py`. Raw files under `data/raw/` are the untouched",
              "responses, each wrapped with its `retrieved_at` time (UTC).", "",
              "| Source | NASA? | Product / version | Variables | Resolution | Period | URL | Files | Retrieved (UTC) | Licence / notes |",
@@ -331,7 +339,8 @@ def source_catalogue(report):
 
 
 def main():
-    report = {"generated_at": utc_now(), "sources": {}}
+    now = utc_now()
+    report = {"generated_at": now, "retrieved_at": now, "sources": {}}
     recent, recent_meta = clean_power_recent(report)
     clim, clim_meta = clean_power_climatology(report)
     soil = clean_soilgrids(report)

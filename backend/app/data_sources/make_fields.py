@@ -44,8 +44,9 @@ def main():
             },
             "geometry": {"type": "Polygon", "coordinates": [rectangle(f["lat"], f["lon"], f["width_m"], f["height_m"], f["rotation_deg"])]},
         })
+    now = utc_now()
     write_json(DATA / "fields.geojson", {
-        "type": "FeatureCollection", "generated_at": utc_now(),
+        "type": "FeatureCollection", "generated_at": now, "retrieved_at": now,
         "note": "DEMO field layout. Shapes, names, crop history and irrigation settings are illustrative.",
         "features": features,
     })

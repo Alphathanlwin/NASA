@@ -1,5 +1,6 @@
 {
-  "generated_at": "2026-11-14T03:33:08Z",
+  "generated_at": "2026-11-14T04:37:18Z",
+  "retrieved_at": "2026-11-14T04:37:18Z",
   "sources": {
     "power_recent:myaungmya": {
       "rows_in": 401,
@@ -534,23 +535,23 @@
       "retrieved_at": "2026-11-14T03:32:04Z"
     },
     "modis_mod13q1": {
-      "rows_in": 0,
-      "rows_out": 0,
+      "rows_in": 100,
+      "rows_out": 66,
       "dropped": [
         {
           "reason": "fill value or outside valid range",
-          "rows": 0
+          "rows": 6
         },
         {
           "reason": "pixel reliability flag: cloud, snow or fill",
-          "rows": 0
+          "rows": 28
         }
       ],
       "date_range": [
-        null,
-        null
+        "2025-09-30",
+        "2026-10-16"
       ],
-      "retrieved_at": null
+      "retrieved_at": "2026-11-14T03:37:45Z"
     },
     "gpm_imerg_late": {
       "status": "UNAVAILABLE",

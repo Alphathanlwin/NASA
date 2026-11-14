@@ -206,7 +206,7 @@ def rule_rain_change(cid, crop, inputs, sc):
 
 def calendar(crop, inputs, sc):
     lo, hi = crop["cycle_days"]["value"]
-    sow = crop["sow_doy"]["value"] + sc["planting_delay_days"]
+    sow = crop["sow_window"]["value"][0] + sc["planting_delay_days"]
     harvest = sow + (lo + hi) // 2
     return {"sow_day": sow, "harvest_day": harvest, "sow": doy_label(sow), "harvest": doy_label(harvest),
             "onset_doy": onset_doy(inputs.get("clim"))}
@@ -221,7 +221,7 @@ def rule_season(cid, crop, inputs, sc):
     # Sowing is in Nov-Dec; a harvest day above 366 falls in the following year.
     days_before = onset - (cal["harvest_day"] - 366) if cal["harvest_day"] > 366 else 366
     p = {"sow": cal["sow"], "crop": crop["name"], "harvest": cal["harvest"], "onset": doy_label(onset), "days": abs(days_before)}
-    refs = ["climatology.rain_mm", f"crops.{cid}.sow_doy", f"crops.{cid}.cycle_days", "assumptions.onset_rule",
+    refs = ["climatology.rain_mm", f"crops.{cid}.sow_window", f"crops.{cid}.cycle_days", "assumptions.onset_rule",
             "assumptions.cycle_midpoint", "scenario.planting_delay_days"]
     if days_before <= 0:
         code = "harvest_after_onset"
@@ -245,7 +245,7 @@ def rule_heat(cid, crop, inputs, sc):
         if v is not None and v > limit:
             n += 1
     p = {"n": n, "limit": limit, "crop": crop["name"]}
-    refs = ["climatology.t2m_max", f"crops.{cid}.temp_abs_max_c", f"crops.{cid}.sow_doy", "scenario.planting_delay_days"]
+    refs = ["climatology.t2m_max", f"crops.{cid}.temp_abs_max_c", f"crops.{cid}.sow_window", "scenario.planting_delay_days"]
     if n >= w["heat_many_days"]:
         return [finding("heat_many", "season_field_fit", w["heat_many"], p, refs)], []
     if n >= w["heat_some_days"]:
@@ -253,11 +253,58 @@ def rule_heat(cid, crop, inputs, sc):
     return [finding("heat_none", "season_field_fit", 0, p, refs)], []
 
 
+def premonson_overlap(crop, inputs, sc):
+    """Days of the growing period that fall in the pre-monsoon heat window.
+
+    The window is 1 March to the climatological onset of pre-monsoon rain. The dry-season
+    crop is sown in November, so its calendar days are compared against the following
+    year's window (day numbers above 366).
+    """
+    clim = inputs.get("clim")
+    if not clim or not clim.get("t2m_max"):
+        return None
+    onset = onset_doy(clim)
+    if onset is None:
+        return None
+    cal = calendar(crop, inputs, sc)
+    start = 60 + 366          # 1 March of the year after sowing
+    end = onset + 366
+    lo = max(cal["sow_day"], start)
+    hi = min(cal["harvest_day"], end)
+    if hi < lo:
+        return {"days": 0, "hot_days": 0, "onset": onset, "calendar": cal}
+    limit = crop["temp_abs_max_c"]["value"]
+    hot = 0
+    for day in range(lo, hi + 1):
+        v = clim["t2m_max"][wrap_doy(day) - 1]
+        if v is not None and v > limit:
+            hot += 1
+    return {"days": hi - lo + 1, "hot_days": hot, "onset": onset, "calendar": cal}
+
+
+def rule_premonsoon(cid, crop, inputs, sc):
+    """Planting delay moves the harvest into (or further into) the pre-monsoon heat window."""
+    w = TABLE["weights"]
+    ov = premonson_overlap(crop, inputs, sc)
+    if ov is None:
+        return [], [unknown("unknown_climatology")]
+    cal = ov["calendar"]
+    p = {"sow": cal["sow"], "harvest": cal["harvest"], "crop": crop["name"], "n": ov["days"],
+         "hot": ov["hot_days"], "onset": doy_label(ov["onset"]), "limit": crop["temp_abs_max_c"]["value"]}
+    refs = ["climatology.t2m_max", "climatology.rain_mm", "assumptions.premonsoon_window",
+            f"crops.{cid}.sow_window", f"crops.{cid}.cycle_days", f"crops.{cid}.temp_abs_max_c",
+            "scenario.planting_delay_days"]
+    if ov["days"] == 0:
+        return [finding("premonsoon_clear", "season_field_fit", w["premonsoon_clear"], p, refs)], []
+    delta = -min(w["premonsoon_cap"], round1(ov["hot_days"] * w["premonsoon_per_hot_day"]))
+    return [finding("premonsoon_hot", "season_field_fit", delta, p, refs)], []
+
+
 def rule_drainage(cid, crop, inputs, sc):
     w = TABLE["weights"]
     p = {"crop": crop["name"]}
-    refs = [f"crops.{cid}.drainage", "scenario.drainage"]
-    if crop["drainage"]["value"] == "tolerates_saturated":
+    refs = [f"crops.{cid}.waterlogging_tolerance", "scenario.drainage"]
+    if crop["waterlogging_tolerance"]["value"] == "high":
         return [finding("drainage_rice", "season_field_fit", 0, p, refs)], []
     if sc["drainage"] == "unknown":
         return [], [unknown("unknown_drainage", p)]
@@ -266,7 +313,7 @@ def rule_drainage(cid, crop, inputs, sc):
 
 
 RULES = [rule_family, rule_legume, rule_ph, rule_texture, rule_water_need, rule_irrigation,
-         rule_moisture, rule_rain_change, rule_season, rule_heat, rule_drainage]
+         rule_moisture, rule_rain_change, rule_season, rule_heat, rule_premonsoon, rule_drainage]
 
 
 # --------------------------------------------------------------------------- evaluate
@@ -280,7 +327,10 @@ def normalise_weights(priorities: dict | None, income_enabled: bool) -> dict:
     if total == 0:
         raw = {"income": 1.0 if income_enabled else 0.0, "soil_health": 1.0, "water_saving": 1.0}
         total = sum(raw.values())
-    return {k: 100 * v / total for k, v in raw.items()}
+    # Round while keeping the displayed weights exactly at 100%.
+    weights = {k: round(100 * v / total, 2) for k, v in raw.items()}
+    weights["water_saving"] = round(100 - weights["income"] - weights["soil_health"], 2)
+    return weights
 
 
 def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None = None, econ: dict | None = None) -> dict:
@@ -288,6 +338,8 @@ def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None
     sc = resolve_scenario(inputs, scenario)
     w = TABLE["weights"]
     econ = econ or {}
+    if not any(plan["baseline"] for plan in TABLE["plans"]):
+        raise ValueError("the crop table must include a baseline plan")
     nets = {}
     for plan in TABLE["plans"]:
         e = econ.get(plan["dry"]) or {}
@@ -295,6 +347,7 @@ def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None
             nets[plan["id"]] = float(e["price"]) - float(e["cost"])
     income_enabled = len(nets) == len(TABLE["plans"])
     weights = normalise_weights(priorities, income_enabled)
+    income_note = None if income_enabled else "Not calculated — enter your price and cost."
 
     plans = []
     for plan in TABLE["plans"]:
@@ -328,7 +381,7 @@ def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None
         else:
             category = "weak_fit"
         local = [render("local_sowing", {}), render("local_rain", {})]
-        if crop["drainage"]["value"] == "needs_well_drained":
+        if crop["waterlogging_tolerance"]["value"] == "low":
             local.append(render("local_drainage", {}))
         local += crop["local_risks"]["value"] + [render("local_general", {})]
         refs = []
@@ -352,6 +405,7 @@ def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None
     for i in order:
         plans[i]["rank"] = 1 + sum(1 for q in plans if q["score"] > plans[i]["score"])
     return {"engine_version": ENGINE_VERSION, "scenario": sc, "weights": weights, "income_enabled": income_enabled,
+            "income_note": income_note,
             "plans": [plans[i] for i in order],
             "disclaimer": "Decision support only — not a yield forecast or agronomic prescription. Check with local extension officers."}
 
@@ -372,7 +426,8 @@ def compare(inputs: dict, scenario: dict, priorities: dict | None = None, econ: 
                  for k in b["score_components"] if b["score_components"][k] != s["score_components"][k]}
         plans.append({"id": b["id"], "sequence": b["sequence"], "score_from": b["score"], "score_to": s["score"],
                       "category_from": b["category"], "category_to": s["category"],
-                      "rank_from": b["rank"], "rank_to": s["rank"], "component_changes": comps, "why_it_changed": why})
+                      "rank_from": b["rank"], "rank_to": s["rank"], "component_changes": comps,
+                      "why_it_changed": [f["reason"] for f in why], "reasons": why})
     return {"original": base, "scenario_result": scen, "changed_assumptions": changed, "plans": plans,
             "note": "What-if comparison on the same rules. Not a forecast."}
 
