@@ -207,12 +207,19 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         elif field["weather"].get("rain_7d") is not None:
             current_wet = min(0.9, 0.4 + field["weather"]["rain_7d"] / 100.0)
 
+        ndvi = field.get("ndvi") or {}
+        ndvi_val = float(ndvi.get("value")) if ndvi.get("value") is not None else None
+        clim_months = (field.get("climatology") or {}).get("months")
+
         hydrological_nowcast = timeseries_hybrid.predict_rootzone_recession(
             current_rootzone_wetness=current_wet,
             recent_weather=field["weather"],
+            climatology_monthly=clim_months,
             soil_texture=soil_texture,
             days_forward=28,
-            confidence_level=0.90
+            confidence_level=0.90,
+            current_ndvi=ndvi_val,
+            ndvi_series=ndvi.get("series") or [],
         )
         processing.append({
             "step": "hydrological_time_series_hybrid",

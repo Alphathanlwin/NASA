@@ -49,7 +49,7 @@
       "description": "Seasonal baseline deviations from quality-screened MODIS MOD13Q1 observations",
       "status": "blocked",
       "used_in_recommendations": false,
-      "reason": "MODIS NDVI series not yet retrieved (AppEEARS task in progress); anomaly evaluation requires the quality-screened NDVI series"
+      "reason": "MODIS NDVI retrieved and quality-screened (236 composites passing QA: 110 across F-01..F-06, 126 across 7 Paw San townships, 2025-09-30 to 2026-10-16). Vegetation-anomaly evaluation not yet run; status stays blocked until an evaluation runs and its gates are met."
     },
     {
       "id": "yield_feasibility",

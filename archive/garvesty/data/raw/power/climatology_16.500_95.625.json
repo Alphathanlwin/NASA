@@ -1,0 +1,175 @@
+{
+  "retrieved_utc": "2026-11-14T02:30:31Z",
+  "response": {
+    "type": "Feature",
+    "geometry": {
+      "type": "Point",
+      "coordinates": [
+        95.922,
+        16.725,
+        3.9
+      ]
+    },
+    "properties": {
+      "parameter": {
+        "ALLSKY_SFC_SW_DWN": {
+          "JAN": 18.4,
+          "FEB": 21.14,
+          "MAR": 22.8,
+          "APR": 23.63,
+          "MAY": 17.79,
+          "JUN": 14.03,
+          "JUL": 13.43,
+          "AUG": 12.97,
+          "SEP": 14.91,
+          "OCT": 16.98,
+          "NOV": 18.14,
+          "DEC": 17.52,
+          "ANN": 17.62
+        },
+        "PRECTOTCORR": {
+          "JAN": 0.26,
+          "FEB": 0.06,
+          "MAR": 0.46,
+          "APR": 0.63,
+          "MAY": 2.61,
+          "JUN": 5.97,
+          "JUL": 7.18,
+          "AUG": 5.81,
+          "SEP": 3.83,
+          "OCT": 2.68,
+          "NOV": 0.59,
+          "DEC": 0.18,
+          "ANN": 2.54
+        },
+        "RH2M": {
+          "JAN": 57.42,
+          "FEB": 49.71,
+          "MAR": 51.38,
+          "APR": 52.91,
+          "MAY": 66.19,
+          "JUN": 77.94,
+          "JUL": 81.74,
+          "AUG": 83.49,
+          "SEP": 82.65,
+          "OCT": 79.05,
+          "NOV": 72.07,
+          "DEC": 64.42,
+          "ANN": 68.35
+        },
+        "T2M": {
+          "JAN": 25.77,
+          "FEB": 27.66,
+          "MAR": 30.02,
+          "APR": 32.25,
+          "MAY": 30.78,
+          "JUN": 28.72,
+          "JUL": 27.86,
+          "AUG": 27.51,
+          "SEP": 27.62,
+          "OCT": 27.95,
+          "NOV": 27.36,
+          "DEC": 25.87,
+          "ANN": 28.28
+        },
+        "T2M_MAX": {
+          "JAN": 37.81,
+          "FEB": 40.41,
+          "MAR": 41.52,
+          "APR": 43.6,
+          "MAY": 43.35,
+          "JUN": 37.53,
+          "JUL": 38.16,
+          "AUG": 36.95,
+          "SEP": 39.05,
+          "OCT": 39.09,
+          "NOV": 39.07,
+          "DEC": 37.95,
+          "ANN": 43.6
+        },
+        "T2M_MIN": {
+          "JAN": 13.75,
+          "FEB": 15.54,
+          "MAR": 17.07,
+          "APR": 22.04,
+          "MAY": 23.43,
+          "JUN": 23.84,
+          "JUL": 23.56,
+          "AUG": 23.48,
+          "SEP": 22.83,
+          "OCT": 21.82,
+          "NOV": 17.57,
+          "DEC": 13.62,
+          "ANN": 13.62
+        },
+        "WS2M": {
+          "JAN": 1.84,
+          "FEB": 2.0,
+          "MAR": 2.24,
+          "APR": 2.51,
+          "MAY": 2.92,
+          "JUN": 3.52,
+          "JUL": 3.55,
+          "AUG": 3.22,
+          "SEP": 2.41,
+          "OCT": 1.8,
+          "NOV": 1.83,
+          "DEC": 1.91,
+          "ANN": 2.48
+        }
+      }
+    },
+    "header": {
+      "title": "NASA/POWER Source Native Resolution Climatology Climatologies",
+      "api": {
+        "version": "v2.10.1",
+        "name": "POWER Climatology API"
+      },
+      "sources": [
+        "SYN1DEG",
+        "MERRA2",
+        "POWER"
+      ],
+      "fill_value": -999.0,
+      "time_standard": "LST",
+      "range": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)"
+    },
+    "messages": [
+      "The requested parameters are retrieved from a pre-computed climatological period (January 2001 - December 2025)"
+    ],
+    "parameters": {
+      "ALLSKY_SFC_SW_DWN": {
+        "units": "MJ/m^2/day",
+        "longname": "All Sky Surface Shortwave Downward Irradiance"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "RH2M": {
+        "units": "%",
+        "longname": "Relative Humidity at 2 Meters"
+      },
+      "T2M": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters"
+      },
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "times": {
+      "data": 0.233,
+      "process": 0.04
+    }
+  }
+}

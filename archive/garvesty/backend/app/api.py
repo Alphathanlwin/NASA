@@ -1,4 +1,6 @@
 import copy
+import json
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -139,16 +141,22 @@ def hybrid_nowcast(field_id: str = "F-01", days_forward: int = Query(28, ge=7, l
     wetness = rec.get("wetness") or {}
     weather = rec.get("weather") or {}
     soil = rec.get("soil") or {}
+    ndvi = rec.get("ndvi") or {}
     
     current_wet = float(wetness.get("gwetroot", 0.70))
     texture = str(soil.get("texture", "clay")).lower()
+    ndvi_val = float(ndvi.get("value")) if ndvi.get("value") is not None else None
+    clim_months = (rec.get("climatology") or {}).get("months")
     
     return timeseries_hybrid.predict_rootzone_recession(
         current_rootzone_wetness=current_wet,
         recent_weather=weather,
+        climatology_monthly=clim_months,
         soil_texture=texture,
         days_forward=days_forward,
-        confidence_level=0.90
+        confidence_level=0.90,
+        current_ndvi=ndvi_val,
+        ndvi_series=ndvi.get("series") or [],
     )
 
 
@@ -171,4 +179,27 @@ def post_field_iot(field_id: str, packet: iot.IoTTelemetryPacket):
     if packet.field_id != field_id:
         raise HTTPException(422, f"Payload field_id '{packet.field_id}' does not match URL field_id '{field_id}'")
     return iot.record_telemetry(packet)
+
+
+@router.get("/regional/pawsan-coverage")
+def get_pawsan_coverage():
+    clean_dir = Path(__file__).resolve().parents[2] / "data" / "clean"
+    ndvi_path = clean_dir / "ndvi.json"
+    smap_path = clean_dir / "smap.json"
+
+    ndvi_data = json.loads(ndvi_path.read_text(encoding="utf-8")) if ndvi_path.exists() else {}
+    smap_data = json.loads(smap_path.read_text(encoding="utf-8")) if smap_path.exists() else {}
+
+    pawsan_townships = [t for t in ndvi_data.keys() if not t.startswith("F-")]
+    return {
+        "dataset": "pawsan-ayeyarwady",
+        "task_id": "14cb26b2-28d6-4415-b328-38c29df7865e",
+        "spatial_scope": "Ayeyarwady Delta (7 Townships)",
+        "modis_townships": pawsan_townships,
+        "smap_townships_passing": [t for t in smap_data.keys() if not t.startswith("F-")],
+        "smap_townships_zero_passing": [t for t in pawsan_townships if t not in smap_data],
+        "phenology_verdict": "Single monsoon rice cycle (sown Jun-Jul, flower Oct-Nov, harvest Dec-Jan). Severe dry-season soil moisture floor (0.02-0.09 VWC) Feb-Apr dictates dry-season pulse rotation.",
+        "ndvi_series": ndvi_data,
+        "smap_series": smap_data,
+    }
 

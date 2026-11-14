@@ -1,0 +1,126 @@
+{
+  "nodes": [
+    {
+      "id": "hub-center",
+      "type": "text",
+      "text": "# 🧠 Garvesty Neural Working Brain\n**Physics-Informed Neural-Symbolic Agricultural Decision System**\n- Differentiable FAO-56 Penman-Monteith Layer\n- Mass-Conserving Soil Water Bucket Cell\n- Residual PINN with Non-Crossing Quantile Heads\n- Split Conformal Distribution-Free Uncertainty Calibrator\n- Deterministic Agronomic Symbolic Rules 1–9",
+      "x": 300,
+      "y": 150,
+      "width": 480,
+      "height": 260,
+      "color": "6"
+    },
+    {
+      "id": "data-power",
+      "type": "text",
+      "text": "### ☀️ NASA POWER\n- T2M, T2M_MAX, T2M_MIN\n- Daily Precipitation (PRECTOTCORR)\n- Solar Radiation (ALLSKY_SFC_SW_DWN)\n- GDD10 & Climatology Norms",
+      "x": -260,
+      "y": -120,
+      "width": 320,
+      "height": 180,
+      "color": "4"
+    },
+    {
+      "id": "data-smap",
+      "type": "text",
+      "text": "### 🛰️ NASA SMAP (SPL3SMP_E)\n- L3 9km Enhanced Microwave Radiometry\n- AM/PM Soil Moisture Retrievals\n- QA Quality Screening (Flags 0, 8)\n- 114 Ayeyarwady Passing Field Days",
+      "x": -260,
+      "y": 100,
+      "width": 320,
+      "height": 180,
+      "color": "5"
+    },
+    {
+      "id": "data-modis",
+      "type": "text",
+      "text": "### 🌿 NASA MODIS (MOD13Q1)\n- 250m 16-Day Vegetation Indices\n- NDVI & EVI Phenology Monitoring\n- Pixel Reliability Cloud Masking\n- 126 Ayeyarwady Clean Composites",
+      "x": -260,
+      "y": 320,
+      "width": 320,
+      "height": 180,
+      "color": "4"
+    },
+    {
+      "id": "data-soilgrids",
+      "type": "text",
+      "text": "### 🌍 ISRIC SoilGrids\n- 250m Edaphic Soil Textures\n- Clay %, Sand %, Silt %, pH, SOC\n- Available Water Capacity (AWC)",
+      "x": -260,
+      "y": 540,
+      "width": 320,
+      "height": 160,
+      "color": "3"
+    },
+    {
+      "id": "data-iot",
+      "type": "text",
+      "text": "### 📡 In-Situ IoT Soil Probes\n- LoRaWAN Telemetry (GW-TW01)\n- 10cm & 40cm Volumetric Water Content\n- Soil EC Salinity Intrusion Sensing",
+      "x": -260,
+      "y": 740,
+      "width": 320,
+      "height": 160,
+      "color": "2"
+    },
+    {
+      "id": "rule-engine",
+      "type": "text",
+      "text": "### ⚖️ Symbolic Rule Engine\n- **Rules 1–8**: Legume credit, pest cycle breaks, salinity tolerance, water demand constraints.\n- **Rule 9**: Real-time input shock adaptation (fertilizer cost spikes, pesticide stockouts, cash liquidity crunches).",
+      "x": 300,
+      "y": 480,
+      "width": 480,
+      "height": 220,
+      "color": "1"
+    },
+    {
+      "id": "target-1",
+      "type": "text",
+      "text": "### 🔵 2754: Root-Zone Water Balance & 28-Day Trajectory\n- **NSE:** 0.6731 (+37.6% over pure physics)\n- **Day 28 MAE:** 0.0834 (beats persistence by 28.8%)\n- **Unphysical Violations:** 0.38%\n- **Outputs:** Critical desaturation day & conformal bounds [q05, q95].",
+      "x": 980,
+      "y": -80,
+      "width": 380,
+      "height": 200,
+      "color": "5"
+    },
+    {
+      "id": "target-2",
+      "type": "text",
+      "text": "### 🟠 1681: Ranked Agronomic Crop Rotation\n- Multi-criteria decision matrix (F4 Comparison)\n- Legume nitrogen credit (+35 kg N/ha)\n- Post-monsoon pulse sowing window optimization\n- Preserves farmer's existing rotation transparently.",
+      "x": 980,
+      "y": 160,
+      "width": 380,
+      "height": 190,
+      "color": "3"
+    },
+    {
+      "id": "target-3",
+      "type": "text",
+      "text": "### 🔷 2599: Climate Resilience & Heat Stress Alerting\n- Extreme temperature anomaly detection (>35°C)\n- 30-day precipitation deficit tracking vs 30-year normal\n- Salinity intrusion early warning (>2.0 dS/m).",
+      "x": 980,
+      "y": 390,
+      "width": 380,
+      "height": 180,
+      "color": "5"
+    },
+    {
+      "id": "target-4",
+      "type": "text",
+      "text": "### 🔴 7749: Input Shock Adaptation & Economic Shield\n- Dynamic fertilizer substitution (bio-slurry, compost)\n- IPM biological pest suppression\n- Cash-constrained low-capital rotation recommendations\n- Sensitivity frontier curves under +50% price shocks.",
+      "x": 980,
+      "y": 610,
+      "width": 380,
+      "height": 200,
+      "color": "1"
+    }
+  ],
+  "edges": [
+    { "id": "e-pow-hub", "fromNode": "data-power", "fromSide": "right", "toNode": "hub-center", "toSide": "left" },
+    { "id": "e-smap-hub", "fromNode": "data-smap", "fromSide": "right", "toNode": "hub-center", "toSide": "left" },
+    { "id": "e-mod-hub", "fromNode": "data-modis", "fromSide": "right", "toNode": "hub-center", "toSide": "left" },
+    { "id": "e-soil-hub", "fromNode": "data-soilgrids", "fromSide": "right", "toNode": "hub-center", "toSide": "left" },
+    { "id": "e-iot-hub", "fromNode": "data-iot", "fromSide": "right", "toNode": "hub-center", "toSide": "left" },
+    { "id": "e-hub-rule", "fromNode": "hub-center", "fromSide": "bottom", "toNode": "rule-engine", "toSide": "top" },
+    { "id": "e-hub-t1", "fromNode": "hub-center", "fromSide": "right", "toNode": "target-1", "toSide": "left" },
+    { "id": "e-rule-t2", "fromNode": "rule-engine", "fromSide": "right", "toNode": "target-2", "toSide": "left" },
+    { "id": "e-hub-t3", "fromNode": "hub-center", "fromSide": "right", "toNode": "target-3", "toSide": "left" },
+    { "id": "e-rule-t4", "fromNode": "rule-engine", "fromSide": "right", "toNode": "target-4", "toSide": "left" }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "task_id": "45fef4f1-95d6-48bc-b53c-5ac27e4f5f0f",
+  "submitted_utc": "2026-11-14T07:43:01Z",
+  "request": {
+    "task_type": "point",
+    "task_name": "fieldshift-demo-fields",
+    "params": {
+      "dates": [
+        {
+          "startDate": "07-17-2026",
+          "endDate": "11-14-2026"
+        }
+      ],
+      "layers": [
+        {
+          "product": "SPL3SMP_E.006",
+          "layer": "Soil_Moisture_Retrieval_Data_AM_retrieval_qual_flag"
+        },
+        {
+          "product": "SPL3SMP_E.006",
+          "layer": "Soil_Moisture_Retrieval_Data_AM_soil_moisture"
+        },
+        {
+          "product": "SPL3SMP_E.006",
+          "layer": "Soil_Moisture_Retrieval_Data_PM_retrieval_qual_flag_pm"
+        },
+        {
+          "product": "SPL3SMP_E.006",
+          "layer": "Soil_Moisture_Retrieval_Data_PM_soil_moisture_pm"
+        }
+      ],
+      "coordinates": [
+        {
+          "id": "F-01",
+          "category": "field",
+          "latitude": 16.62,
+          "longitude": 94.96
+        },
+        {
+          "id": "F-02",
+          "category": "field",
+          "latitude": 16.8,
+          "longitude": 94.78
+        },
+        {
+          "id": "F-03",
+          "category": "field",
+          "latitude": 16.31,
+          "longitude": 95.42
+        },
+        {
+          "id": "F-04",
+          "category": "field",
+          "latitude": 16.7352,
+          "longitude": 95.9548
+        }
+      ]
+    }
+  }
+}

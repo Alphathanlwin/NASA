@@ -34,4 +34,6 @@ def utc_now() -> str:
 
 def write_json(path: Path, obj) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        path.unlink()
     path.write_text(json.dumps(obj, indent=2), encoding="utf-8")

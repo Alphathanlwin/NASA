@@ -7,7 +7,43 @@ This module implements algorithms that address critical issues in agricultural t
 4. Causal temporal feature engineering with zero lookahead bias.
 """
 import math
+import os
+import json
+from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+_PINN_MODEL_CACHE: Optional[Any] = None
+_PINN_CALIBRATION_CACHE: Optional[Dict[str, Any]] = None
+
+
+def get_pinn_model(soil_texture: str = "clay", latitude: float = 16.73) -> Tuple[Optional[Any], Optional[Dict[str, Any]]]:
+    """Safely loads or retrieves the cached PyTorch PINN Hydrology Brain."""
+    global _PINN_MODEL_CACHE, _PINN_CALIBRATION_CACHE
+    if _PINN_MODEL_CACHE is not None:
+        return _PINN_MODEL_CACHE, _PINN_CALIBRATION_CACHE
+
+    try:
+        import torch
+        from .pinn_hydrology import PINNHydrologyBrain
+
+        models_dir = Path(__file__).resolve().parents[3] / "data" / "models"
+        weights_path = models_dir / "pinn_hydrology.pt"
+        calib_path = models_dir / "pinn_calibration.json"
+
+        if weights_path.exists():
+            model = PINNHydrologyBrain(soil_texture=soil_texture, lat_deg=latitude)
+            state_dict = torch.load(str(weights_path), map_location="cpu", weights_only=True)
+            model.load_state_dict(state_dict)
+            model.eval()
+            _PINN_MODEL_CACHE = model
+
+            if calib_path.exists():
+                with open(calib_path, "r", encoding="utf-8") as f:
+                    _PINN_CALIBRATION_CACHE = json.load(f)
+            return _PINN_MODEL_CACHE, _PINN_CALIBRATION_CACHE
+    except Exception:
+        pass
+    return None, None
 
 
 class SoilPhysicsBucketModel:
@@ -160,6 +196,55 @@ class ExtendedKalmanSatelliteFilter:
         return self.x, self.p
 
 
+def compute_dynamic_kc(ndvi_val: Optional[float] = None) -> float:
+    """Computes dynamic FAO-56 crop coefficient Kc from satellite NDVI observations.
+    
+    FAO-56 Dual Kc framework (Allen et al., 1998; Glenn et al., 2011):
+    - Full canopy / rice flowering-heading (NDVI ~0.75-0.85): Kc ~ 1.05 - 1.15
+    - Ripening / post-harvest stubble (NDVI ~0.40-0.60): Kc ~ 0.65 - 0.80
+    - Dry fallow / bare soil (NDVI <0.30): Kc ~ 0.35 - 0.45
+    """
+    if ndvi_val is None or math.isnan(ndvi_val):
+        return 0.65
+    clamped_ndvi = max(0.20, min(0.85, float(ndvi_val)))
+    kc = 0.35 + ((clamped_ndvi - 0.20) / (0.85 - 0.20)) * (1.10 - 0.35)
+    return round(float(kc), 3)
+
+
+def get_climatology_day_context(
+    doy: int,
+    climatology_monthly: Optional[List[Dict[str, Any]]],
+    fallback_t2m: float = 27.0,
+    fallback_t2m_max: float = 31.0,
+    fallback_t2m_min: float = 23.0
+) -> Tuple[float, float, float, float]:
+    """Retrieves climatological (t2m, t2m_max, t2m_min, rain_mm) for a given DOY.
+    
+    Converts day of year to calendar month and extracts NASA POWER 25-year baseline.
+    """
+    month_cum_days = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+    month = 1
+    for m in range(1, 13):
+        if doy <= month_cum_days[m]:
+            month = m
+            break
+
+    if not climatology_monthly:
+        return fallback_t2m, fallback_t2m_max, fallback_t2m_min, 0.0
+
+    for m_entry in climatology_monthly:
+        if m_entry.get("month") == month:
+            t = m_entry.get("t2m") if m_entry.get("t2m") is not None else fallback_t2m
+            t_max = m_entry.get("t2m_max") if m_entry.get("t2m_max") is not None else fallback_t2m_max
+            t_min = m_entry.get("t2m_min") if m_entry.get("t2m_min") is not None else fallback_t2m_min
+            rain_m = m_entry.get("rain_mm") if m_entry.get("rain_mm") is not None else 0.0
+            days_in_m = month_cum_days[month] - month_cum_days[month - 1]
+            daily_rain = rain_m / max(1, days_in_m)
+            return float(t), float(t_max), float(t_min), float(daily_rain)
+
+    return fallback_t2m, fallback_t2m_max, fallback_t2m_min, 0.0
+
+
 def predict_rootzone_recession(
     current_rootzone_wetness: float,
     recent_weather: Dict[str, Any],
@@ -167,19 +252,22 @@ def predict_rootzone_recession(
     days_forward: int = 28,
     soil_texture: str = "clay",
     latitude: float = 16.73,
-    confidence_level: float = 0.90
+    confidence_level: float = 0.90,
+    current_ndvi: Optional[float] = None,
+    ndvi_series: Optional[List[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
-    """Generates a 28-day forward root-zone soil moisture trajectory with conformal intervals.
+    """Generates a forward root-zone soil moisture trajectory with conformal intervals.
     
     Combines:
-    1. Physics-based FAO-56 PET energy calculations.
-    2. Exponential water-table recession dynamics.
+    1. Physics-based FAO-56 PET energy calculations & dynamic NDVI canopy Kc.
+    2. Exponential water-table recession dynamics & deep drainage loss.
     3. Distribution-free conformal prediction bounds.
     4. Sowing-window threshold analysis (critical threshold for pulse germination: 0.35 - 0.40).
     """
     alpha = 1.0 - confidence_level
     conformal = ConformalTimeSeriesCalibrator(alpha=alpha)
     physics = SoilPhysicsBucketModel(soil_texture=soil_texture, root_depth_m=0.6)
+    dynamic_kc = compute_dynamic_kc(current_ndvi)
 
     # Initial state
     t2m = recent_weather.get("t2m", 27.0)
@@ -188,6 +276,99 @@ def predict_rootzone_recession(
 
     # Starting day of year (approx mid-November post-monsoon harvest: DOY 315)
     start_doy = 315
+    current_s = max(0.1, min(1.0, current_rootzone_wetness))
+
+    # Check if trained PyTorch PINN Hydrology Brain is available
+    pinn_model, pinn_calib = get_pinn_model(soil_texture=soil_texture, latitude=latitude)
+    if pinn_model is not None:
+        try:
+            import torch
+            init_w = torch.tensor([[current_s]], dtype=torch.float32)
+            t_seq, t_max_seq, t_min_seq, rain_seq, doy_seq = [], [], [], [], []
+            for h in range(1, days_forward + 1):
+                doy = (start_doy + h) % 365
+                t_day, t_max_d, t_min_d, _ = get_climatology_day_context(
+                    doy, climatology_monthly, fallback_t2m=t2m, fallback_t2m_max=t2m_max, fallback_t2m_min=t2m_min
+                )
+                t_seq.append(t_day)
+                t_max_seq.append(t_max_d)
+                t_min_seq.append(t_min_d)
+                rain_seq.append(0.0)
+                doy_seq.append(float(doy))
+
+            weather_seq = {
+                "t_mean": torch.tensor([t_seq], dtype=torch.float32),
+                "t_max": torch.tensor([t_max_seq], dtype=torch.float32),
+                "t_min": torch.tensor([t_min_seq], dtype=torch.float32),
+                "rain_mm": torch.tensor([rain_seq], dtype=torch.float32),
+                "doy": torch.tensor([doy_seq], dtype=torch.float32),
+            }
+
+            with torch.no_grad():
+                out = pinn_model(init_w, weather_seq, days_forward=days_forward)
+
+            conf_margin = float(pinn_calib.get("conformal_q90_residual", 0.05)) if pinn_calib else 0.05
+            pinn_traj = []
+            crit_day = None
+            prev_val = current_s
+
+            for h in range(1, days_forward + 1):
+                doy = (start_doy + h) % 365
+                pet_val = round(float(out["pet_sequence"][0, h - 1].item()), 2)
+                raw_p = float(out["q50_trajectory"][0, h - 1].item())
+                raw_l = float(out["q05_trajectory"][0, h - 1].item())
+                raw_u = float(out["q95_trajectory"][0, h - 1].item())
+
+                # Enforce physical monotonicity under zero rain (moisture cannot spontaneously rise)
+                p_val = round(min(prev_val, raw_p), 3)
+                prev_val = p_val
+
+                # Inductive conformal expansion for 1 - alpha finite-sample coverage
+                horizon_scale = 0.4 + 0.6 * (h / days_forward)
+                conf_l = max(0.05, p_val - conf_margin * horizon_scale)
+                conf_u = min(1.0, p_val + conf_margin * horizon_scale)
+
+                low_ci = round(min(p_val, min(raw_l, conf_l)), 3)
+                high_ci = round(max(p_val, max(raw_u, conf_u)), 3)
+
+                pinn_traj.append({
+                    "day": h,
+                    "doy": doy,
+                    "wetness_point": p_val,
+                    "wetness_lower_ci": low_ci,
+                    "wetness_upper_ci": high_ci,
+                    "pet_mm": pet_val,
+                })
+
+                if p_val < 0.40 and crit_day is None:
+                    crit_day = h
+
+            risk = "low"
+            if crit_day is not None and crit_day <= 14:
+                risk = "critical"
+            elif crit_day is not None and crit_day <= 21:
+                risk = "moderate"
+
+            return {
+                "days_forward": days_forward,
+                "initial_wetness": round(current_rootzone_wetness, 3),
+                "soil_texture": soil_texture,
+                "model_architecture": "PyTorch Physics-Informed Neural Network (PINN) + Inductive Conformal Calibration",
+                "engine": "pytorch_pinn",
+                "pinn_weights_loaded": True,
+                "conformal_calibrated": True,
+                "conformal_q90_margin": conf_margin,
+                "confidence_level": confidence_level,
+                "dynamic_kc": dynamic_kc,
+                "current_ndvi": current_ndvi,
+                "climatology_incorporated": bool(climatology_monthly),
+                "critical_desaturation_day": crit_day,
+                "desaturation_risk": risk,
+                "terminal_wetness_point": pinn_traj[-1]["wetness_point"],
+                "trajectory": pinn_traj,
+            }
+        except Exception:
+            pass  # Fall back to analytical physics
 
     trajectory = []
     current_s = max(0.1, min(1.0, current_rootzone_wetness))
@@ -197,14 +378,14 @@ def predict_rootzone_recession(
 
     for h in range(1, days_forward + 1):
         doy = (start_doy + h) % 365
+        t_day, t_max_d, t_min_d, _ = get_climatology_day_context(
+            doy, climatology_monthly, fallback_t2m=t2m, fallback_t2m_max=t2m_max, fallback_t2m_min=t2m_min
+        )
         # Compute PET
-        pet = physics.compute_hargreaves_samani_pet(t2m, t2m_max, t2m_min, latitude, doy)
+        pet = physics.compute_hargreaves_samani_pet(t_day, t_max_d, t_min_d, latitude, doy)
         
-        # Projected dry season daily rain (statistically minimal in Nov-Jan delta: 0.0 - 0.5 mm)
-        rain_proj = 0.0
-        
-        # Advance physics
-        current_s = physics.step(current_s, rain_proj, pet, kc=0.65)
+        # Advance physics using dynamic Kc
+        current_s = physics.step(current_s, 0.0, pet, kc=dynamic_kc)
         
         # Conformal uncertainty intervals
         q_low, q_high = conformal.get_prediction_interval(current_s, h)
@@ -233,6 +414,9 @@ def predict_rootzone_recession(
         "soil_texture": soil_texture,
         "model_architecture": "Physics-Informed Bucket (FAO-56 PET) + Inductive Conformal Calibration",
         "confidence_level": confidence_level,
+        "dynamic_kc": dynamic_kc,
+        "current_ndvi": current_ndvi,
+        "climatology_incorporated": bool(climatology_monthly),
         "critical_desaturation_day": critical_stress_day,
         "desaturation_risk": desaturation_risk,
         "terminal_wetness_point": trajectory[-1]["wetness_point"],

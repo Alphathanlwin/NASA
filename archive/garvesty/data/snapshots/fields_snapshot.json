@@ -1,0 +1,3653 @@
+{
+  "generated_utc": "2026-11-14T08:26:18Z",
+  "transform_version": "power-calendar-v1",
+  "fields": {
+    "F-01": {
+      "id": "F-01",
+      "name": "Twante North Block",
+      "centroid": [
+        16.7352,
+        95.9548
+      ],
+      "area_ha": 15.6,
+      "crop_history": [
+        "monsoon_rice",
+        "black_gram"
+      ],
+      "irrigated": false,
+      "status": "DEMO",
+      "power_cell": "16.500_96.250",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 47.9,
+        "rain_30d": 144.0,
+        "t2m_30d_mean": 28.6,
+        "t2m": 26.3,
+        "t2m_max": 27.4,
+        "t2m_min": 25.3,
+        "rh2m": 80.0,
+        "ws2m": 4.0,
+        "solar": null,
+        "rain_1d": 3.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.49,
+          "t2m_max": 36.24,
+          "t2m_min": 19.3,
+          "rh2m": 73.08,
+          "ws2m": 2.44,
+          "solar": 18.14,
+          "rain_mm": 26.1
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.71,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.01
+      },
+      "soil": {
+        "cec_cmol_per_kg": 25.3,
+        "clay_pct": 33.5,
+        "ph": 6.5,
+        "sand_pct": 28.6,
+        "silt_pct": 37.9,
+        "soc_g_per_kg": 36.3
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.795,
+        "series": [
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.795,
+            "evi": 0.48,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.756,
+            "evi": 0.463,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.763,
+            "evi": 0.471,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.7,
+            "evi": 0.382,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.691,
+            "evi": 0.399,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.654,
+            "evi": 0.337,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.708,
+            "evi": 0.351,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.763,
+            "evi": 0.486,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.647,
+            "evi": 0.413,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.743,
+            "evi": 0.48,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.646,
+            "evi": 0.388,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.613,
+            "evi": 0.354,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.673,
+            "evi": 0.533,
+            "marginal": false
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.822,
+            "evi": 0.547,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.799,
+            "evi": 0.472,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.803,
+            "evi": 0.437,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.805,
+            "evi": 0.535,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.795,
+            "evi": 0.527,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.008
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "wet_spell",
+            "start": "2026-05-25",
+            "end": "2026-10-01",
+            "days": 130,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-02-18",
+            "change": -0.116,
+            "from": 0.763,
+            "to": 0.647
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-02-08",
+            "end": "2026-05-07",
+            "days": 89,
+            "min_gwetroot": 0.45
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-05-26",
+            "end": "2025-11-25",
+            "days": 184,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-05",
+            "end": "2025-04-10",
+            "days": 37,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-02-05",
+            "end": "2025-02-24",
+            "days": 20,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "wet_spell",
+            "start": "2024-11-13",
+            "end": "2024-11-20",
+            "days": 8,
+            "max_gwetroot": 0.94
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.71,
+          "gwettop": 0.75,
+          "rain_7d": 47.9,
+          "rain_30d": 144.0,
+          "rain_30d_vs_climatology_mm": 117.9,
+          "t2m_30d_mean": 28.6,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.49,
+            "t2m_max": 34.84,
+            "t2m_min": 16.08,
+            "rh2m": 62.7,
+            "ws2m": 2.3,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.18,
+            "t2m_max": 37.72,
+            "t2m_min": 17.12,
+            "rh2m": 56.03,
+            "ws2m": 2.63,
+            "solar": 21.14,
+            "rain_mm": 1.4
+          },
+          {
+            "month": 3,
+            "t2m": 29.33,
+            "t2m_max": 38.36,
+            "t2m_min": 19.13,
+            "rh2m": 56.75,
+            "ws2m": 3.06,
+            "solar": 22.8,
+            "rain_mm": 16.4
+          },
+          {
+            "month": 4,
+            "t2m": 31.24,
+            "t2m_max": 40.59,
+            "t2m_min": 22.99,
+            "rh2m": 58.92,
+            "ws2m": 3.26,
+            "solar": 23.63,
+            "rain_mm": 29.4
+          },
+          {
+            "month": 5,
+            "t2m": 30.0,
+            "t2m_max": 40.41,
+            "t2m_min": 24.21,
+            "rh2m": 72.26,
+            "ws2m": 3.54,
+            "solar": 17.79,
+            "rain_mm": 185.4
+          },
+          {
+            "month": 6,
+            "t2m": 28.27,
+            "t2m_max": 34.59,
+            "t2m_min": 24.71,
+            "rh2m": 82.53,
+            "ws2m": 4.08,
+            "solar": 14.03,
+            "rain_mm": 333.3
+          },
+          {
+            "month": 7,
+            "t2m": 27.55,
+            "t2m_max": 35.41,
+            "t2m_min": 24.4,
+            "rh2m": 85.09,
+            "ws2m": 4.09,
+            "solar": 13.43,
+            "rain_mm": 428.7
+          },
+          {
+            "month": 8,
+            "t2m": 27.36,
+            "t2m_max": 34.06,
+            "t2m_min": 24.15,
+            "rh2m": 85.64,
+            "ws2m": 3.87,
+            "solar": 12.97,
+            "rain_mm": 366.4
+          },
+          {
+            "month": 9,
+            "t2m": 27.44,
+            "t2m_max": 35.72,
+            "t2m_min": 24.0,
+            "rh2m": 84.87,
+            "ws2m": 3.05,
+            "solar": 14.91,
+            "rain_mm": 236.4
+          },
+          {
+            "month": 10,
+            "t2m": 27.96,
+            "t2m_max": 35.79,
+            "t2m_min": 23.06,
+            "rh2m": 79.86,
+            "ws2m": 2.3,
+            "solar": 16.98,
+            "rain_mm": 151.6
+          },
+          {
+            "month": 11,
+            "t2m": 27.49,
+            "t2m_max": 36.24,
+            "t2m_min": 19.3,
+            "rh2m": 73.08,
+            "ws2m": 2.44,
+            "solar": 18.14,
+            "rain_mm": 26.1
+          },
+          {
+            "month": 12,
+            "t2m": 25.75,
+            "t2m_max": 34.73,
+            "t2m_min": 16.63,
+            "rh2m": 68.1,
+            "ws2m": 2.53,
+            "solar": 17.52,
+            "rain_mm": 6.8
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 1702.0,
+            "t2m": 28.1,
+            "t2m_max": 30.1
+          },
+          "winter": {
+            "rain_mm": 42.0,
+            "t2m": 26.5,
+            "t2m_max": 30.4
+          },
+          "summer": {
+            "rain_mm": 46.0,
+            "t2m": 30.3,
+            "t2m_max": 35.8
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:25Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:30:42Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    },
+    "F-02": {
+      "id": "F-02",
+      "name": "Canal Side Block",
+      "centroid": [
+        16.712,
+        95.988
+      ],
+      "area_ha": 15.6,
+      "crop_history": [
+        "monsoon_rice",
+        "summer_rice"
+      ],
+      "irrigated": true,
+      "status": "DEMO",
+      "power_cell": "16.500_96.250",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 47.9,
+        "rain_30d": 144.0,
+        "t2m_30d_mean": 28.6,
+        "t2m": 26.3,
+        "t2m_max": 27.4,
+        "t2m_min": 25.3,
+        "rh2m": 80.0,
+        "ws2m": 4.0,
+        "solar": null,
+        "rain_1d": 3.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.49,
+          "t2m_max": 36.24,
+          "t2m_min": 19.3,
+          "rh2m": 73.08,
+          "ws2m": 2.44,
+          "solar": 18.14,
+          "rain_mm": 26.1
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.71,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.01
+      },
+      "soil": {
+        "cec_cmol_per_kg": 27.1,
+        "clay_pct": 33.8,
+        "ph": 6.3,
+        "sand_pct": 29.5,
+        "silt_pct": 36.6,
+        "soc_g_per_kg": 34.5
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.599,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.624,
+            "evi": 0.168,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.547,
+            "evi": 0.263,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.505,
+            "evi": 0.261,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.353,
+            "evi": 0.167,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.468,
+            "evi": 0.233,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.647,
+            "evi": 0.291,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.592,
+            "evi": 0.338,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.682,
+            "evi": 0.423,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.669,
+            "evi": 0.395,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.594,
+            "evi": 0.38,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.75,
+            "evi": 0.51,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.685,
+            "evi": 0.416,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.563,
+            "evi": 0.333,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.543,
+            "evi": 0.395,
+            "marginal": false
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.676,
+            "evi": 0.3,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.64,
+            "evi": 0.343,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.18,
+            "evi": 0.072,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.602,
+            "evi": 0.301,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.599,
+            "evi": 0.327,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.419
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-08-29",
+            "change": -0.46,
+            "from": 0.64,
+            "to": 0.18
+          },
+          {
+            "type": "wet_spell",
+            "start": "2026-05-25",
+            "end": "2026-10-01",
+            "days": 130,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-04-07",
+            "change": -0.122,
+            "from": 0.685,
+            "to": 0.563
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-02-08",
+            "end": "2026-05-07",
+            "days": 89,
+            "min_gwetroot": 0.45
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2025-11-17",
+            "change": -0.152,
+            "from": 0.505,
+            "to": 0.353
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-05-26",
+            "end": "2025-11-25",
+            "days": 184,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-05",
+            "end": "2025-04-10",
+            "days": 37,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-02-05",
+            "end": "2025-02-24",
+            "days": 20,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "wet_spell",
+            "start": "2024-11-13",
+            "end": "2024-11-20",
+            "days": 8,
+            "max_gwetroot": 0.94
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.71,
+          "gwettop": 0.75,
+          "rain_7d": 47.9,
+          "rain_30d": 144.0,
+          "rain_30d_vs_climatology_mm": 117.9,
+          "t2m_30d_mean": 28.6,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.49,
+            "t2m_max": 34.84,
+            "t2m_min": 16.08,
+            "rh2m": 62.7,
+            "ws2m": 2.3,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.18,
+            "t2m_max": 37.72,
+            "t2m_min": 17.12,
+            "rh2m": 56.03,
+            "ws2m": 2.63,
+            "solar": 21.14,
+            "rain_mm": 1.4
+          },
+          {
+            "month": 3,
+            "t2m": 29.33,
+            "t2m_max": 38.36,
+            "t2m_min": 19.13,
+            "rh2m": 56.75,
+            "ws2m": 3.06,
+            "solar": 22.8,
+            "rain_mm": 16.4
+          },
+          {
+            "month": 4,
+            "t2m": 31.24,
+            "t2m_max": 40.59,
+            "t2m_min": 22.99,
+            "rh2m": 58.92,
+            "ws2m": 3.26,
+            "solar": 23.63,
+            "rain_mm": 29.4
+          },
+          {
+            "month": 5,
+            "t2m": 30.0,
+            "t2m_max": 40.41,
+            "t2m_min": 24.21,
+            "rh2m": 72.26,
+            "ws2m": 3.54,
+            "solar": 17.79,
+            "rain_mm": 185.4
+          },
+          {
+            "month": 6,
+            "t2m": 28.27,
+            "t2m_max": 34.59,
+            "t2m_min": 24.71,
+            "rh2m": 82.53,
+            "ws2m": 4.08,
+            "solar": 14.03,
+            "rain_mm": 333.3
+          },
+          {
+            "month": 7,
+            "t2m": 27.55,
+            "t2m_max": 35.41,
+            "t2m_min": 24.4,
+            "rh2m": 85.09,
+            "ws2m": 4.09,
+            "solar": 13.43,
+            "rain_mm": 428.7
+          },
+          {
+            "month": 8,
+            "t2m": 27.36,
+            "t2m_max": 34.06,
+            "t2m_min": 24.15,
+            "rh2m": 85.64,
+            "ws2m": 3.87,
+            "solar": 12.97,
+            "rain_mm": 366.4
+          },
+          {
+            "month": 9,
+            "t2m": 27.44,
+            "t2m_max": 35.72,
+            "t2m_min": 24.0,
+            "rh2m": 84.87,
+            "ws2m": 3.05,
+            "solar": 14.91,
+            "rain_mm": 236.4
+          },
+          {
+            "month": 10,
+            "t2m": 27.96,
+            "t2m_max": 35.79,
+            "t2m_min": 23.06,
+            "rh2m": 79.86,
+            "ws2m": 2.3,
+            "solar": 16.98,
+            "rain_mm": 151.6
+          },
+          {
+            "month": 11,
+            "t2m": 27.49,
+            "t2m_max": 36.24,
+            "t2m_min": 19.3,
+            "rh2m": 73.08,
+            "ws2m": 2.44,
+            "solar": 18.14,
+            "rain_mm": 26.1
+          },
+          {
+            "month": 12,
+            "t2m": 25.75,
+            "t2m_max": 34.73,
+            "t2m_min": 16.63,
+            "rh2m": 68.1,
+            "ws2m": 2.53,
+            "solar": 17.52,
+            "rain_mm": 6.8
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 1702.0,
+            "t2m": 28.1,
+            "t2m_max": 30.1
+          },
+          "winter": {
+            "rain_mm": 42.0,
+            "t2m": 26.5,
+            "t2m_max": 30.4
+          },
+          "summer": {
+            "rain_mm": 46.0,
+            "t2m": 30.3,
+            "t2m_max": 35.8
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:25Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:41:04Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    },
+    "F-03": {
+      "id": "F-03",
+      "name": "Kyaung Su Block",
+      "centroid": [
+        16.7015,
+        95.9402
+      ],
+      "area_ha": 16.0,
+      "crop_history": [
+        "monsoon_rice",
+        "fallow"
+      ],
+      "irrigated": false,
+      "status": "DEMO",
+      "power_cell": "16.500_96.250",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 47.9,
+        "rain_30d": 144.0,
+        "t2m_30d_mean": 28.6,
+        "t2m": 26.3,
+        "t2m_max": 27.4,
+        "t2m_min": 25.3,
+        "rh2m": 80.0,
+        "ws2m": 4.0,
+        "solar": null,
+        "rain_1d": 3.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.49,
+          "t2m_max": 36.24,
+          "t2m_min": 19.3,
+          "rh2m": 73.08,
+          "ws2m": 2.44,
+          "solar": 18.14,
+          "rain_mm": 26.1
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.71,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.01
+      },
+      "soil": {
+        "cec_cmol_per_kg": 25.3,
+        "clay_pct": 31.1,
+        "ph": 6.2,
+        "sand_pct": 28.5,
+        "silt_pct": 40.4,
+        "soc_g_per_kg": 34.9
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.734,
+        "series": [
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.701,
+            "evi": 0.405,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.772,
+            "evi": 0.422,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.776,
+            "evi": 0.47,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.761,
+            "evi": 0.45,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.671,
+            "evi": 0.354,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.681,
+            "evi": 0.374,
+            "marginal": true
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.628,
+            "evi": 0.324,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.658,
+            "evi": 0.364,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.605,
+            "evi": 0.304,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.627,
+            "evi": 0.341,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.567,
+            "evi": 0.4,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.556,
+            "evi": 0.318,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.568,
+            "evi": 0.329,
+            "marginal": true
+          },
+          {
+            "date": "2026-07-12",
+            "ndvi": 0.461,
+            "evi": 0.296,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.742,
+            "evi": 0.458,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.702,
+            "evi": 0.398,
+            "marginal": true
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.702,
+            "evi": 0.386,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.734,
+            "evi": 0.486,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.032
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-07-12",
+            "change": -0.107,
+            "from": 0.568,
+            "to": 0.461
+          },
+          {
+            "type": "wet_spell",
+            "start": "2026-05-25",
+            "end": "2026-10-01",
+            "days": 130,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-02-08",
+            "end": "2026-05-07",
+            "days": 89,
+            "min_gwetroot": 0.45
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-05-26",
+            "end": "2025-11-25",
+            "days": 184,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-05",
+            "end": "2025-04-10",
+            "days": 37,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-02-05",
+            "end": "2025-02-24",
+            "days": 20,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "wet_spell",
+            "start": "2024-11-13",
+            "end": "2024-11-20",
+            "days": 8,
+            "max_gwetroot": 0.94
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.71,
+          "gwettop": 0.75,
+          "rain_7d": 47.9,
+          "rain_30d": 144.0,
+          "rain_30d_vs_climatology_mm": 117.9,
+          "t2m_30d_mean": 28.6,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.49,
+            "t2m_max": 34.84,
+            "t2m_min": 16.08,
+            "rh2m": 62.7,
+            "ws2m": 2.3,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.18,
+            "t2m_max": 37.72,
+            "t2m_min": 17.12,
+            "rh2m": 56.03,
+            "ws2m": 2.63,
+            "solar": 21.14,
+            "rain_mm": 1.4
+          },
+          {
+            "month": 3,
+            "t2m": 29.33,
+            "t2m_max": 38.36,
+            "t2m_min": 19.13,
+            "rh2m": 56.75,
+            "ws2m": 3.06,
+            "solar": 22.8,
+            "rain_mm": 16.4
+          },
+          {
+            "month": 4,
+            "t2m": 31.24,
+            "t2m_max": 40.59,
+            "t2m_min": 22.99,
+            "rh2m": 58.92,
+            "ws2m": 3.26,
+            "solar": 23.63,
+            "rain_mm": 29.4
+          },
+          {
+            "month": 5,
+            "t2m": 30.0,
+            "t2m_max": 40.41,
+            "t2m_min": 24.21,
+            "rh2m": 72.26,
+            "ws2m": 3.54,
+            "solar": 17.79,
+            "rain_mm": 185.4
+          },
+          {
+            "month": 6,
+            "t2m": 28.27,
+            "t2m_max": 34.59,
+            "t2m_min": 24.71,
+            "rh2m": 82.53,
+            "ws2m": 4.08,
+            "solar": 14.03,
+            "rain_mm": 333.3
+          },
+          {
+            "month": 7,
+            "t2m": 27.55,
+            "t2m_max": 35.41,
+            "t2m_min": 24.4,
+            "rh2m": 85.09,
+            "ws2m": 4.09,
+            "solar": 13.43,
+            "rain_mm": 428.7
+          },
+          {
+            "month": 8,
+            "t2m": 27.36,
+            "t2m_max": 34.06,
+            "t2m_min": 24.15,
+            "rh2m": 85.64,
+            "ws2m": 3.87,
+            "solar": 12.97,
+            "rain_mm": 366.4
+          },
+          {
+            "month": 9,
+            "t2m": 27.44,
+            "t2m_max": 35.72,
+            "t2m_min": 24.0,
+            "rh2m": 84.87,
+            "ws2m": 3.05,
+            "solar": 14.91,
+            "rain_mm": 236.4
+          },
+          {
+            "month": 10,
+            "t2m": 27.96,
+            "t2m_max": 35.79,
+            "t2m_min": 23.06,
+            "rh2m": 79.86,
+            "ws2m": 2.3,
+            "solar": 16.98,
+            "rain_mm": 151.6
+          },
+          {
+            "month": 11,
+            "t2m": 27.49,
+            "t2m_max": 36.24,
+            "t2m_min": 19.3,
+            "rh2m": 73.08,
+            "ws2m": 2.44,
+            "solar": 18.14,
+            "rain_mm": 26.1
+          },
+          {
+            "month": 12,
+            "t2m": 25.75,
+            "t2m_max": 34.73,
+            "t2m_min": 16.63,
+            "rh2m": 68.1,
+            "ws2m": 2.53,
+            "solar": 17.52,
+            "rain_mm": 6.8
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 1702.0,
+            "t2m": 28.1,
+            "t2m_max": 30.1
+          },
+          "winter": {
+            "rain_mm": 42.0,
+            "t2m": 26.5,
+            "t2m_max": 30.4
+          },
+          "summer": {
+            "rain_mm": 46.0,
+            "t2m": 30.3,
+            "t2m_max": 35.8
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:25Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:32:39Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    },
+    "F-04": {
+      "id": "F-04",
+      "name": "Htan Pin Block",
+      "centroid": [
+        16.6893,
+        95.9715
+      ],
+      "area_ha": 15.4,
+      "crop_history": [
+        "monsoon_rice",
+        "green_gram"
+      ],
+      "irrigated": false,
+      "status": "DEMO",
+      "power_cell": "16.500_96.250",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 47.9,
+        "rain_30d": 144.0,
+        "t2m_30d_mean": 28.6,
+        "t2m": 26.3,
+        "t2m_max": 27.4,
+        "t2m_min": 25.3,
+        "rh2m": 80.0,
+        "ws2m": 4.0,
+        "solar": null,
+        "rain_1d": 3.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.49,
+          "t2m_max": 36.24,
+          "t2m_min": 19.3,
+          "rh2m": 73.08,
+          "ws2m": 2.44,
+          "solar": 18.14,
+          "rain_mm": 26.1
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.71,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.01
+      },
+      "soil": {
+        "cec_cmol_per_kg": 26.3,
+        "clay_pct": 29.8,
+        "ph": 6.3,
+        "sand_pct": 26.8,
+        "silt_pct": 43.4,
+        "soc_g_per_kg": 36.1
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.826,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.841,
+            "evi": 0.638,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.787,
+            "evi": 0.511,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.792,
+            "evi": 0.519,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.795,
+            "evi": 0.5,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.801,
+            "evi": 0.513,
+            "marginal": true
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.738,
+            "evi": 0.441,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.753,
+            "evi": 0.445,
+            "marginal": true
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.736,
+            "evi": 0.414,
+            "marginal": true
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.674,
+            "evi": 0.375,
+            "marginal": true
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.699,
+            "evi": 0.526,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.687,
+            "evi": 0.536,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.664,
+            "evi": 0.507,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.578,
+            "evi": 0.347,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.64,
+            "evi": 0.5,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.827,
+            "evi": 0.578,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.858,
+            "evi": 0.59,
+            "marginal": true
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.852,
+            "evi": 0.631,
+            "marginal": true
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.826,
+            "evi": 0.596,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.032
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "wet_spell",
+            "start": "2026-05-25",
+            "end": "2026-10-01",
+            "days": 130,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-02-08",
+            "end": "2026-05-07",
+            "days": 89,
+            "min_gwetroot": 0.45
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-05-26",
+            "end": "2025-11-25",
+            "days": 184,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-05",
+            "end": "2025-04-10",
+            "days": 37,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-02-05",
+            "end": "2025-02-24",
+            "days": 20,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "wet_spell",
+            "start": "2024-11-13",
+            "end": "2024-11-20",
+            "days": 8,
+            "max_gwetroot": 0.94
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.71,
+          "gwettop": 0.75,
+          "rain_7d": 47.9,
+          "rain_30d": 144.0,
+          "rain_30d_vs_climatology_mm": 117.9,
+          "t2m_30d_mean": 28.6,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.49,
+            "t2m_max": 34.84,
+            "t2m_min": 16.08,
+            "rh2m": 62.7,
+            "ws2m": 2.3,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.18,
+            "t2m_max": 37.72,
+            "t2m_min": 17.12,
+            "rh2m": 56.03,
+            "ws2m": 2.63,
+            "solar": 21.14,
+            "rain_mm": 1.4
+          },
+          {
+            "month": 3,
+            "t2m": 29.33,
+            "t2m_max": 38.36,
+            "t2m_min": 19.13,
+            "rh2m": 56.75,
+            "ws2m": 3.06,
+            "solar": 22.8,
+            "rain_mm": 16.4
+          },
+          {
+            "month": 4,
+            "t2m": 31.24,
+            "t2m_max": 40.59,
+            "t2m_min": 22.99,
+            "rh2m": 58.92,
+            "ws2m": 3.26,
+            "solar": 23.63,
+            "rain_mm": 29.4
+          },
+          {
+            "month": 5,
+            "t2m": 30.0,
+            "t2m_max": 40.41,
+            "t2m_min": 24.21,
+            "rh2m": 72.26,
+            "ws2m": 3.54,
+            "solar": 17.79,
+            "rain_mm": 185.4
+          },
+          {
+            "month": 6,
+            "t2m": 28.27,
+            "t2m_max": 34.59,
+            "t2m_min": 24.71,
+            "rh2m": 82.53,
+            "ws2m": 4.08,
+            "solar": 14.03,
+            "rain_mm": 333.3
+          },
+          {
+            "month": 7,
+            "t2m": 27.55,
+            "t2m_max": 35.41,
+            "t2m_min": 24.4,
+            "rh2m": 85.09,
+            "ws2m": 4.09,
+            "solar": 13.43,
+            "rain_mm": 428.7
+          },
+          {
+            "month": 8,
+            "t2m": 27.36,
+            "t2m_max": 34.06,
+            "t2m_min": 24.15,
+            "rh2m": 85.64,
+            "ws2m": 3.87,
+            "solar": 12.97,
+            "rain_mm": 366.4
+          },
+          {
+            "month": 9,
+            "t2m": 27.44,
+            "t2m_max": 35.72,
+            "t2m_min": 24.0,
+            "rh2m": 84.87,
+            "ws2m": 3.05,
+            "solar": 14.91,
+            "rain_mm": 236.4
+          },
+          {
+            "month": 10,
+            "t2m": 27.96,
+            "t2m_max": 35.79,
+            "t2m_min": 23.06,
+            "rh2m": 79.86,
+            "ws2m": 2.3,
+            "solar": 16.98,
+            "rain_mm": 151.6
+          },
+          {
+            "month": 11,
+            "t2m": 27.49,
+            "t2m_max": 36.24,
+            "t2m_min": 19.3,
+            "rh2m": 73.08,
+            "ws2m": 2.44,
+            "solar": 18.14,
+            "rain_mm": 26.1
+          },
+          {
+            "month": 12,
+            "t2m": 25.75,
+            "t2m_max": 34.73,
+            "t2m_min": 16.63,
+            "rh2m": 68.1,
+            "ws2m": 2.53,
+            "solar": 17.52,
+            "rain_mm": 6.8
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 1702.0,
+            "t2m": 28.1,
+            "t2m_max": 30.1
+          },
+          "winter": {
+            "rain_mm": 42.0,
+            "t2m": 26.5,
+            "t2m_max": 30.4
+          },
+          "summer": {
+            "rain_mm": 46.0,
+            "t2m": 30.3,
+            "t2m_max": 35.8
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:25Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:33:18Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    },
+    "F-05": {
+      "id": "F-05",
+      "name": "River Bend Block",
+      "centroid": [
+        16.7246,
+        95.9221
+      ],
+      "area_ha": 14.4,
+      "crop_history": [
+        "monsoon_rice",
+        "maize"
+      ],
+      "irrigated": true,
+      "status": "DEMO",
+      "power_cell": "16.500_95.625",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 78.8,
+        "rain_30d": 157.4,
+        "t2m_30d_mean": 28.1,
+        "t2m": 25.2,
+        "t2m_max": 27.0,
+        "t2m_min": 23.4,
+        "rh2m": 87.0,
+        "ws2m": 2.9,
+        "solar": null,
+        "rain_1d": 2.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.36,
+          "t2m_max": 39.07,
+          "t2m_min": 17.57,
+          "rh2m": 72.07,
+          "ws2m": 1.83,
+          "solar": 18.14,
+          "rain_mm": 17.7
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.74,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.05
+      },
+      "soil": {
+        "cec_cmol_per_kg": 25.3,
+        "clay_pct": 33.6,
+        "ph": 6.3,
+        "sand_pct": 26.6,
+        "silt_pct": 39.8,
+        "soc_g_per_kg": 33.4
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.665,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.433,
+            "evi": 0.32,
+            "marginal": false
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.614,
+            "evi": 0.304,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.53,
+            "evi": 0.236,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.577,
+            "evi": 0.261,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.618,
+            "evi": 0.357,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.576,
+            "evi": 0.264,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.453,
+            "evi": 0.183,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.507,
+            "evi": 0.223,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.527,
+            "evi": 0.246,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.273,
+            "evi": 0.126,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.517,
+            "evi": 0.253,
+            "marginal": false
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.572,
+            "evi": 0.373,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.477,
+            "evi": 0.227,
+            "marginal": false
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.579,
+            "evi": 0.298,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.463,
+            "evi": 0.189,
+            "marginal": false
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.518,
+            "evi": 0.254,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.679,
+            "evi": 0.391,
+            "marginal": false
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.665,
+            "evi": 0.365,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": 0.147
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "ndvi_drop",
+            "date": "2026-08-13",
+            "change": -0.116,
+            "from": 0.579,
+            "to": 0.463
+          },
+          {
+            "type": "wet_spell",
+            "start": "2026-07-05",
+            "end": "2026-09-30",
+            "days": 88,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-03-23",
+            "end": "2026-04-24",
+            "days": 33,
+            "min_gwetroot": 0.48
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-02-18",
+            "change": -0.254,
+            "from": 0.527,
+            "to": 0.273
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-01-27",
+            "end": "2026-03-10",
+            "days": 43,
+            "min_gwetroot": 0.48
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-01-01",
+            "change": -0.123,
+            "from": 0.576,
+            "to": 0.453
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-11-03",
+            "end": "2025-11-14",
+            "days": 12,
+            "max_gwetroot": 0.93
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-07-23",
+            "end": "2025-10-26",
+            "days": 96,
+            "max_gwetroot": 0.99
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-03",
+            "end": "2025-04-03",
+            "days": 32,
+            "min_gwetroot": 0.48
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-01-15",
+            "end": "2025-02-23",
+            "days": 40,
+            "min_gwetroot": 0.48
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.74,
+          "gwettop": 0.75,
+          "rain_7d": 78.8,
+          "rain_30d": 157.4,
+          "rain_30d_vs_climatology_mm": 139.7,
+          "t2m_30d_mean": 28.1,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.77,
+            "t2m_max": 37.81,
+            "t2m_min": 13.75,
+            "rh2m": 57.42,
+            "ws2m": 1.84,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.66,
+            "t2m_max": 40.41,
+            "t2m_min": 15.54,
+            "rh2m": 49.71,
+            "ws2m": 2.0,
+            "solar": 21.14,
+            "rain_mm": 1.7
+          },
+          {
+            "month": 3,
+            "t2m": 30.02,
+            "t2m_max": 41.52,
+            "t2m_min": 17.07,
+            "rh2m": 51.38,
+            "ws2m": 2.24,
+            "solar": 22.8,
+            "rain_mm": 14.3
+          },
+          {
+            "month": 4,
+            "t2m": 32.25,
+            "t2m_max": 43.6,
+            "t2m_min": 22.04,
+            "rh2m": 52.91,
+            "ws2m": 2.51,
+            "solar": 23.63,
+            "rain_mm": 18.9
+          },
+          {
+            "month": 5,
+            "t2m": 30.78,
+            "t2m_max": 43.35,
+            "t2m_min": 23.43,
+            "rh2m": 66.19,
+            "ws2m": 2.92,
+            "solar": 17.79,
+            "rain_mm": 80.9
+          },
+          {
+            "month": 6,
+            "t2m": 28.72,
+            "t2m_max": 37.53,
+            "t2m_min": 23.84,
+            "rh2m": 77.94,
+            "ws2m": 3.52,
+            "solar": 14.03,
+            "rain_mm": 179.1
+          },
+          {
+            "month": 7,
+            "t2m": 27.86,
+            "t2m_max": 38.16,
+            "t2m_min": 23.56,
+            "rh2m": 81.74,
+            "ws2m": 3.55,
+            "solar": 13.43,
+            "rain_mm": 222.6
+          },
+          {
+            "month": 8,
+            "t2m": 27.51,
+            "t2m_max": 36.95,
+            "t2m_min": 23.48,
+            "rh2m": 83.49,
+            "ws2m": 3.22,
+            "solar": 12.97,
+            "rain_mm": 180.1
+          },
+          {
+            "month": 9,
+            "t2m": 27.62,
+            "t2m_max": 39.05,
+            "t2m_min": 22.83,
+            "rh2m": 82.65,
+            "ws2m": 2.41,
+            "solar": 14.91,
+            "rain_mm": 114.9
+          },
+          {
+            "month": 10,
+            "t2m": 27.95,
+            "t2m_max": 39.09,
+            "t2m_min": 21.82,
+            "rh2m": 79.05,
+            "ws2m": 1.8,
+            "solar": 16.98,
+            "rain_mm": 83.1
+          },
+          {
+            "month": 11,
+            "t2m": 27.36,
+            "t2m_max": 39.07,
+            "t2m_min": 17.57,
+            "rh2m": 72.07,
+            "ws2m": 1.83,
+            "solar": 18.14,
+            "rain_mm": 17.7
+          },
+          {
+            "month": 12,
+            "t2m": 25.87,
+            "t2m_max": 37.95,
+            "t2m_min": 13.62,
+            "rh2m": 64.42,
+            "ws2m": 1.91,
+            "solar": 17.52,
+            "rain_mm": 5.6
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 861.0,
+            "t2m": 28.4,
+            "t2m_max": 31.1
+          },
+          "winter": {
+            "rain_mm": 33.0,
+            "t2m": 26.6,
+            "t2m_max": 32.6
+          },
+          "summer": {
+            "rain_mm": 33.0,
+            "t2m": 31.1,
+            "t2m_max": 38.5
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:31Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "e1d272f4af817a8e46e78e267bc6085526712748998a639f9de0daae659c76ef",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:29Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.922,
+              16.725,
+              3.9
+            ]
+          },
+          "request": null,
+          "raw_sha256": "dd7588f876f236224a6f05c0633a76a07377180d6416af7b76fac6b420e534d5",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:29Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.922,
+              16.725,
+              3.9
+            ]
+          },
+          "request": null,
+          "raw_sha256": "dd7588f876f236224a6f05c0633a76a07377180d6416af7b76fac6b420e534d5",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:34:27Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    },
+    "F-06": {
+      "id": "F-06",
+      "name": "South Embankment Block",
+      "centroid": [
+        16.6761,
+        95.9489
+      ],
+      "area_ha": 16.7,
+      "crop_history": [
+        "monsoon_rice",
+        "black_gram"
+      ],
+      "irrigated": false,
+      "status": "DEMO",
+      "power_cell": "16.500_96.250",
+      "weather": {
+        "as_of": "2026-11-10",
+        "coverage": {
+          "rain_7d": {
+            "observed": 7,
+            "expected": 7
+          },
+          "rain_30d": {
+            "observed": 30,
+            "expected": 30
+          },
+          "t2m_30d_mean": {
+            "observed": 30,
+            "expected": 30
+          }
+        },
+        "rain_7d": 47.9,
+        "rain_30d": 144.0,
+        "t2m_30d_mean": 28.6,
+        "t2m": 26.3,
+        "t2m_max": 27.4,
+        "t2m_min": 25.3,
+        "rh2m": 80.0,
+        "ws2m": 4.0,
+        "solar": null,
+        "rain_1d": 3.9,
+        "clim_month": {
+          "month": 11,
+          "t2m": 27.49,
+          "t2m_max": 36.24,
+          "t2m_min": 19.3,
+          "rh2m": 73.08,
+          "ws2m": 2.44,
+          "solar": 18.14,
+          "rain_mm": 26.1
+        }
+      },
+      "wetness": {
+        "as_of": "2026-11-10",
+        "gwettop": 0.75,
+        "gwetroot": 0.71,
+        "comparison_date": "2026-11-03",
+        "gwetroot_7d_change": 0.01
+      },
+      "soil": {
+        "cec_cmol_per_kg": 27.1,
+        "clay_pct": 30.8,
+        "ph": 6.3,
+        "sand_pct": 28.0,
+        "silt_pct": 41.2,
+        "soc_g_per_kg": 28.7
+      },
+      "ndvi": {
+        "as_of": "2026-10-16",
+        "value": 0.71,
+        "series": [
+          {
+            "date": "2025-09-30",
+            "ndvi": 0.779,
+            "evi": 0.433,
+            "marginal": true
+          },
+          {
+            "date": "2025-10-16",
+            "ndvi": 0.769,
+            "evi": 0.511,
+            "marginal": false
+          },
+          {
+            "date": "2025-11-01",
+            "ndvi": 0.724,
+            "evi": 0.466,
+            "marginal": true
+          },
+          {
+            "date": "2025-11-17",
+            "ndvi": 0.77,
+            "evi": 0.512,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-03",
+            "ndvi": 0.712,
+            "evi": 0.507,
+            "marginal": false
+          },
+          {
+            "date": "2025-12-19",
+            "ndvi": 0.612,
+            "evi": 0.287,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-01",
+            "ndvi": 0.5,
+            "evi": 0.211,
+            "marginal": false
+          },
+          {
+            "date": "2026-01-17",
+            "ndvi": 0.644,
+            "evi": 0.358,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-02",
+            "ndvi": 0.593,
+            "evi": 0.337,
+            "marginal": false
+          },
+          {
+            "date": "2026-02-18",
+            "ndvi": 0.618,
+            "evi": 0.441,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-06",
+            "ndvi": 0.556,
+            "evi": 0.361,
+            "marginal": true
+          },
+          {
+            "date": "2026-03-22",
+            "ndvi": 0.571,
+            "evi": 0.322,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-07",
+            "ndvi": 0.655,
+            "evi": 0.41,
+            "marginal": true
+          },
+          {
+            "date": "2026-04-23",
+            "ndvi": 0.608,
+            "evi": 0.409,
+            "marginal": true
+          },
+          {
+            "date": "2026-05-09",
+            "ndvi": 0.514,
+            "evi": 0.26,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-13",
+            "ndvi": 0.75,
+            "evi": 0.513,
+            "marginal": true
+          },
+          {
+            "date": "2026-08-29",
+            "ndvi": 0.823,
+            "evi": 0.537,
+            "marginal": false
+          },
+          {
+            "date": "2026-09-30",
+            "ndvi": 0.768,
+            "evi": 0.412,
+            "marginal": true
+          },
+          {
+            "date": "2026-10-16",
+            "ndvi": 0.71,
+            "evi": 0.385,
+            "marginal": false
+          }
+        ],
+        "change_vs_2_composites_ago": -0.113
+      },
+      "smap": null,
+      "time_context": {
+        "past": [
+          {
+            "type": "wet_spell",
+            "start": "2026-05-25",
+            "end": "2026-10-01",
+            "days": 130,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2026-02-08",
+            "end": "2026-05-07",
+            "days": 89,
+            "min_gwetroot": 0.45
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2026-01-01",
+            "change": -0.112,
+            "from": 0.612,
+            "to": 0.5
+          },
+          {
+            "type": "ndvi_drop",
+            "date": "2025-12-19",
+            "change": -0.1,
+            "from": 0.712,
+            "to": 0.612
+          },
+          {
+            "type": "wet_spell",
+            "start": "2025-05-26",
+            "end": "2025-11-25",
+            "days": 184,
+            "max_gwetroot": 1.0
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-03-05",
+            "end": "2025-04-10",
+            "days": 37,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "dry_spell",
+            "start": "2025-02-05",
+            "end": "2025-02-24",
+            "days": 20,
+            "min_gwetroot": 0.46
+          },
+          {
+            "type": "wet_spell",
+            "start": "2024-11-13",
+            "end": "2024-11-20",
+            "days": 8,
+            "max_gwetroot": 0.94
+          }
+        ],
+        "present": {
+          "as_of": "2026-11-10",
+          "gwetroot": 0.71,
+          "gwettop": 0.75,
+          "rain_7d": 47.9,
+          "rain_30d": 144.0,
+          "rain_30d_vs_climatology_mm": 117.9,
+          "t2m_30d_mean": 28.6,
+          "stress": [
+            "root_zone_wet"
+          ]
+        }
+      },
+      "climatology": {
+        "months": [
+          {
+            "month": 1,
+            "t2m": 25.49,
+            "t2m_max": 34.84,
+            "t2m_min": 16.08,
+            "rh2m": 62.7,
+            "ws2m": 2.3,
+            "solar": 18.4,
+            "rain_mm": 8.1
+          },
+          {
+            "month": 2,
+            "t2m": 27.18,
+            "t2m_max": 37.72,
+            "t2m_min": 17.12,
+            "rh2m": 56.03,
+            "ws2m": 2.63,
+            "solar": 21.14,
+            "rain_mm": 1.4
+          },
+          {
+            "month": 3,
+            "t2m": 29.33,
+            "t2m_max": 38.36,
+            "t2m_min": 19.13,
+            "rh2m": 56.75,
+            "ws2m": 3.06,
+            "solar": 22.8,
+            "rain_mm": 16.4
+          },
+          {
+            "month": 4,
+            "t2m": 31.24,
+            "t2m_max": 40.59,
+            "t2m_min": 22.99,
+            "rh2m": 58.92,
+            "ws2m": 3.26,
+            "solar": 23.63,
+            "rain_mm": 29.4
+          },
+          {
+            "month": 5,
+            "t2m": 30.0,
+            "t2m_max": 40.41,
+            "t2m_min": 24.21,
+            "rh2m": 72.26,
+            "ws2m": 3.54,
+            "solar": 17.79,
+            "rain_mm": 185.4
+          },
+          {
+            "month": 6,
+            "t2m": 28.27,
+            "t2m_max": 34.59,
+            "t2m_min": 24.71,
+            "rh2m": 82.53,
+            "ws2m": 4.08,
+            "solar": 14.03,
+            "rain_mm": 333.3
+          },
+          {
+            "month": 7,
+            "t2m": 27.55,
+            "t2m_max": 35.41,
+            "t2m_min": 24.4,
+            "rh2m": 85.09,
+            "ws2m": 4.09,
+            "solar": 13.43,
+            "rain_mm": 428.7
+          },
+          {
+            "month": 8,
+            "t2m": 27.36,
+            "t2m_max": 34.06,
+            "t2m_min": 24.15,
+            "rh2m": 85.64,
+            "ws2m": 3.87,
+            "solar": 12.97,
+            "rain_mm": 366.4
+          },
+          {
+            "month": 9,
+            "t2m": 27.44,
+            "t2m_max": 35.72,
+            "t2m_min": 24.0,
+            "rh2m": 84.87,
+            "ws2m": 3.05,
+            "solar": 14.91,
+            "rain_mm": 236.4
+          },
+          {
+            "month": 10,
+            "t2m": 27.96,
+            "t2m_max": 35.79,
+            "t2m_min": 23.06,
+            "rh2m": 79.86,
+            "ws2m": 2.3,
+            "solar": 16.98,
+            "rain_mm": 151.6
+          },
+          {
+            "month": 11,
+            "t2m": 27.49,
+            "t2m_max": 36.24,
+            "t2m_min": 19.3,
+            "rh2m": 73.08,
+            "ws2m": 2.44,
+            "solar": 18.14,
+            "rain_mm": 26.1
+          },
+          {
+            "month": 12,
+            "t2m": 25.75,
+            "t2m_max": 34.73,
+            "t2m_min": 16.63,
+            "rh2m": 68.1,
+            "ws2m": 2.53,
+            "solar": 17.52,
+            "rain_mm": 6.8
+          }
+        ],
+        "seasons": {
+          "monsoon": {
+            "rain_mm": 1702.0,
+            "t2m": 28.1,
+            "t2m_max": 30.1
+          },
+          "winter": {
+            "rain_mm": 42.0,
+            "t2m": 26.5,
+            "t2m_max": 30.4
+          },
+          "summer": {
+            "rain_mm": 46.0,
+            "t2m": 30.3,
+            "t2m_max": 35.8
+          },
+          "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+        },
+        "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+        "retrieved_utc": "2026-11-14T02:30:25Z",
+        "api_version": "v2.10.1",
+        "time_standard": "LST",
+        "parameters": {
+          "ALLSKY_SFC_SW_DWN": {
+            "units": "MJ/m^2/day",
+            "longname": "All Sky Surface Shortwave Downward Irradiance"
+          },
+          "PRECTOTCORR": {
+            "units": "mm/day",
+            "longname": "Precipitation Corrected"
+          },
+          "RH2M": {
+            "units": "%",
+            "longname": "Relative Humidity at 2 Meters"
+          },
+          "T2M": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters"
+          },
+          "T2M_MAX": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Maximum"
+          },
+          "T2M_MIN": {
+            "units": "C",
+            "longname": "Temperature at 2 Meters Minimum"
+          },
+          "WS2M": {
+            "units": "m/s",
+            "longname": "Wind Speed at 2 Meters"
+          }
+        },
+        "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+        "calendar_basis": "non-leap reference year (365 days)"
+      },
+      "provenance": {
+        "weather": {
+          "source": "NASA POWER",
+          "detail": "modelled weather (MERRA-2 / GEOS), 0.5 x 0.625 deg grid cell",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "wetness": {
+          "source": "NASA POWER",
+          "detail": "modelled soil wetness fraction (0 = dry, 1 = saturated), grid-cell scale, not a field measurement",
+          "version": "v2.10.3",
+          "as_of": "2026-11-10",
+          "retrieved_utc": "2026-11-14T02:30:18Z",
+          "status": "CACHED",
+          "sources": [
+            "MERRA2",
+            "GEOSIT",
+            "SYN1DEG",
+            "FLASHFLUX",
+            "POWER"
+          ],
+          "time_standard": "LST",
+          "parameters": {
+            "T2M": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters"
+            },
+            "T2M_MAX": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Maximum"
+            },
+            "T2M_MIN": {
+              "units": "C",
+              "longname": "Temperature at 2 Meters Minimum"
+            },
+            "PRECTOTCORR": {
+              "units": "mm/day",
+              "longname": "Precipitation Corrected"
+            },
+            "RH2M": {
+              "units": "%",
+              "longname": "Relative Humidity at 2 Meters"
+            },
+            "WS2M": {
+              "units": "m/s",
+              "longname": "Wind Speed at 2 Meters"
+            },
+            "ALLSKY_SFC_SW_DWN": {
+              "units": "MJ/m^2/day",
+              "longname": "All Sky Surface Shortwave Downward Irradiance"
+            },
+            "GWETTOP": {
+              "units": "1",
+              "longname": "Surface Soil Wetness"
+            },
+            "GWETROOT": {
+              "units": "1",
+              "longname": "Root Zone Soil Wetness"
+            }
+          },
+          "requested_range": [
+            "20241113",
+            "20261113"
+          ],
+          "sample_geometry": {
+            "type": "Point",
+            "coordinates": [
+              95.955,
+              16.735,
+              4.23
+            ]
+          },
+          "request": null,
+          "raw_sha256": "25dab3c99ea9879e310f949aeff311ed53d437fc32a31a326bf395a5c9e90138",
+          "transform_version": "power-calendar-v1"
+        },
+        "time_context": {
+          "source": "NASA POWER daily + MODIS/SMAP when connected",
+          "detail": "Detected dry/wet spells and NDVI drops from the cleaned series; thresholds are team parameters",
+          "as_of": "2026-11-10",
+          "status": "CACHED"
+        },
+        "soil": {
+          "source": "ISRIC SoilGrids",
+          "detail": "0-5 cm mean, 250 m grid (not a NASA product)",
+          "version": "v2.0",
+          "as_of": null,
+          "retrieved_utc": "2026-11-14T02:37:33Z",
+          "status": "CACHED"
+        },
+        "ndvi": {
+          "source": "MODIS Terra MOD13Q1",
+          "detail": "250 m, 16-day composite, cloud/snow pixels removed",
+          "version": "061",
+          "as_of": "2026-10-16",
+          "retrieved_utc": null,
+          "status": "CACHED"
+        },
+        "smap": {
+          "source": "SMAP SPL3SMP_E",
+          "version": "006",
+          "status": "NOT_CONNECTED",
+          "detail": "No data pulled yet (needs Earthdata login)."
+        },
+        "field": {
+          "source": "Illustrative layout",
+          "status": "DEMO",
+          "detail": "Field shape, name, crop history and irrigation flag are demo values."
+        }
+      }
+    }
+  }
+}

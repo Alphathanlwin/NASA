@@ -1,0 +1,358 @@
+{
+  "16.500_95.625": {
+    "months": [
+      {
+        "month": 1,
+        "t2m": 25.77,
+        "t2m_max": 37.81,
+        "t2m_min": 13.75,
+        "rh2m": 57.42,
+        "ws2m": 1.84,
+        "solar": 18.4,
+        "rain_mm": 8.1
+      },
+      {
+        "month": 2,
+        "t2m": 27.66,
+        "t2m_max": 40.41,
+        "t2m_min": 15.54,
+        "rh2m": 49.71,
+        "ws2m": 2.0,
+        "solar": 21.14,
+        "rain_mm": 1.7
+      },
+      {
+        "month": 3,
+        "t2m": 30.02,
+        "t2m_max": 41.52,
+        "t2m_min": 17.07,
+        "rh2m": 51.38,
+        "ws2m": 2.24,
+        "solar": 22.8,
+        "rain_mm": 14.3
+      },
+      {
+        "month": 4,
+        "t2m": 32.25,
+        "t2m_max": 43.6,
+        "t2m_min": 22.04,
+        "rh2m": 52.91,
+        "ws2m": 2.51,
+        "solar": 23.63,
+        "rain_mm": 18.9
+      },
+      {
+        "month": 5,
+        "t2m": 30.78,
+        "t2m_max": 43.35,
+        "t2m_min": 23.43,
+        "rh2m": 66.19,
+        "ws2m": 2.92,
+        "solar": 17.79,
+        "rain_mm": 80.9
+      },
+      {
+        "month": 6,
+        "t2m": 28.72,
+        "t2m_max": 37.53,
+        "t2m_min": 23.84,
+        "rh2m": 77.94,
+        "ws2m": 3.52,
+        "solar": 14.03,
+        "rain_mm": 179.1
+      },
+      {
+        "month": 7,
+        "t2m": 27.86,
+        "t2m_max": 38.16,
+        "t2m_min": 23.56,
+        "rh2m": 81.74,
+        "ws2m": 3.55,
+        "solar": 13.43,
+        "rain_mm": 222.6
+      },
+      {
+        "month": 8,
+        "t2m": 27.51,
+        "t2m_max": 36.95,
+        "t2m_min": 23.48,
+        "rh2m": 83.49,
+        "ws2m": 3.22,
+        "solar": 12.97,
+        "rain_mm": 180.1
+      },
+      {
+        "month": 9,
+        "t2m": 27.62,
+        "t2m_max": 39.05,
+        "t2m_min": 22.83,
+        "rh2m": 82.65,
+        "ws2m": 2.41,
+        "solar": 14.91,
+        "rain_mm": 114.9
+      },
+      {
+        "month": 10,
+        "t2m": 27.95,
+        "t2m_max": 39.09,
+        "t2m_min": 21.82,
+        "rh2m": 79.05,
+        "ws2m": 1.8,
+        "solar": 16.98,
+        "rain_mm": 83.1
+      },
+      {
+        "month": 11,
+        "t2m": 27.36,
+        "t2m_max": 39.07,
+        "t2m_min": 17.57,
+        "rh2m": 72.07,
+        "ws2m": 1.83,
+        "solar": 18.14,
+        "rain_mm": 17.7
+      },
+      {
+        "month": 12,
+        "t2m": 25.87,
+        "t2m_max": 37.95,
+        "t2m_min": 13.62,
+        "rh2m": 64.42,
+        "ws2m": 1.91,
+        "solar": 17.52,
+        "rain_mm": 5.6
+      }
+    ],
+    "seasons": {
+      "monsoon": {
+        "rain_mm": 861.0,
+        "t2m": 28.4,
+        "t2m_max": 31.1
+      },
+      "winter": {
+        "rain_mm": 33.0,
+        "t2m": 26.6,
+        "t2m_max": 32.6
+      },
+      "summer": {
+        "rain_mm": 33.0,
+        "t2m": 31.1,
+        "t2m_max": 38.5
+      },
+      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+    },
+    "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+    "retrieved_utc": "2026-11-14T02:30:31Z",
+    "api_version": "v2.10.1",
+    "time_standard": "LST",
+    "parameters": {
+      "ALLSKY_SFC_SW_DWN": {
+        "units": "MJ/m^2/day",
+        "longname": "All Sky Surface Shortwave Downward Irradiance"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "RH2M": {
+        "units": "%",
+        "longname": "Relative Humidity at 2 Meters"
+      },
+      "T2M": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters"
+      },
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "raw_sha256": "e1d272f4af817a8e46e78e267bc6085526712748998a639f9de0daae659c76ef",
+    "calendar_basis": "non-leap reference year (365 days)"
+  },
+  "16.500_96.250": {
+    "months": [
+      {
+        "month": 1,
+        "t2m": 25.49,
+        "t2m_max": 34.84,
+        "t2m_min": 16.08,
+        "rh2m": 62.7,
+        "ws2m": 2.3,
+        "solar": 18.4,
+        "rain_mm": 8.1
+      },
+      {
+        "month": 2,
+        "t2m": 27.18,
+        "t2m_max": 37.72,
+        "t2m_min": 17.12,
+        "rh2m": 56.03,
+        "ws2m": 2.63,
+        "solar": 21.14,
+        "rain_mm": 1.4
+      },
+      {
+        "month": 3,
+        "t2m": 29.33,
+        "t2m_max": 38.36,
+        "t2m_min": 19.13,
+        "rh2m": 56.75,
+        "ws2m": 3.06,
+        "solar": 22.8,
+        "rain_mm": 16.4
+      },
+      {
+        "month": 4,
+        "t2m": 31.24,
+        "t2m_max": 40.59,
+        "t2m_min": 22.99,
+        "rh2m": 58.92,
+        "ws2m": 3.26,
+        "solar": 23.63,
+        "rain_mm": 29.4
+      },
+      {
+        "month": 5,
+        "t2m": 30.0,
+        "t2m_max": 40.41,
+        "t2m_min": 24.21,
+        "rh2m": 72.26,
+        "ws2m": 3.54,
+        "solar": 17.79,
+        "rain_mm": 185.4
+      },
+      {
+        "month": 6,
+        "t2m": 28.27,
+        "t2m_max": 34.59,
+        "t2m_min": 24.71,
+        "rh2m": 82.53,
+        "ws2m": 4.08,
+        "solar": 14.03,
+        "rain_mm": 333.3
+      },
+      {
+        "month": 7,
+        "t2m": 27.55,
+        "t2m_max": 35.41,
+        "t2m_min": 24.4,
+        "rh2m": 85.09,
+        "ws2m": 4.09,
+        "solar": 13.43,
+        "rain_mm": 428.7
+      },
+      {
+        "month": 8,
+        "t2m": 27.36,
+        "t2m_max": 34.06,
+        "t2m_min": 24.15,
+        "rh2m": 85.64,
+        "ws2m": 3.87,
+        "solar": 12.97,
+        "rain_mm": 366.4
+      },
+      {
+        "month": 9,
+        "t2m": 27.44,
+        "t2m_max": 35.72,
+        "t2m_min": 24.0,
+        "rh2m": 84.87,
+        "ws2m": 3.05,
+        "solar": 14.91,
+        "rain_mm": 236.4
+      },
+      {
+        "month": 10,
+        "t2m": 27.96,
+        "t2m_max": 35.79,
+        "t2m_min": 23.06,
+        "rh2m": 79.86,
+        "ws2m": 2.3,
+        "solar": 16.98,
+        "rain_mm": 151.6
+      },
+      {
+        "month": 11,
+        "t2m": 27.49,
+        "t2m_max": 36.24,
+        "t2m_min": 19.3,
+        "rh2m": 73.08,
+        "ws2m": 2.44,
+        "solar": 18.14,
+        "rain_mm": 26.1
+      },
+      {
+        "month": 12,
+        "t2m": 25.75,
+        "t2m_max": 34.73,
+        "t2m_min": 16.63,
+        "rh2m": 68.1,
+        "ws2m": 2.53,
+        "solar": 17.52,
+        "rain_mm": 6.8
+      }
+    ],
+    "seasons": {
+      "monsoon": {
+        "rain_mm": 1702.0,
+        "t2m": 28.1,
+        "t2m_max": 30.1
+      },
+      "winter": {
+        "rain_mm": 42.0,
+        "t2m": 26.5,
+        "t2m_max": 30.4
+      },
+      "summer": {
+        "rain_mm": 46.0,
+        "t2m": 30.3,
+        "t2m_max": 35.8
+      },
+      "t2m_max_basis": "mean daily maximum, POWER daily 2024-11-13 to 2026-11-13"
+    },
+    "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+    "retrieved_utc": "2026-11-14T02:30:25Z",
+    "api_version": "v2.10.1",
+    "time_standard": "LST",
+    "parameters": {
+      "ALLSKY_SFC_SW_DWN": {
+        "units": "MJ/m^2/day",
+        "longname": "All Sky Surface Shortwave Downward Irradiance"
+      },
+      "PRECTOTCORR": {
+        "units": "mm/day",
+        "longname": "Precipitation Corrected"
+      },
+      "RH2M": {
+        "units": "%",
+        "longname": "Relative Humidity at 2 Meters"
+      },
+      "T2M": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters"
+      },
+      "T2M_MAX": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Maximum"
+      },
+      "T2M_MIN": {
+        "units": "C",
+        "longname": "Temperature at 2 Meters Minimum"
+      },
+      "WS2M": {
+        "units": "m/s",
+        "longname": "Wind Speed at 2 Meters"
+      }
+    },
+    "raw_sha256": "ec4a2c368e4beb21ffe511ad7844d82fbe535993ff52db96251b0364b231d394",
+    "calendar_basis": "non-leap reference year (365 days)"
+  }
+}
