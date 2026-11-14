@@ -53,7 +53,6 @@ const ICON = {
   clock: 'M12 7v5l3 2M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z',
   pin: 'M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
   area: 'M4 20L12 4l8 16zM8 14h8',
-  sprout: 'M12 21V11M12 11c0-4 3-6 7-6 0 4-3 6-7 6zM12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5zM5 21h14',
   db: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6',
 }
 
@@ -108,8 +107,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             <span className="tile-sub">{t('field.acres', { a: field.area_acres })} · {t(field.status === 'USER-INPUT' ? 'mine.badge' : 'mine.example')}</span>
           </div>
         </div>
-        <Tile icon={<Icon d={ICON.sprout} />} label={t('tile.next')}
-          value={best ? t(`crop.${best.dry_crop}` as Key) : '—'} sub={t('rec.after')} />
         <Tile icon={<Icon d={ICON.cal} />} label={t('tile.sow')} value={cal?.sow ?? '—'} sub={t('tile.assumed')} tone="amber" />
         <Tile icon={<Icon d={ICON.clock} />} label={t('tile.harvest')} value={cal?.harvest ?? '—'}
           sub={daysToHarvest !== null ? t('tile.inDays', { n: daysToHarvest }) : undefined} tone="rose" />
