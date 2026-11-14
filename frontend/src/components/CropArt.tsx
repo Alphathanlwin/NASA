@@ -1,56 +1,54 @@
 // AI-assisted: Claude Code
-// Simple drawn crop illustrations (no external images). Decorative: the crop name is always shown next to them.
+// Drawn crop illustrations (no external images): each crop is shown as what the farmer harvests
+// and sells, so it can be recognised at a glance. Decorative: the crop name is always shown next to them.
+
+// [x, y, rotation in degrees] for a small heap of seeds, back row first so front seeds overlap.
+const HEAP: [number, number, number][] = [
+  [22, 22, -20], [34, 19, 15], [45, 25, -35],
+  [16, 34, 40], [28, 31, -5], [40, 33, 25], [50, 38, -15],
+  [21, 45, -30], [33, 43, 10], [44, 47, 35],
+]
+
+const BG: Record<string, string> = { rice: '#fbf1d6', mung_bean: '#e8f1df', black_gram: '#ebe8e1' }
 
 export function CropArt({ crop, size = 72 }: { crop: string; size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="crop-art">
-      <circle cx="32" cy="32" r="31" fill={crop === 'rice' ? '#fdf6dc' : crop === 'black_gram' ? '#ece9e4' : '#e6f4e3'} />
-      {crop === 'rice' && <Rice />}
-      {crop === 'mung_bean' && <Pods pod="#4d9a3f" podDark="#3b7f2f" seed="#7cc36a" />}
-      {crop === 'black_gram' && <Pods pod="#5b5446" podDark="#433d33" seed="#1f1d1a" />}
+      <circle cx="32" cy="32" r="31" fill={BG[crop] ?? '#eee'} />
+      {crop === 'black_gram' && <Beans body="#2a2723" edge="#141210" sheen="#57524a" hilum="#e6e2c6" odd={4} oddBody="#4b3a2a" />}
+      {crop === 'mung_bean' && <Beans body="#5d9438" edge="#3d6b22" sheen="#8fbf5a" hilum="#eef2dc" />}
+      {crop === 'rice' && <Paddy />}
     </svg>
   )
 }
 
-function Rice() {
-  const grains = [
-    [33, 15], [36, 18], [38, 22], [40, 26], [41, 30], [41, 34],
-    [30, 18], [28, 22], [27, 26],
-  ]
+// Black gram and mung bean: small oval beans, each with the pale seed scar (hilum) along its side.
+function Beans({ body, edge, sheen, hilum, odd, oddBody }: {
+  body: string; edge: string; sheen: string; hilum: string; odd?: number; oddBody?: string
+}) {
   return (
     <g>
-      {/* soil line */}
-      <path d="M10 54 Q32 50 54 54" stroke="#8a6a3c" strokeWidth="2" fill="none" strokeLinecap="round" />
-      {/* leaves */}
-      <path d="M32 54 C28 40 22 34 14 30" stroke="#5f9e3a" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M32 54 C35 42 42 38 50 36" stroke="#5f9e3a" strokeWidth="3" fill="none" strokeLinecap="round" />
-      <path d="M31 54 C31 40 31 26 32 13" stroke="#6aa842" strokeWidth="2.6" fill="none" strokeLinecap="round" />
-      {/* drooping panicle */}
-      <path d="M32 13 C38 15 42 22 41 36" stroke="#b8952f" strokeWidth="1.6" fill="none" />
-      <path d="M32 13 C28 16 26 22 27 28" stroke="#b8952f" strokeWidth="1.4" fill="none" />
-      {grains.map(([x, y], i) => (
-        <ellipse key={i} cx={x} cy={y} rx="2.2" ry="3.4" fill="#e2bb45" stroke="#b8952f" strokeWidth="0.6"
-          transform={`rotate(${x > 32 ? -25 : 25} ${x} ${y})`} />
+      {HEAP.map(([x, y, r], i) => (
+        <g key={i} transform={`translate(${x} ${y}) rotate(${r})`}>
+          <ellipse rx="6.6" ry="4.9" fill={i === odd ? oddBody : body} stroke={edge} strokeWidth="0.8" />
+          <ellipse cx="-2" cy="-2.2" rx="2.6" ry="1.1" fill={sheen} opacity="0.55" />
+          <rect x="-2.6" y="0.6" width="5.2" height="1.7" rx="0.85" fill={hilum} />
+        </g>
       ))}
     </g>
   )
 }
 
-function Pods({ pod, podDark, seed }: { pod: string; podDark: string; seed: string }) {
+// Rice: golden paddy grains, long and pointed, with the ridge along the husk.
+function Paddy() {
   return (
     <g>
-      {/* stem and leaves */}
-      <path d="M32 10 C31 22 33 34 32 54" stroke="#5f9e3a" strokeWidth="2.4" fill="none" strokeLinecap="round" />
-      <path d="M32 18 C24 12 16 14 13 20 C20 24 27 23 32 18 Z" fill="#6aa842" />
-      <path d="M32 26 C40 20 48 22 51 28 C44 32 37 31 32 26 Z" fill="#6aa842" />
-      {/* pods hanging */}
-      <path d="M31 30 C24 36 20 44 19 52" stroke={podDark} strokeWidth="5" fill="none" strokeLinecap="round" />
-      <path d="M31 30 C24 36 20 44 19 52" stroke={pod} strokeWidth="3.2" fill="none" strokeLinecap="round" />
-      <path d="M33 32 C40 38 43 45 44 52" stroke={podDark} strokeWidth="5" fill="none" strokeLinecap="round" />
-      <path d="M33 32 C40 38 43 45 44 52" stroke={pod} strokeWidth="3.2" fill="none" strokeLinecap="round" />
-      {/* loose seeds */}
-      {[[27, 57], [32, 58], [37, 57]].map(([x, y], i) => (
-        <ellipse key={i} cx={x} cy={y} rx="2.4" ry="1.8" fill={seed} />
+      {HEAP.map(([x, y, r], i) => (
+        <g key={i} transform={`translate(${x} ${y}) rotate(${r + 60})`}>
+          <path d="M0 -8.2 C3.4 -5 3.4 5 0 8.2 C-3.4 5 -3.4 -5 0 -8.2 Z" fill="#dcae3c" stroke="#a87a1c" strokeWidth="0.8" />
+          <path d="M0 -6.6 V6.6" stroke="#b98a24" strokeWidth="0.7" />
+          <path d="M0 -8.2 V-10" stroke="#a87a1c" strokeWidth="0.8" strokeLinecap="round" />
+        </g>
       ))}
     </g>
   )
