@@ -57,7 +57,7 @@ def smap_layers():
         low = n.lower()
         if low.endswith("soil_moisture") or low.endswith("soil_moisture_pm"):
             wanted.append(n)
-        elif "retrieval_qual_flag" in low:
+        elif low.endswith(("retrieval_qual_flag", "retrieval_qual_flag_pm")):
             wanted.append(n)
     return wanted
 

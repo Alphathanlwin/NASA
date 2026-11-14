@@ -3,7 +3,7 @@
 A decision-support tool for NASA Space Apps Challenge 2026, challenge 07
 "Field Shift: Adapting Farms with NASA Data".
 
-Click a field on the map. An agent travels to it, reads the NASA data for that
+Click a field on the 3D map (three.js). An agent travels to it, reads the NASA data for that
 location, and compares crop rotations for the coming dry season and the next
 monsoon. It always shows three alternatives plus the farmer's usual rotation,
 each with the reasons for and against it, the evidence used, the information
@@ -47,8 +47,8 @@ backend. The app then serves only the cached data in this repo.
 | Seasonal rain and temperature averages | Real. NASA POWER climatology 2001-2025, cached | named in each plan's evidence |
 | Topsoil pH and texture | Real. ISRIC SoilGrids v2.0, 250 m, cached. Not a NASA product | `CACHED` · ISRIC SoilGrids |
 | Crop pH, temperature and rainfall tolerances | Real. FAO EcoCrop. Global ranges, not Myanmar-specific | cited in each reason |
-| Satellite soil moisture (SMAP) | Not connected. The fetch script exists; no Earthdata login was available on the build machine | `NOT CONNECTED` |
-| Vegetation index (MODIS NDVI) | Not connected, same reason | `NOT CONNECTED` |
+| Satellite soil moisture (SMAP) | Not connected. It needs a working Earthdata login (AppEEARS); the ORNL no-login service has no SMAP data for this location | `NOT CONNECTED` |
+| Vegetation index (MODIS NDVI) | Real. MOD13Q1, one 250 m pixel at each field centre, from the NASA ORNL DAAC subset service (no login). Cloudy composites removed. Cached | `CACHED` · MODIS Terra MOD13Q1 |
 | Field shapes, names, usual rotation, irrigation flag | Demo. Illustrative blocks at real coordinates | `DEMO` |
 | Rotation scores | Real rules applied to the data above. Point sizes and the wetness thresholds are the team's rule weights, not measurements | score breakdown on every card |
 | Income | Only from numbers the farmer types in. With none entered, every cropped season counts the same | stated under "Information gaps" |
@@ -68,7 +68,8 @@ backend. The app then serves only the cached data in this repo.
 python pipeline/make_fields.py        # demo fields
 python pipeline/fetch_power.py        # NASA POWER daily + climatology
 python pipeline/fetch_soilgrids.py    # SoilGrids
-python pipeline/fetch_appeears.py submit   # MODIS + SMAP, needs ~/.netrc Earthdata login
+python pipeline/fetch_modis_ornl.py   # MODIS NDVI, no login
+python pipeline/fetch_appeears.py submit   # SMAP (+ MODIS), needs ~/.netrc Earthdata login
 python pipeline/fetch_appeears.py collect  # run when the AppEEARS task has finished
 python pipeline/clean_all.py          # clean, build the snapshot and the cleaning report
 ```

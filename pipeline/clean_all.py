@@ -230,8 +230,59 @@ def clean_appeears(report):
     return ndvi, smap, retrieved
 
 
+# ------------------------------------------------------------- MODIS via ORNL
+def clean_modis_ornl(report):
+    """MOD13Q1 values from the ORNL DAAC subset service: raw integers, one 250 m pixel per field."""
+    folder = RAW / "modis_ornl"
+    if not (folder / "bands.json").exists():
+        return {}, None
+    bands = json.loads((folder / "bands.json").read_text(encoding="utf-8"))["bands"]
+
+    def meta(name):
+        b = bands[name]
+        lo, hi = (float(x) for x in b["valid_range"].split(" to "))
+        return float(b.get("scale_factor") or 1), float(b["fill_value"]), lo, hi
+
+    ndvi, retrieved = {}, None
+    rows_in = dropped_fill = dropped_quality = 0
+    for path in sorted(folder.glob("F-*.json")):
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        retrieved = raw["retrieved_utc"]
+        by_date = {}
+        for row in raw["rows"]:
+            by_date.setdefault(row["calendar_date"], {})[row["band"]] = row["value"]
+        series = []
+        for day in sorted(by_date):
+            rec = by_date[day]
+            rows_in += 1
+            scale, fill, lo, hi = meta("250m_16_days_NDVI")
+            v = rec.get("250m_16_days_NDVI")
+            if v is None or v == fill or not lo <= v <= hi:
+                dropped_fill += 1
+                continue
+            # pixel_reliability: 0 good, 1 marginal, 2 snow/ice, 3 cloudy, -1 fill
+            rel = rec.get("250m_16_days_pixel_reliability")
+            if rel not in (0, 1):
+                dropped_quality += 1
+                continue
+            e_scale, e_fill, e_lo, e_hi = meta("250m_16_days_EVI")
+            e = rec.get("250m_16_days_EVI")
+            evi = round(e * e_scale, 3) if e is not None and e != e_fill and e_lo <= e <= e_hi else None
+            series.append({"date": day, "ndvi": round(v * scale, 3), "evi": evi, "marginal": rel == 1})
+        if series:
+            ndvi[path.stem] = series
+    report["sources"]["modis_mod13q1"] = {
+        "via": "NASA ORNL DAAC subset service (no login)", "composites_in": rows_in,
+        "composites_out": sum(len(s) for s in ndvi.values()),
+        "dropped_fill_or_out_of_range": dropped_fill, "dropped_cloud_snow_or_fill_quality": dropped_quality,
+        "retrieved_utc": retrieved,
+        "note": "One 250 m pixel at each field centre. Dates are the start of each 16-day composite.",
+    }
+    return ndvi, retrieved
+
+
 # ------------------------------------------------------------------- snapshot
-def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved):
+def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved, ndvi_retrieved=None):
     fields = {}
     for f in load_fields():
         lat, lon = f["centroid"]
@@ -291,8 +342,9 @@ def build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved
             rec["ndvi"] = {"as_of": last["date"], "value": last["ndvi"], "series": series[-24:],
                            "change_vs_2_composites_ago": None if prev is None else round(last["ndvi"] - prev, 3)}
             rec["provenance"]["ndvi"] = {
-                "source": "MODIS Terra MOD13Q1", "detail": "250 m, 16-day composite, cloud/snow pixels removed",
-                "version": "061", "as_of": last["date"], "retrieved_utc": appeears_retrieved, "status": "CACHED",
+                "source": "MODIS Terra MOD13Q1",
+                "detail": "250 m pixel at the field centre, 16-day composite, cloud/snow composites removed",
+                "version": "061", "as_of": last["date"], "retrieved_utc": ndvi_retrieved, "status": "CACHED",
             }
         else:
             rec["provenance"]["ndvi"] = {"source": "MODIS Terra MOD13Q1", "version": "061", "status": "NOT_CONNECTED",
@@ -322,10 +374,15 @@ def main():
     clim = clean_power_climatology(report, daily)
     soil = clean_soilgrids(report)
     ndvi, smap, appeears_retrieved = clean_appeears(report)
+    ndvi_retrieved = appeears_retrieved
+    if not ndvi:
+        ndvi, ndvi_retrieved = clean_modis_ornl(report)
+        if ndvi:
+            write_json(CLEAN / "ndvi.json", ndvi)
     for name, present in (("modis_mod13q1", bool(ndvi)), ("smap_spl3smp_e", bool(smap))):
         if not present:
             report["sources"][name] = {"status": "NOT_CONNECTED", "note": "No raw files in data/raw/appeears."}
-    snapshot = build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved)
+    snapshot = build_snapshot(daily, power_meta, clim, soil, ndvi, smap, appeears_retrieved, ndvi_retrieved)
     write_json(SNAPSHOTS / "fields_snapshot.json", snapshot)
     write_json(REPORTS / "cleaning_report.json", report)
     print(json.dumps(report, indent=2))

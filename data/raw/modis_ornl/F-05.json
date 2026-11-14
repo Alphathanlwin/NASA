@@ -1,0 +1,458 @@
+{
+  "retrieved_utc": "2026-11-14T03:14:05Z",
+  "latitude": 16.7246,
+  "longitude": 95.9221,
+  "product": "MOD13Q1",
+  "rows": [
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-09-30",
+      "modis_date": "A2025273",
+      "value": 4330
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-10-16",
+      "modis_date": "A2025289",
+      "value": 6142
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-11-01",
+      "modis_date": "A2025305",
+      "value": 5299
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-11-17",
+      "modis_date": "A2025321",
+      "value": 5772
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-12-03",
+      "modis_date": "A2025337",
+      "value": 6180
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-12-19",
+      "modis_date": "A2025353",
+      "value": 5755
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-01-01",
+      "modis_date": "A2026001",
+      "value": 4527
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-01-17",
+      "modis_date": "A2026017",
+      "value": 5071
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-02-02",
+      "modis_date": "A2026033",
+      "value": 5274
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-02-18",
+      "modis_date": "A2026049",
+      "value": 2732
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-03-06",
+      "modis_date": "A2026065",
+      "value": 5175
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-03-22",
+      "modis_date": "A2026081",
+      "value": 5716
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-04-07",
+      "modis_date": "A2026097",
+      "value": 4773
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-04-23",
+      "modis_date": "A2026113",
+      "value": 5793
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-05-09",
+      "modis_date": "A2026129",
+      "value": 4677
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-05-25",
+      "modis_date": "A2026145",
+      "value": 4020
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-06-10",
+      "modis_date": "A2026161",
+      "value": 4534
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-06-26",
+      "modis_date": "A2026177",
+      "value": 4002
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-07-12",
+      "modis_date": "A2026193",
+      "value": 2286
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-07-28",
+      "modis_date": "A2026209",
+      "value": 1316
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-08-13",
+      "modis_date": "A2026225",
+      "value": 4626
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-08-29",
+      "modis_date": "A2026241",
+      "value": 5183
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-09-14",
+      "modis_date": "A2026257",
+      "value": 2353
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-09-30",
+      "modis_date": "A2026273",
+      "value": 6792
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-10-16",
+      "modis_date": "A2026289",
+      "value": 6653
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-09-30",
+      "modis_date": "A2025273",
+      "value": 3198
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-10-16",
+      "modis_date": "A2025289",
+      "value": 3044
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-11-01",
+      "modis_date": "A2025305",
+      "value": 2358
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-11-17",
+      "modis_date": "A2025321",
+      "value": 2608
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-12-03",
+      "modis_date": "A2025337",
+      "value": 3573
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-12-19",
+      "modis_date": "A2025353",
+      "value": 2639
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-01-01",
+      "modis_date": "A2026001",
+      "value": 1832
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-01-17",
+      "modis_date": "A2026017",
+      "value": 2230
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-02-02",
+      "modis_date": "A2026033",
+      "value": 2465
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-02-18",
+      "modis_date": "A2026049",
+      "value": 1260
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-03-06",
+      "modis_date": "A2026065",
+      "value": 2529
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-03-22",
+      "modis_date": "A2026081",
+      "value": 3731
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-04-07",
+      "modis_date": "A2026097",
+      "value": 2273
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-04-23",
+      "modis_date": "A2026113",
+      "value": 2976
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-05-09",
+      "modis_date": "A2026129",
+      "value": 3073
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-05-25",
+      "modis_date": "A2026145",
+      "value": 2268
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-06-10",
+      "modis_date": "A2026161",
+      "value": 2146
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-06-26",
+      "modis_date": "A2026177",
+      "value": 1712
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-07-12",
+      "modis_date": "A2026193",
+      "value": 1164
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-07-28",
+      "modis_date": "A2026209",
+      "value": 1249
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-08-13",
+      "modis_date": "A2026225",
+      "value": 1894
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-08-29",
+      "modis_date": "A2026241",
+      "value": 2540
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-09-14",
+      "modis_date": "A2026257",
+      "value": 1620
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-09-30",
+      "modis_date": "A2026273",
+      "value": 3907
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-10-16",
+      "modis_date": "A2026289",
+      "value": 3648
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-09-30",
+      "modis_date": "A2025273",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-10-16",
+      "modis_date": "A2025289",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-11-01",
+      "modis_date": "A2025305",
+      "value": 1
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-11-17",
+      "modis_date": "A2025321",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-12-03",
+      "modis_date": "A2025337",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2025-12-19",
+      "modis_date": "A2025353",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-01-01",
+      "modis_date": "A2026001",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-01-17",
+      "modis_date": "A2026017",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-02-02",
+      "modis_date": "A2026033",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-02-18",
+      "modis_date": "A2026049",
+      "value": 1
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-03-06",
+      "modis_date": "A2026065",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-03-22",
+      "modis_date": "A2026081",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-04-07",
+      "modis_date": "A2026097",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-04-23",
+      "modis_date": "A2026113",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-05-09",
+      "modis_date": "A2026129",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-05-25",
+      "modis_date": "A2026145",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-06-10",
+      "modis_date": "A2026161",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-06-26",
+      "modis_date": "A2026177",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-07-12",
+      "modis_date": "A2026193",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-07-28",
+      "modis_date": "A2026209",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-08-13",
+      "modis_date": "A2026225",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-08-29",
+      "modis_date": "A2026241",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-09-14",
+      "modis_date": "A2026257",
+      "value": 3
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-09-30",
+      "modis_date": "A2026273",
+      "value": 0
+    },
+    {
+      "band": "250m_16_days_pixel_reliability",
+      "calendar_date": "2026-10-16",
+      "modis_date": "A2026289",
+      "value": 0
+    }
+  ]
+}

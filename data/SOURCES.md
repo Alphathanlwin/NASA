@@ -10,8 +10,9 @@ retrieval time (`retrieved_utc`). `pipeline/clean_all.py` turns them into `data/
 | `raw/power/climatology_*.json` | NASA POWER Climatology API, monthly means January 2001 to December 2025 | `https://power.larc.nasa.gov/api/temporal/climatology/point`, no login | `pipeline/fetch_power.py` |
 | `raw/soilgrids/F-*.json` | ISRIC SoilGrids v2.0, 0-5 cm mean (not a NASA product) | `https://rest.isric.org/soilgrids/v2.0/properties/query`, no login | `pipeline/fetch_soilgrids.py` |
 | `reference/ecocrop_ranges.json` | FAO EcoCrop database (crop pH, temperature, rainfall tolerances) | `EcoCrop_DB.csv` from https://github.com/OpenCLIM/ecocrop | `pipeline/extract_ecocrop.py` |
+| `raw/modis_ornl/*.json` | MODIS Terra MOD13Q1 NDVI, EVI and pixel reliability, one 250 m pixel per field, last 420 days | NASA ORNL DAAC subset API `https://modis.ornl.gov/rst/api/v1/MOD13Q1`, no login | `pipeline/fetch_modis_ornl.py` |
 | `raw/appeears/*` (not present yet) | MODIS MOD13Q1.061 NDVI and SMAP SPL3SMP_E.006 soil moisture point samples | NASA AppEEARS, needs an Earthdata login in `~/.netrc` | `pipeline/fetch_appeears.py` |
 | `fields.geojson` | DEMO. Hand-made field blocks near Twante, Yangon Region | n/a | `pipeline/make_fields.py` |
 
-Map tiles are loaded live and are not stored: CARTO / OpenStreetMap base map, and NASA GIBS
+Map tiles are loaded live and are not stored: OpenStreetMap base map, and NASA GIBS
 VIIRS NOAA-20 true-colour imagery.

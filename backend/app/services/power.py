@@ -1,5 +1,5 @@
 """The one live network call: recent NASA POWER daily data for a field.
-5 second timeout, 10 minute memory cache. Any failure returns None and the
+10 second timeout, 10 minute memory cache. Any failure returns None and the
 caller keeps the cached snapshot values.
 """
 import os
@@ -14,7 +14,7 @@ PARAMS = "T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,RH2M,WS2M,ALLSKY_SFC_SW_DWN,GWETTOP,GW
 FILL = (-999.0, -99.0)
 TTL_S = 600
 RETRY_S = 60
-TIMEOUT_S = 5
+TIMEOUT_S = 10
 _lock = threading.Lock()
 _cache: dict[str, tuple[float, dict | None]] = {}
 last_status = {"ok": None, "checked_utc": None, "error": None}

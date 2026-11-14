@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-14T02:41:18Z",
+  "generated_utc": "2026-11-14T03:16:05Z",
   "sources": {
     "power_daily:16.500_95.625": {
       "rows_in": 731,
@@ -60,8 +60,13 @@
       "missing": []
     },
     "modis_mod13q1": {
-      "status": "NOT_CONNECTED",
-      "note": "No raw files in data/raw/appeears."
+      "via": "NASA ORNL DAAC subset service (no login)",
+      "composites_in": 150,
+      "composites_out": 110,
+      "dropped_fill_or_out_of_range": 0,
+      "dropped_cloud_snow_or_fill_quality": 40,
+      "retrieved_utc": "2026-11-14T03:15:54Z",
+      "note": "One 250 m pixel at each field centre. Dates are the start of each 16-day composite."
     },
     "smap_spl3smp_e": {
       "status": "NOT_CONNECTED",

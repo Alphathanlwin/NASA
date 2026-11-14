@@ -30,7 +30,10 @@ small { color: var(--muted); }
 .map-col { display: grid; grid-template-rows: minmax(0, 1fr) 190px; min-height: 0; }
 .map-wrap { position: relative; min-height: 0; }
 .map { height: 100%; width: 100%; background: #ece6d4; }
-.map-wrap.tiles-failed .leaflet-tile-pane { visibility: hidden; }
+.map canvas { display: block; }
+.map-tip { position: absolute; z-index: 500; pointer-events: none; background: var(--forest); color: #fff; padding: 2px var(--s2); border-radius: var(--r1); font-size: var(--t-xs); white-space: nowrap; }
+.map-credit { position: absolute; right: 0; bottom: 0; z-index: 400; background: rgb(255 255 255 / 0.8); padding: 1px var(--s2); font-size: 0.65rem; color: var(--muted); }
+.map-help { position: absolute; left: var(--s3); top: var(--s3); z-index: 400; background: rgb(255 255 255 / 0.85); padding: 2px var(--s2); border-radius: var(--r1); font-size: var(--t-xs); color: var(--muted); }
 .layer-switch { position: absolute; top: var(--s3); right: var(--s3); z-index: 500; display: flex; background: var(--card); border-radius: var(--r2); box-shadow: 0 1px 4px rgb(0 0 0 / 0.25); overflow: hidden; }
 .layer-switch button { border: 0; background: none; padding: var(--s2) var(--s3); font: inherit; font-size: var(--t-sm); cursor: pointer; color: var(--ink); }
 .layer-switch button.on { background: var(--forest); color: #fff; }

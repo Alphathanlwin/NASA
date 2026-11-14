@@ -1,3 +1,4 @@
+import type * as GeoJSON from 'geojson'
 export type Status = 'LIVE' | 'CACHED' | 'DEMO' | 'NOT_CONNECTED'
 
 export interface Provenance {

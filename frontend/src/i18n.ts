@@ -8,6 +8,7 @@ const en = {
     'Demo fields near Twante, Yangon Region. Values are real data for these coordinates unless badged DEMO.',
   offlineBanner: 'No connection to NASA POWER. Showing cached data.',
   tilesOffline: 'Map tiles unavailable. Field outlines are still shown.',
+  mapHelp: 'Drag to rotate · scroll to zoom · right-drag to move',
   pickField: 'Click a field on the map to send the agent.',
   pickFieldHint: 'The agent visits the field, reads the data for it and compares rotations.',
   agentEnRoute: 'Agent en route…',
