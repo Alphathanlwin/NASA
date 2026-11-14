@@ -941,3 +941,5 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
   .plan-card.float, .sim-summary { animation: none; }
   .plan-card, .tl-now { transition: none; }
 }
+
+.crop-photo { border-radius: 50%; object-fit: cover; }
