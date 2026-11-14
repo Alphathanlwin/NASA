@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { t } from '../i18n'
-import type { FieldDetail, PlanResult, Priorities, ScenarioRequest, Crop } from '../api'
+import type { FieldDetail, PlanResult, Priorities, ScenarioRequest, Crop, IoTTelemetry } from '../api'
 
 interface CommonProps {
   field: FieldDetail | null
@@ -8,6 +8,7 @@ interface CommonProps {
   crops: Crop[]
   priorities: Priorities
   returns: Record<string, number>
+  iotData?: IoTTelemetry | null
   onUpdatePriorities: (p: Priorities) => void
   onUpdateReturns: (r: Record<string, number>) => void
   onSelectField: (id: string) => void
@@ -257,7 +258,7 @@ export const F2MyFarm: React.FC<F2Props> = ({
 }
 
 // ---------------------------------------------------------------------- F3: Environment
-export const F3Environment: React.FC<CommonProps> = ({ field }) => {
+export const F3Environment: React.FC<CommonProps> = ({ field, iotData }) => {
   if (!field) return <div className="view-panel empty-state">No field selected.</div>
 
   const w = field.weather
@@ -275,6 +276,63 @@ export const F3Environment: React.FC<CommonProps> = ({ field }) => {
       </div>
 
       <div className="evidence-list">
+        {iotData?.telemetry && (
+          <div className="evidence-card" style={{ borderLeft: '4px solid var(--color-primary-base)' }}>
+            <div className="card-top">
+              <h4>📡 In-Situ IoT Soil Probe ({iotData.telemetry.device_id})</h4>
+              <span className="badge badge-live">
+                {iotData.fusion_status === 'GROUND_TRUTH_SYNCHRONIZED' ? '🛰️ SPACE + GROUND FUSED' : 'ONLINE'}
+              </span>
+            </div>
+            <div className="detail-grid">
+              <div>
+                <span className="d-label">Rootzone VWC (40cm):</span>
+                <span className="d-val tabular" style={{ color: 'var(--color-primary-dark)', fontWeight: 600 }}>
+                  {(iotData.telemetry.soil_moisture_40cm_vwc * 100).toFixed(1)}% VWC
+                </span>
+              </div>
+              <div>
+                <span className="d-label">Topsoil VWC (10cm):</span>
+                <span className="d-val tabular">
+                  {(iotData.telemetry.soil_moisture_10cm_vwc * 100).toFixed(1)}% VWC
+                </span>
+              </div>
+              <div>
+                <span className="d-label">Salinity (EC):</span>
+                <span className="d-val tabular">
+                  {iotData.telemetry.salinity_ec_ds_m.toFixed(2)} dS/m
+                </span>
+              </div>
+              <div>
+                <span className="d-label">Soil Temperature:</span>
+                <span className="d-val tabular">{iotData.telemetry.soil_temp_c.toFixed(1)} °C</span>
+              </div>
+              <div>
+                <span className="d-label">Probe Battery:</span>
+                <span className="d-val tabular">{iotData.battery_percentage}% ({iotData.telemetry.battery_mv} mV)</span>
+              </div>
+              <div>
+                <span className="d-label">LoRaWAN Signal:</span>
+                <span className="d-val tabular">{iotData.telemetry.rssi_dbm} dBm ({iotData.signal_quality})</span>
+              </div>
+            </div>
+
+            {iotData.alerts && iotData.alerts.length > 0 && (
+              <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {iotData.alerts.map((alert, idx) => (
+                  <div
+                    key={idx}
+                    className={`badge badge-${alert.severity === 'critical' ? 'unsuitable' : alert.severity === 'warning' ? 'warn' : 'info'}`}
+                    style={{ padding: '0.4rem 0.6rem', textAlign: 'left', borderRadius: '4px', lineHeight: 1.4 }}
+                  >
+                    ⚠️ <strong>{alert.type.toUpperCase().replace('_', ' ')}:</strong> {alert.message}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="evidence-card">
           <div className="card-top">
             <h4>🌧️ Precipitation (NASA POWER)</h4>

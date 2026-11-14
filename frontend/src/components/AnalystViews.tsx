@@ -1,15 +1,17 @@
 import React from 'react'
-import type { FieldDetail, MLTrack, Provenance } from '../api'
+import type { FieldDetail, IoTDevice, IoTTelemetry, MLTrack, Provenance } from '../api'
 
 interface AnalystProps {
   field: FieldDetail | null
   layers: (Provenance & { layer: string })[]
   cleaningReport: any
   modelsStatus: MLTrack[]
+  iotDevices?: IoTDevice[]
+  iotData?: IoTTelemetry | null
 }
 
 // ---------------------------------------------------------------------- A1: Mission Overview
-export const A1Overview: React.FC<AnalystProps> = ({ field, layers }) => {
+export const A1Overview: React.FC<AnalystProps> = ({ field, layers, iotDevices = [] }) => {
   return (
     <div className="view-panel">
       <div className="panel-header">
@@ -66,12 +68,46 @@ export const A1Overview: React.FC<AnalystProps> = ({ field, layers }) => {
           </table>
         </div>
       </div>
+
+      {iotDevices.length > 0 && (
+        <div className="section-block" style={{ marginTop: '1.5rem' }}>
+          <h4>In-Situ IoT Edge Sensor Mesh (AgroGuard LoRaWAN)</h4>
+          <div className="table-responsive">
+            <table className="comparison-table">
+              <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>Assigned Field</th>
+                  <th>Hardware / Firmware</th>
+                  <th>Signal RSSI</th>
+                  <th>Battery</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {iotDevices.map((dev) => (
+                  <tr key={dev.device_id}>
+                    <td><strong>{dev.device_id}</strong></td>
+                    <td>{dev.field_id} ({dev.name.split('(')[1]?.replace(')', '') || 'Active'})</td>
+                    <td>{dev.model} ({dev.firmware_version})</td>
+                    <td className="tabular">{dev.rssi_dbm} dBm (SNR: {dev.snr_db} dB)</td>
+                    <td className="tabular">{dev.battery_mv} mV</td>
+                    <td>
+                      <span className="badge badge-live">ONLINE</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
 
 // ---------------------------------------------------------------------- A2: Field Intelligence
-export const A2FieldIntelligence: React.FC<AnalystProps> = ({ field }) => {
+export const A2FieldIntelligence: React.FC<AnalystProps> = ({ field, iotData }) => {
   if (!field) return <div className="view-panel empty-state">No field selected for telemetry analysis.</div>
 
   const w = field.weather
@@ -107,6 +143,39 @@ export const A2FieldIntelligence: React.FC<AnalystProps> = ({ field }) => {
           </div>
         </div>
       </div>
+
+      {iotData?.telemetry && (
+        <div className="raw-data-card" style={{ marginTop: '1rem', borderLeft: '4px solid var(--color-primary-base)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <h4 style={{ margin: 0 }}>🛰️ Space + Ground Sensor Fusion</h4>
+            <span className="badge badge-live">{iotData.fusion_status}</span>
+          </div>
+          <div className="detail-grid">
+            <div>
+              <span className="d-label">Satellite Estimate (0.5° MERRA-2):</span>
+              <span className="d-val tabular">{wet?.gwetroot != null ? (wet.gwetroot * 100).toFixed(1) : '–'}% (Coarse Footprint)</span>
+            </div>
+            <div>
+              <span className="d-label">In-Situ Probe (40cm Root Zone):</span>
+              <span className="d-val tabular" style={{ color: 'var(--color-primary-dark)', fontWeight: 600 }}>
+                {(iotData.telemetry.soil_moisture_40cm_vwc * 100).toFixed(1)}% VWC (Ground Truth)
+              </span>
+            </div>
+            <div>
+              <span className="d-label">In-Situ Probe (10cm Topsoil):</span>
+              <span className="d-val tabular">
+                {(iotData.telemetry.soil_moisture_10cm_vwc * 100).toFixed(1)}% VWC
+              </span>
+            </div>
+            <div>
+              <span className="d-label">Tidal Salinity Intrusion:</span>
+              <span className="d-val tabular">
+                {iotData.telemetry.salinity_ec_ds_m.toFixed(2)} dS/m {iotData.telemetry.salinity_ec_ds_m >= 2.0 ? '⚠️ [High]' : '✅ [Normal]'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="time-series-preview">
         <h4>Recent Hydro-Climatic Observations</h4>

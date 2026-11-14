@@ -4,6 +4,8 @@ import type {
   AgentEvent,
   Crop,
   FieldDetail,
+  IoTDevice,
+  IoTTelemetry,
   MLTrack,
   PlanResult,
   Priorities,
@@ -45,6 +47,8 @@ export default function App() {
   const [modelsStatus, setModelsStatus] = useState<MLTrack[]>([])
   const [error, setError] = useState(false)
   const [powerOk, setPowerOk] = useState<boolean | null>(null)
+  const [iotDevices, setIotDevices] = useState<IoTDevice[]>([])
+  const [iotData, setIotData] = useState<IoTTelemetry | null>(null)
 
   // Navigation & Mode
   const [mode, setMode] = useState<Mode>('farmer')
@@ -113,6 +117,10 @@ export default function App() {
       .modelsStatus()
       .then((m) => setModelsStatus(m.tracks))
       .catch(() => {})
+    api
+      .iotDevices()
+      .then((devs) => setIotDevices(devs))
+      .catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -145,6 +153,11 @@ export default function App() {
       setRoute(null)
 
       try {
+        api
+          .fieldIoT(id)
+          .then((iot) => setIotData(iot))
+          .catch(() => setIotData(null))
+
         const [d, a, p] = await Promise.all([
           api.field(id),
           api.agentRun(id),
@@ -278,6 +291,7 @@ export default function App() {
 
       setDetail(result.field)
       setPlan(result.baseline)
+      setIotData(result.iot_telemetry ?? null)
       setSelectedId(result.field.id)
       setDrawing(false)
       setDrawnPoints([])
@@ -394,6 +408,7 @@ export default function App() {
               crops={crops}
               priorities={priorities}
               returns={returns}
+              iotData={iotData}
               onUpdatePriorities={setPriorities}
               onUpdateReturns={setReturns}
               onSelectField={selectField}
@@ -450,6 +465,8 @@ export default function App() {
               layers={layers}
               cleaningReport={cleaningReport}
               modelsStatus={modelsStatus}
+              iotDevices={iotDevices}
+              iotData={iotData}
             />
           )}
 
@@ -459,6 +476,8 @@ export default function App() {
               layers={layers}
               cleaningReport={cleaningReport}
               modelsStatus={modelsStatus}
+              iotDevices={iotDevices}
+              iotData={iotData}
             />
           )}
 

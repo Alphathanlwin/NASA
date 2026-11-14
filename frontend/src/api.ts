@@ -144,12 +144,48 @@ export interface AnalysisRequest {
   scenario?: ScenarioRequest
 }
 
+export interface IoTTelemetry {
+  telemetry: {
+    device_id: string
+    field_id: string
+    timestamp_utc: string
+    battery_mv: number
+    rssi_dbm: number
+    soil_moisture_10cm_vwc: number
+    soil_moisture_40cm_vwc: number
+    soil_temp_c: number
+    salinity_ec_ds_m: number
+    water_table_depth_cm?: number | null
+  }
+  alerts: { severity: string; type: string; message: string }[]
+  fusion_status: string
+  battery_percentage: number
+  signal_quality: 'strong' | 'moderate' | 'weak'
+}
+
+export interface IoTDevice {
+  device_id: string
+  name: string
+  field_id: string
+  model: string
+  hardware_version: string
+  firmware_version: string
+  status: string
+  last_seen_utc: string
+  battery_mv: number
+  rssi_dbm: number
+  snr_db: number
+  sensors: string[]
+}
+
 export interface AnalysisResult {
   analysis_id: string
   engine_version: string
   field: FieldDetail
   baseline: PlanResult
   scenario: (PlanResult & { assumptions: ScenarioRequest }) | null
+  hydrological_trajectory?: any
+  iot_telemetry?: IoTTelemetry | null
   limitations: string[]
   processing: { step: string; status: 'complete' | 'unavailable'; details?: string }[]
 }
@@ -210,6 +246,17 @@ export const api = {
       body: JSON.stringify(req),
     })
     if (!res.ok) throw new Error(`analysis: ${res.status}`)
+    return res.json()
+  },
+  iotDevices: () => get<IoTDevice[]>('/api/iot/devices'),
+  fieldIoT: (fieldId: string) => get<IoTTelemetry>(`/api/fields/${fieldId}/iot`),
+  postFieldIoT: async (fieldId: string, packet: any): Promise<IoTTelemetry> => {
+    const res = await fetch(`/api/fields/${fieldId}/iot`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(packet),
+    })
+    if (!res.ok) throw new Error(`postFieldIoT: ${res.status}`)
     return res.json()
   },
 }
