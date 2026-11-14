@@ -1,7 +1,6 @@
 // AI-assisted: Claude Code
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AgentLog } from './components/AgentLog'
-import { DataQuality } from './components/DataQuality'
 import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { FieldView } from './components/FieldView'
@@ -22,7 +21,7 @@ import type { Key, Lang } from './i18n'
 import './app.css'
 
 
-const PAGE_ORDER: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log', 'quality']
+const PAGE_ORDER: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log']
 /** The map's agent trace runs 2.2 s before the field view opens. */
 const ENTER_DELAY_MS = 2200
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
@@ -256,7 +255,6 @@ export default function App() {
             {page === 'log' && field.agent_run && (
               <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
             )}
-            {page === 'quality' && <DataQuality snap={snap} />}
           </main>
         )}
 

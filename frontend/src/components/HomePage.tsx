@@ -66,7 +66,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
   userFields: UserField[]
   selectedId: string | null
   onSelect: (id: string) => void
-  onPage: (p: 'fields' | 'field3d' | 'planner' | 'scenarios' | 'quality') => void
+  onPage: (p: 'fields' | 'field3d' | 'planner' | 'scenarios') => void
   onMeasurements: () => void
   onAdd: () => void
   readingsMoisture?: string | null
@@ -155,7 +155,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             </div>
             <div className="cond-foot">
               <span>{t('cond.note')}</span>
-              <button className="link" onClick={() => onPage('quality')}>{t('cond.more')}</button>
+              <a className="link" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">{t('cond.more')}</a>
             </div>
             <div className="field-nutrients">
               <h4>{t('overview.nutrients')}</h4>
