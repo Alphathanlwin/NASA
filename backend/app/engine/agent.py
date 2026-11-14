@@ -1,11 +1,26 @@
-"""The agent run: a deterministic list of events describing the data checks for
-one field. The frontend replays it to move the marker and fill the event log.
-Same field data in, same events out.
+# AI-assisted: Claude Code
+"""Deterministic explanation steps for one field.
+
+There is no live LLM in the MVP. The event log is a fixed sequence of nine steps
+filled from the field profile and the rule output. Same field in, same log out.
+The moving marker in the UI is a visual metaphor for these steps, not a claim
+that a vehicle or satellite travels to the field.
 """
 import math
 
 SPEED_KMH = 20.0
-SIM_START_MIN = 9 * 60 + 12  # sim clock starts at 09:12
+SIM_START_MIN = 9 * 60 + 12
+STEPS = [
+    ("field_selected", "Field selected"),
+    ("geometry_resolved", "Geometry resolved"),
+    ("loading_power", "Loading NASA POWER"),
+    ("loading_imerg", "Loading cached IMERG"),
+    ("checking_quality", "Checking data quality"),
+    ("building_profile", "Building field profile"),
+    ("evaluating_rotations", "Evaluating rotations"),
+    ("scenario_recalculated", "Scenario recalculated"),
+    ("report_ready", "Report ready"),
+]
 
 
 def distance_km(a, b):
@@ -19,63 +34,39 @@ def sim_time(minutes):
     return f"{total // 60 % 24:02d}:{total % 60:02d}"
 
 
-def build_run(field: dict, base: dict, steps: int = 30) -> dict:
+def build_run(field: dict, base: dict, steps: int = 30, scenario_label: str | None = None) -> dict:
     start = (base["lat"], base["lon"])
     end = tuple(field["centroid"])
+    km = distance_km(start, end)
     waypoints = [[round(start[0] + (end[0] - start[0]) * i / steps, 6),
                   round(start[1] + (end[1] - start[1]) * i / steps, 6)] for i in range(steps + 1)]
-    km = distance_km(start, end)
-    eta = max(1.0, km / SPEED_KMH * 60)
     prov = field.get("provenance") or {}
-    weather, wet, soil = field.get("weather"), field.get("wetness"), field.get("soil")
-    ndvi, smap = field.get("ndvi"), field.get("smap")
+    town = field.get("town_name")
+    dist = field.get("town_distance_km")
 
-    def ev(key, t_ms, minutes, text, source=None, status=None, ok=True):
-        return {"key": key, "t_ms": t_ms, "sim_time": sim_time(minutes), "text": text,
-                "source": source, "status": status, "ok": ok}
-
-    def st(name):
+    def status(name):
         return (prov.get(name) or {}).get("status")
 
-    events = [
-        ev("dispatched", 0, 0, f"Agent dispatched to {field['name']} ({field['id']})."),
-        ev("en_route", 400, eta * 0.2, f"En route: {km:.1f} km in a straight line."),
-        ev("arrived", 2500, eta, "Arrived at the field. Starting checks."),
-    ]
-    t, m = 2900, eta + 1
-    if weather:
-        events.append(ev("reading_power", t, m,
-                         f"Weather: {weather['t2m']} C, {weather['rain_7d']} mm rain in the last 7 days "
-                         f"(as of {weather['as_of']}).", "NASA POWER (modelled)", st("weather")))
-    else:
-        events.append(ev("reading_power", t, m, "Weather: no data available.", "NASA POWER", None, ok=False))
-    t, m = t + 400, m + 1
-    if wet:
-        events.append(ev("reading_wetness", t, m, f"Root-zone wetness: {wet['gwetroot']} on a 0-1 scale.",
-                         "NASA POWER (modelled)", st("wetness")))
-        t, m = t + 400, m + 1
-    if soil and soil.get("ph") is not None:
-        events.append(ev("reading_soil", t, m, f"Topsoil: pH {soil['ph']}, clay {soil.get('clay_pct')}%.",
-                         "ISRIC SoilGrids", st("soil")))
-    else:
-        events.append(ev("reading_soil", t, m, "Topsoil: no data for this location.", "ISRIC SoilGrids", None, ok=False))
-    t, m = t + 400, m + 1
-    if smap:
-        events.append(ev("reading_smap", t, m, f"Satellite soil moisture: {smap['value']} m3/m3 (district scale, 9 km).",
-                         "SMAP SPL3SMP_E", st("smap")))
-    else:
-        events.append(ev("reading_smap", t, m, "Satellite soil moisture: not connected, skipped.",
-                         "SMAP SPL3SMP_E", "NOT_CONNECTED", ok=False))
-    t, m = t + 400, m + 1
-    if ndvi:
-        events.append(ev("reading_ndvi", t, m, f"Vegetation index (NDVI): {ndvi['value']} on {ndvi['as_of']}.",
-                         "MODIS MOD13Q1", st("ndvi")))
-    else:
-        events.append(ev("reading_ndvi", t, m, "Vegetation index: not connected, skipped.",
-                         "MODIS MOD13Q1", "NOT_CONNECTED", ok=False))
-    t, m = t + 400, m + 1
-    events.append(ev("scoring", t, m, "Scoring rotations with the rules engine."))
-    events.append(ev("plan_ready", t + 500, m + 1, "Plans ready."))
+    detail = {
+        "field_selected": (f"Field {field['id']} selected.", None, "DEMO"),
+        "geometry_resolved": (f"Polygon resolved; {field.get('area_acres')} acres. Nearest reference: {town}, {dist} km.",
+                              "Demo geometry (DEMO)", "DEMO"),
+        "loading_power": (f"NASA POWER point data for the {town} grid cell.", "NASA POWER daily", status("power_recent")),
+        "loading_imerg": ("GPM IMERG Late run is not available in this build.", "GPM_3IMERGDL V07", "UNAVAILABLE"),
+        "checking_quality": ("Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+                             "Cleaning report", "CACHED"),
+        "building_profile": ("Field profile built from the grid-cell values above; no field measurements are claimed.",
+                             "Field profile", "CACHED"),
+        "evaluating_rotations": ("Rice-rice baseline plus rice-mung bean and rice-black gram scored by the rules engine.",
+                                 "Rotation engine", "CACHED"),
+        "scenario_recalculated": (scenario_label or "Baseline assumptions (no scenario selected).", "Scenario simulator", "USER-INPUT"),
+        "report_ready": ("Reasons, evidence references, unknowns and local checks ready.", "Decision report", "CACHED"),
+    }
+    events = []
+    for i, (key, label) in enumerate(STEPS):
+        text, source, state = detail[key]
+        events.append({"key": key, "label": label, "t_ms": i * 450, "sim_time": sim_time(i * 0.8),
+                       "text": text, "source": source, "status": state, "ok": state != "UNAVAILABLE"})
     return {"field_id": field["id"], "waypoints": waypoints, "distance_km": round(km, 2),
-            "eta_min": round(eta, 1), "travel_ms": 2500, "sim_clock_note": "Sim time, not real time.",
-            "events": events}
+            "travel_ms": 2200, "sim_clock_note": "Simulated clock, not real time.",
+            "metaphor": "Visualises the analysis steps", "events": events}

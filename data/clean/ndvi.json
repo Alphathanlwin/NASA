@@ -1,0 +1,340 @@
+{
+  "F-01": [
+    {
+      "date": "2025-09-30",
+      "ndvi": 0.745,
+      "marginal": true
+    },
+    {
+      "date": "2025-10-16",
+      "ndvi": 0.715,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-01",
+      "ndvi": 0.464,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-17",
+      "ndvi": 0.406,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-03",
+      "ndvi": 0.387,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-19",
+      "ndvi": 0.49,
+      "marginal": false
+    },
+    {
+      "date": "2026-01-01",
+      "ndvi": 0.586,
+      "marginal": true
+    },
+    {
+      "date": "2026-01-17",
+      "ndvi": 0.74,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-02",
+      "ndvi": 0.846,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-18",
+      "ndvi": 0.835,
+      "marginal": true
+    },
+    {
+      "date": "2026-03-06",
+      "ndvi": 0.68,
+      "marginal": true
+    },
+    {
+      "date": "2026-03-22",
+      "ndvi": 0.6,
+      "marginal": true
+    },
+    {
+      "date": "2026-04-07",
+      "ndvi": 0.402,
+      "marginal": false
+    },
+    {
+      "date": "2026-04-23",
+      "ndvi": 0.438,
+      "marginal": true
+    },
+    {
+      "date": "2026-05-25",
+      "ndvi": 0.571,
+      "marginal": true
+    },
+    {
+      "date": "2026-08-29",
+      "ndvi": 0.715,
+      "marginal": false
+    },
+    {
+      "date": "2026-09-30",
+      "ndvi": 0.735,
+      "marginal": false
+    },
+    {
+      "date": "2026-10-16",
+      "ndvi": 0.599,
+      "marginal": false
+    }
+  ],
+  "F-02": [
+    {
+      "date": "2025-09-30",
+      "ndvi": 0.817,
+      "marginal": true
+    },
+    {
+      "date": "2025-10-16",
+      "ndvi": 0.817,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-01",
+      "ndvi": 0.782,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-17",
+      "ndvi": 0.773,
+      "marginal": true
+    },
+    {
+      "date": "2025-12-03",
+      "ndvi": 0.731,
+      "marginal": true
+    },
+    {
+      "date": "2025-12-19",
+      "ndvi": 0.734,
+      "marginal": false
+    },
+    {
+      "date": "2026-01-01",
+      "ndvi": 0.684,
+      "marginal": true
+    },
+    {
+      "date": "2026-01-17",
+      "ndvi": 0.735,
+      "marginal": true
+    },
+    {
+      "date": "2026-02-02",
+      "ndvi": 0.639,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-18",
+      "ndvi": 0.548,
+      "marginal": false
+    },
+    {
+      "date": "2026-03-06",
+      "ndvi": 0.587,
+      "marginal": false
+    },
+    {
+      "date": "2026-03-22",
+      "ndvi": 0.627,
+      "marginal": false
+    },
+    {
+      "date": "2026-04-07",
+      "ndvi": 0.617,
+      "marginal": true
+    },
+    {
+      "date": "2026-04-23",
+      "ndvi": 0.544,
+      "marginal": true
+    },
+    {
+      "date": "2026-08-13",
+      "ndvi": 0.766,
+      "marginal": true
+    },
+    {
+      "date": "2026-08-29",
+      "ndvi": 0.781,
+      "marginal": false
+    },
+    {
+      "date": "2026-09-30",
+      "ndvi": 0.791,
+      "marginal": true
+    },
+    {
+      "date": "2026-10-16",
+      "ndvi": 0.778,
+      "marginal": false
+    }
+  ],
+  "F-03": [
+    {
+      "date": "2025-11-01",
+      "ndvi": 0.52,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-17",
+      "ndvi": 0.547,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-03",
+      "ndvi": 0.658,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-19",
+      "ndvi": 0.664,
+      "marginal": false
+    },
+    {
+      "date": "2026-01-01",
+      "ndvi": 0.787,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-02",
+      "ndvi": 0.811,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-18",
+      "ndvi": 0.62,
+      "marginal": false
+    },
+    {
+      "date": "2026-03-06",
+      "ndvi": 0.684,
+      "marginal": false
+    },
+    {
+      "date": "2026-04-07",
+      "ndvi": 0.543,
+      "marginal": false
+    },
+    {
+      "date": "2026-05-09",
+      "ndvi": 0.429,
+      "marginal": false
+    },
+    {
+      "date": "2026-05-25",
+      "ndvi": 0.691,
+      "marginal": false
+    },
+    {
+      "date": "2026-09-30",
+      "ndvi": 0.772,
+      "marginal": false
+    }
+  ],
+  "F-04": [
+    {
+      "date": "2025-10-16",
+      "ndvi": 0.795,
+      "marginal": false
+    },
+    {
+      "date": "2025-11-01",
+      "ndvi": 0.756,
+      "marginal": true
+    },
+    {
+      "date": "2025-11-17",
+      "ndvi": 0.763,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-03",
+      "ndvi": 0.7,
+      "marginal": false
+    },
+    {
+      "date": "2025-12-19",
+      "ndvi": 0.691,
+      "marginal": false
+    },
+    {
+      "date": "2026-01-01",
+      "ndvi": 0.654,
+      "marginal": false
+    },
+    {
+      "date": "2026-01-17",
+      "ndvi": 0.708,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-02",
+      "ndvi": 0.763,
+      "marginal": false
+    },
+    {
+      "date": "2026-02-18",
+      "ndvi": 0.647,
+      "marginal": false
+    },
+    {
+      "date": "2026-03-06",
+      "ndvi": 0.743,
+      "marginal": false
+    },
+    {
+      "date": "2026-03-22",
+      "ndvi": 0.646,
+      "marginal": false
+    },
+    {
+      "date": "2026-04-07",
+      "ndvi": 0.613,
+      "marginal": false
+    },
+    {
+      "date": "2026-04-23",
+      "ndvi": 0.673,
+      "marginal": false
+    },
+    {
+      "date": "2026-05-09",
+      "ndvi": 0.822,
+      "marginal": false
+    },
+    {
+      "date": "2026-08-13",
+      "ndvi": 0.799,
+      "marginal": false
+    },
+    {
+      "date": "2026-08-29",
+      "ndvi": 0.803,
+      "marginal": false
+    },
+    {
+      "date": "2026-09-30",
+      "ndvi": 0.805,
+      "marginal": false
+    },
+    {
+      "date": "2026-10-16",
+      "ndvi": 0.795,
+      "marginal": false
+    }
+  ]
+}

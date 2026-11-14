@@ -1,28 +1,37 @@
 {
   "type": "FeatureCollection",
-  "note": "DEMO field layout. Shapes, names, crop history and irrigation flags are illustrative.",
+  "generated_at": "2026-11-14T04:40:48Z",
+  "retrieved_at": "2026-11-14T04:40:48Z",
   "agent_base": {
-    "name": "Agent base (DEMO)",
-    "lat": 16.709,
-    "lon": 95.956
+    "lat": 16.809,
+    "lon": 96.157,
+    "name": "Yangon advisory office (DEMO)"
   },
+  "note": "DEMO field layout. Shapes, names, crop history and irrigation settings are illustrative.",
   "features": [
     {
       "type": "Feature",
       "id": "F-01",
       "properties": {
         "id": "F-01",
-        "name": "Twante North Block",
+        "name": "Myaungmya demo field",
         "centroid": [
-          16.7352,
-          95.9548
+          16.62,
+          94.96
         ],
-        "area_ha": 15.6,
+        "area_acres": 38.6,
+        "town_id": "myaungmya",
+        "town_name": "Myaungmya",
+        "town_distance_km": 3.9,
+        "power_grid": [
+          16.5,
+          95.0
+        ],
         "crop_history": [
-          "monsoon_rice",
-          "black_gram"
+          "rice",
+          "rice"
         ],
-        "irrigated": false,
+        "irrigation": "unavailable",
         "status": "DEMO"
       },
       "geometry": {
@@ -30,24 +39,24 @@
         "coordinates": [
           [
             [
-              95.953021,
-              16.733277
+              94.958222,
+              16.618077
             ],
             [
-              95.957242,
-              16.734136
+              94.96244,
+              16.618936
             ],
             [
-              95.956579,
-              16.737123
+              94.961778,
+              16.621923
             ],
             [
-              95.952358,
-              16.736264
+              94.95756,
+              16.621064
             ],
             [
-              95.953021,
-              16.733277
+              94.958222,
+              16.618077
             ]
           ]
         ]
@@ -58,17 +67,24 @@
       "id": "F-02",
       "properties": {
         "id": "F-02",
-        "name": "Canal Side Block",
+        "name": "Pathein demo field",
         "centroid": [
-          16.712,
-          95.988
+          16.8,
+          94.78
         ],
-        "area_ha": 15.6,
+        "area_acres": 38.5,
+        "town_id": "pathein",
+        "town_name": "Pathein",
+        "town_distance_km": 5.8,
+        "power_grid": [
+          17.0,
+          95.0
+        ],
         "crop_history": [
-          "monsoon_rice",
-          "summer_rice"
+          "rice",
+          "rice"
         ],
-        "irrigated": true,
+        "irrigation": "available",
         "status": "DEMO"
       },
       "geometry": {
@@ -76,24 +92,24 @@
         "coordinates": [
           [
             [
-              95.985389,
-              16.710991
+              94.777388,
+              16.798991
             ],
             [
-              95.990219,
-              16.710341
+              94.78222,
+              16.798341
             ],
             [
-              95.990611,
-              16.713009
+              94.782612,
+              16.801009
             ],
             [
-              95.985781,
-              16.713659
+              94.77778,
+              16.801659
             ],
             [
-              95.985389,
-              16.710991
+              94.777388,
+              16.798991
             ]
           ]
         ]
@@ -104,17 +120,24 @@
       "id": "F-03",
       "properties": {
         "id": "F-03",
-        "name": "Kyaung Su Block",
+        "name": "Bogale demo field",
         "centroid": [
-          16.7015,
-          95.9402
+          16.31,
+          95.42
         ],
-        "area_ha": 16.0,
+        "area_acres": 39.4,
+        "town_id": "bogale",
+        "town_name": "Bogale",
+        "town_distance_km": 3.1,
+        "power_grid": [
+          16.5,
+          95.625
+        ],
         "crop_history": [
-          "monsoon_rice",
-          "fallow"
+          "rice",
+          "rice"
         ],
-        "irrigated": false,
+        "irrigation": "sometimes",
         "status": "DEMO"
       },
       "geometry": {
@@ -122,24 +145,24 @@
         "coordinates": [
           [
             [
-              95.939168,
-              16.699156
+              95.41897,
+              16.307656
             ],
             [
-              95.942738,
-              16.70075
+              95.422533,
+              16.30925
             ],
             [
-              95.941232,
-              16.703844
+              95.42103,
+              16.312344
             ],
             [
-              95.937662,
-              16.70225
+              95.417467,
+              16.31075
             ],
             [
-              95.939168,
-              16.699156
+              95.41897,
+              16.307656
             ]
           ]
         ]
@@ -150,17 +173,24 @@
       "id": "F-04",
       "properties": {
         "id": "F-04",
-        "name": "Htan Pin Block",
+        "name": "Twante demo field",
         "centroid": [
-          16.6893,
-          95.9715
+          16.7352,
+          95.9548
         ],
-        "area_ha": 15.4,
+        "area_acres": 38.0,
+        "town_id": "twante",
+        "town_name": "Twante",
+        "town_distance_km": 2.9,
+        "power_grid": [
+          16.5,
+          96.25
+        ],
         "crop_history": [
-          "monsoon_rice",
-          "green_gram"
+          "rice",
+          "rice"
         ],
-        "irrigated": false,
+        "irrigation": "unavailable",
         "status": "DEMO"
       },
       "geometry": {
@@ -168,116 +198,24 @@
         "coordinates": [
           [
             [
-              95.969359,
-              16.687716
+              95.952659,
+              16.733616
             ],
             [
-              95.97385,
-              16.688017
+              95.957151,
+              16.733917
             ],
             [
-              95.973641,
-              16.690884
+              95.956941,
+              16.736784
             ],
             [
-              95.96915,
-              16.690583
+              95.952449,
+              16.736483
             ],
             [
-              95.969359,
-              16.687716
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "F-05",
-      "properties": {
-        "id": "F-05",
-        "name": "River Bend Block",
-        "centroid": [
-          16.7246,
-          95.9221
-        ],
-        "area_ha": 14.4,
-        "crop_history": [
-          "monsoon_rice",
-          "maize"
-        ],
-        "irrigated": true,
-        "status": "DEMO"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              95.91976,
-              16.723695
-            ],
-            [
-              95.923285,
-              16.722466
-            ],
-            [
-              95.92444,
-              16.725505
-            ],
-            [
-              95.920915,
-              16.726734
-            ],
-            [
-              95.91976,
-              16.723695
-            ]
-          ]
-        ]
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "F-06",
-      "properties": {
-        "id": "F-06",
-        "name": "South Embankment Block",
-        "centroid": [
-          16.6761,
-          95.9489
-        ],
-        "area_ha": 16.7,
-        "crop_history": [
-          "monsoon_rice",
-          "black_gram"
-        ],
-        "irrigated": false,
-        "status": "DEMO"
-      },
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              95.946831,
-              16.674127
-            ],
-            [
-              95.951722,
-              16.675383
-            ],
-            [
-              95.950969,
-              16.678073
-            ],
-            [
-              95.946078,
-              16.676817
-            ],
-            [
-              95.946831,
-              16.674127
+              95.952659,
+              16.733616
             ]
           ]
         ]

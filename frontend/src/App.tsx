@@ -1,181 +1,165 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { api } from './api'
-import type { AgentEvent, Crop, FieldDetail, PlanResult, Priorities, Provenance } from './api'
-import { FarmMap } from './components/FarmMap'
-import { Badge, Conditions, FieldHeader, Plans, PrioritySliders, ReturnsForm } from './components/Panel'
-import { t } from './i18n'
+// AI-assisted: Claude Code
+import { useEffect, useMemo, useState } from 'react'
+import { AgentLog } from './components/AgentLog'
+import { DataQuality } from './components/DataQuality'
+import { FieldOverview } from './components/FieldOverview'
+import { MapView } from './components/MapView'
+import { PlansPanel } from './components/PlansPanel'
+import { ScenarioPanel } from './components/ScenarioPanel'
+import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
+import type { Snapshot } from './data'
+import type { Econ, Priorities, Scenario } from './engine/types'
+import { initialLang, setLang, t } from './i18n'
+import type { Lang } from './i18n'
 import './app.css'
 
-type Fields = Awaited<ReturnType<typeof api.fields>>
+type Tab = 'overview' | 'compare' | 'scenarios' | 'agent' | 'quality'
 
-const ease = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2)
+const TABS: { id: Tab; key: Parameters<typeof t>[0] }[] = [
+  { id: 'overview', key: 'nav.overview' },
+  { id: 'compare', key: 'nav.compare' },
+  { id: 'scenarios', key: 'nav.scenarios' },
+  { id: 'agent', key: 'nav.agent' },
+  { id: 'quality', key: 'nav.quality' },
+]
+
+const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
 export default function App() {
-  const [fields, setFields] = useState<Fields | null>(null)
-  const [crops, setCrops] = useState<Crop[]>([])
-  const [layers, setLayers] = useState<(Provenance & { layer: string })[]>([])
+  const [lang, setLanguage] = useState<Lang>(initialLang())
+  const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
-  const [powerOk, setPowerOk] = useState<boolean | null>(null)
-
+  const [online, setOnline] = useState(false)
+  const [tab, setTab] = useState<Tab>('overview')
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [detail, setDetail] = useState<FieldDetail | null>(null)
-  const [plan, setPlan] = useState<PlanResult | null>(null)
-  const [events, setEvents] = useState<AgentEvent[]>([])
-  const [agentPos, setAgentPos] = useState<[number, number] | null>(null)
-  const [route, setRoute] = useState<[number, number][] | null>(null)
-  const [priorities, setPriorities] = useState<Priorities>({ income: 40, soil: 30, water: 30 })
-  const [returns, setReturns] = useState<Record<string, number>>({})
+  const [priorities, setPriorities] = useState<Priorities>(DEFAULT_PRIORITIES)
+  const [econ, setEcon] = useState<Econ>({})
+  const [draft, setDraft] = useState<Scenario>({})
+  const [runId, setRunId] = useState(0)
 
-  const runRef = useRef(0)
-  const timers = useRef<number[]>([])
-  const raf = useRef(0)
-  const logRef = useRef<HTMLOListElement>(null)
+  useEffect(() => {
+    setLang(lang)
+  }, [lang])
 
-  const refreshStatus = useCallback(() => {
-    api.status().then((s) => setLayers(s.layers)).catch(() => {})
-    api.health().then((h) => setPowerOk(h.power_live.ok)).catch(() => {})
+  useEffect(() => {
+    loadSnapshot()
+      .then((s) => {
+        setSnap(s)
+        setSelectedId(Object.keys(s.fields)[0] ?? null)
+      })
+      .catch(() => setError(true))
+    backendOnline().then(setOnline)
   }, [])
 
-  useEffect(() => {
-    Promise.all([api.fields(), api.crops()])
-      .then(([f, c]) => { setFields(f); setCrops(c.crops); setAgentPos([f.agent_base.lat, f.agent_base.lon]) })
-      .catch(() => setError(true))
-    refreshStatus()
-  }, [refreshStatus])
+  const field = snap && selectedId ? snap.fields[selectedId] : null
 
-  useEffect(() => { logRef.current?.scrollTo({ top: logRef.current.scrollHeight }) }, [events])
+  const plans = useMemo(() => {
+    if (!snap || !field) return null
+    return runPlans(snap, field, priorities, econ)
+  }, [snap, field, priorities, econ])
 
-  const cancelRun = () => {
-    timers.current.forEach(clearTimeout)
-    timers.current = []
-    cancelAnimationFrame(raf.current)
+  const comparison = useMemo(() => {
+    if (!snap || !field || Object.keys(draft).length === 0) return null
+    return runCompare(snap, field, draft, priorities, econ)
+  }, [snap, field, draft, priorities, econ])
+
+  const select = (id: string) => {
+    setSelectedId(id)
+    setDraft({})
+    setRunId((n) => n + 1)
   }
 
-  const selectField = useCallback(async (id: string) => {
-    cancelRun()
-    const run = ++runRef.current
-    setSelectedId(id); setDetail(null); setPlan(null); setEvents([]); setRoute(null)
-    try {
-      const [d, a, p] = await Promise.all([api.field(id), api.agentRun(id), api.plan(id, priorities, returns)])
-      if (run !== runRef.current) return
-      setRoute(a.waypoints)
-      const start = performance.now()
-      const step = (now: number) => {
-        const k = Math.min(1, (now - start) / a.travel_ms)
-        const pos = ease(k) * (a.waypoints.length - 1)
-        const i = Math.min(a.waypoints.length - 2, Math.floor(pos))
-        const f = pos - i
-        const [p0, p1] = [a.waypoints[i], a.waypoints[i + 1]]
-        setAgentPos([p0[0] + (p1[0] - p0[0]) * f, p0[1] + (p1[1] - p0[1]) * f])
-        if (k < 1) raf.current = requestAnimationFrame(step)
-      }
-      raf.current = requestAnimationFrame(step)
-      for (const ev of a.events) {
-        timers.current.push(window.setTimeout(() => {
-          if (run !== runRef.current) return
-          setEvents((prev) => [...prev, ev])
-          if (ev.key === 'arrived') setDetail(d)
-          if (ev.key === 'plan_ready') { setPlan(p); refreshStatus() }
-        }, ev.t_ms))
-      }
-    } catch {
-      if (run === runRef.current) setError(true)
-    }
-  }, [priorities, returns, refreshStatus])
-
-  // Deep link: /?field=F-03 sends the agent to that field on load.
-  const autoRan = useRef(false)
-  useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get('field')
-    if (fields && id && !autoRan.current) { autoRan.current = true; selectField(id) }
-  }, [fields, selectField])
-
-  // Sliders and returns re-rank the plans without re-running the agent.
-  useEffect(() => {
-    if (!selectedId || !plan) return
-    const id = window.setTimeout(() => {
-      api.plan(selectedId, priorities, returns).then(setPlan).catch(() => {})
-    }, 150)
-    return () => clearTimeout(id)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [priorities, returns])
-
-  const seen = new Set(events.map((e) => e.key))
-  const arrived = seen.has('arrived')
-  const scanning = arrived && !seen.has('plan_ready')
-  const last = events[events.length - 1]
+  const calendar = plans?.plans[0]?.calendar ?? null
 
   return (
-    <div className="shell">
-      <aside className="sidebar">
+    <div className="app">
+      <header className="topbar">
         <div className="brand">
-          <div className="brand-mark">FS</div>
+          <div className="brand-mark" aria-hidden="true">FS</div>
           <div>
-            <b>{t('appName')}</b>
-            <small>{t('tagline')}</small>
+            <b>{t('app.name')}</b>
+            <span>{t('app.tagline')}</span>
           </div>
         </div>
-        <div className="side-section">
-          <h4>{t('dataSources')}</h4>
-          <ul className="sources">
-            {layers.filter((l) => l.layer !== 'wetness').map((l) => (
-              <li key={l.layer}><Badge p={{ ...l, as_of: null }} /></li>
+
+        <div className="top-actions">
+          <span className={`mode ${online ? 'mode-online' : 'mode-offline'}`}>
+            {online ? t('mode.backend') : t('mode.cached')}
+          </span>
+          <div className="lang-toggle" role="group" aria-label={t('lang.label')}>
+            <button className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
+            <button className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
+          </div>
+        </div>
+      </header>
+
+      {error && <div className="banner error">{t('common.error')}</div>}
+      {!snap && !error && <div className="banner">{t('common.loading')}</div>}
+
+      {snap && field && (
+        <>
+          <div className="field-strip" role="tablist" aria-label={t('field.choose')}>
+            <span className="strip-label">{t('field.choose')}</span>
+            {Object.values(snap.fields).map((f) => (
+              <button key={f.id} role="tab" aria-selected={f.id === selectedId}
+                className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
+                <b>{f.id}</b> {f.name.replace(' demo field', '')}
+                <small>{t('field.acres', { a: f.area_acres })}</small>
+              </button>
             ))}
-          </ul>
-        </div>
-        <p className="side-foot">{t('disclaimer')}</p>
-      </aside>
+          </div>
 
-      <main className="main">
-        <div className="banner demo">{t('demoBanner')}</div>
-        {powerOk === false && <div className="banner offline">{t('offlineBanner')}</div>}
-        {error && <div className="banner offline">{t('loadError')}</div>}
-        <div className="content">
-          <div className="map-col">
-            {fields && (
-              <FarmMap fields={fields} selectedId={selectedId} agentPos={agentPos} route={route} scanning={scanning} onSelect={selectField} />
-            )}
-            <div className="log">
-              <div className="log-head">
-                <b>{t('eventLog')}</b>
-                {last && <span className="clock">{last.sim_time} <small>{t('simTime')}</small></span>}
+          <main className="layout">
+            <div className="map-col">
+              <MapView snap={snap} selectedId={selectedId} onSelect={select}
+                agentRun={field.agent_run ?? null} runId={runId} />
+              <div className="map-note">
+                <b>{t('field.reference')}:</b> {field.town_name}, {t('field.distance', { d: field.town_distance_km })}.
+                <span> {snap.geojson.note}</span>
               </div>
-              <ol ref={logRef}>
-                {events.length === 0 && <li className="muted">{t('pickField')}</li>}
-                {events.map((e, i) => (
-                  <li key={i} className={e.ok ? '' : 'skipped'}>
-                    <time>{e.sim_time}</time>
-                    <span>{e.text}{e.source && <small> {e.source}{e.status ? ` · ${e.status.replace('_', ' ')}` : ''}</small>}</span>
-                  </li>
-                ))}
-              </ol>
             </div>
-          </div>
 
-          <div className="panel">
-            {!selectedId && (
-              <div className="empty">
-                <h2>{t('pickField')}</h2>
-                <p>{t('pickFieldHint')}</p>
-              </div>
-            )}
-            {selectedId && !detail && <div className="empty"><h2>{t('agentEnRoute')}</h2><div className="skeleton tall" /></div>}
-            {detail && (
-              <>
-                <FieldHeader f={detail} crops={crops} />
-                <Conditions f={detail} seen={seen} />
-                {plan && (
-                  <>
-                    <PrioritySliders value={priorities} onChange={setPriorities} />
-                    <ReturnsForm crops={crops} value={returns} onChange={setReturns} />
-                    <Plans result={plan} />
-                  </>
+            <div className="content">
+              <nav className="tabs" aria-label={t('nav.sections')}>
+                {TABS.map((item) => (
+                  <button key={item.id} className={tab === item.id ? 'active' : ''}
+                    onClick={() => setTab(item.id)} aria-current={tab === item.id ? 'page' : undefined}>
+                    {t(item.key)}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="page">
+                {tab === 'overview' && (
+                  <FieldOverview snap={snap} field={field} calendar={calendar}
+                    onAnalyse={() => { setTab('compare'); setRunId((n) => n + 1) }} />
                 )}
-              </>
-            )}
-          </div>
-        </div>
-      </main>
+                {tab === 'compare' && plans && (
+                  <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}
+                    econ={econ} onEcon={setEcon} />
+                )}
+                {tab === 'scenarios' && (
+                  <ScenarioPanel draft={draft} onChange={setDraft} result={comparison}
+                    fieldIrrigation={field.irrigation} />
+                )}
+                {tab === 'agent' && field.agent_run && (
+                  <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
+                )}
+                {tab === 'quality' && <DataQuality snap={snap} />}
+              </div>
+            </div>
+          </main>
+        </>
+      )}
+
+      <footer className="footer">
+        <p className="disclaimer">{t('footer.disclaimer')}</p>
+        <p>{t('footer.data')} · {t('footer.built')}</p>
+        <p className="small">
+          Snapshot {snap?.generated_at?.slice(0, 10) ?? '—'} · Engine {snap?.engine_version ?? '—'} ·
+          Retrieval {snap?.retrieved_at?.slice(0, 10) ?? '—'}
+        </p>
+      </footer>
     </div>
   )
 }

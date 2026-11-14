@@ -1,12 +1,12 @@
 {
-  "retrieved_utc": "2026-11-14T02:30:42Z",
+  "retrieved_at": "2026-11-14T03:30:54Z",
   "response": {
     "type": "Feature",
     "geometry": {
       "type": "Point",
       "coordinates": [
-        95.9548,
-        16.7352
+        94.96,
+        16.62
       ]
     },
     "properties": {
@@ -28,7 +28,7 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 253
+                "mean": 233
               }
             }
           ]
@@ -50,7 +50,7 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 335
+                "mean": 326
               }
             }
           ]
@@ -72,7 +72,7 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 65
+                "mean": 64
               }
             }
           ]
@@ -94,7 +94,7 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 286
+                "mean": 265
               }
             }
           ]
@@ -116,7 +116,7 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 379
+                "mean": 409
               }
             }
           ]
@@ -138,13 +138,13 @@
               },
               "label": "0-5cm",
               "values": {
-                "mean": 363
+                "mean": 364
               }
             }
           ]
         }
       ]
     },
-    "query_time_s": 3.3857011795043945
+    "query_time_s": 3.107088565826416
   }
 }

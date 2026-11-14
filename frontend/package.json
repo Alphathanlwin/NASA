@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
+    "test:parity": "node ../scripts/parity_test.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
     "react-leaflet": "^5.0.0"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.16",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",

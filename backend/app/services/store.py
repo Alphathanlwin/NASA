@@ -1,3 +1,4 @@
+# AI-assisted: Claude Code
 """Loads the cleaned data the API serves. The backend never reads data/raw."""
 import json
 from functools import lru_cache
@@ -20,23 +21,21 @@ def geojson() -> dict:
 
 @lru_cache(maxsize=1)
 def snapshot() -> dict:
-    return _read(DATA / "snapshots" / "fields_snapshot.json", {"generated_utc": None, "fields": {}})
+    return _read(DATA / "snapshots" / "fields_snapshot.json", {"generated_at": None, "fields": {}, "climatology": {}})
 
 
 @lru_cache(maxsize=1)
 def cleaning_report() -> dict:
-    return _read(DATA / "reports" / "cleaning_report.json", {"sources": {}})
+    return _read(DATA / "reports" / "cleaning_report.json", {"retrieved_at": None, "sources": {}})
 
 
 @lru_cache(maxsize=1)
-def power_daily():
-    import pandas as pd
-    path = DATA / "clean" / "power_daily.parquet"
-    return pd.read_parquet(path) if path.exists() else None
+def sources() -> dict:
+    return _read(DATA / "sources.json", {"retrieved_at": None, "sources": []})
 
 
 def field(field_id: str) -> dict | None:
-    return snapshot()["fields"].get(field_id)
+    return (snapshot().get("fields") or {}).get(field_id)
 
 
 def agent_base() -> dict:
