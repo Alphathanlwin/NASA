@@ -174,7 +174,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
                 {steps.map((s, i) => {
                   const state = i < stage ? 'done' : i === stage ? 'now' : 'next'
                   return (
-                    <li key={s.key} className={state}>
+                    <li key={s.key} className={`${state} ph-${i}`}>
                       <span className="dot" aria-hidden="true" />
                       <b>{t(s.key as Key)}</b>
                       <small>{state === 'now' ? t('cal.now') : s.when}</small>
