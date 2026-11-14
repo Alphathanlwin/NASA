@@ -9,3 +9,4 @@ frontend/dist/
 .netrc
 _netrc
 .playwright-mcp/
+ frontend/package-lock.json
