@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 import shortlist from '../engine/ecocrop_shortlist.json'
 import { monthlyClimate, rankCrops } from '../engine/suitability'
 import type { EcoCrop } from '../engine/suitability'
-import { t } from '../i18n'
+import { t, townName } from '../i18n'
 import type { Key } from '../i18n'
 
 type Props = { snap: any; field: any }
@@ -40,7 +40,7 @@ export function OtherCrops({ snap, field }: Props) {
     <section className="card other-crops">
       <div className="card-head">
         <h3>{t('other.title')}</h3>
-        <span className="note small">{t('other.place', { town: field.town_name ?? town })}</span>
+        <span className="note small">{t('other.place', { town: townName(town, field.town_name ?? town) })}</span>
       </div>
       <p className="note">{t('other.lead')}</p>
       <ol className="other-list">

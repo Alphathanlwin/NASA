@@ -2,7 +2,7 @@
 import type { ReactNode } from 'react'
 import type { Snapshot, SnapshotField } from '../data'
 import { doyLabel } from '../engine/engine'
-import { t } from '../i18n'
+import { t, townName, fieldName } from '../i18n'
 import type { Readings } from '../userfields'
 import { Metric, StatusPill } from './Provenance'
 import { ReadingsCard } from './ReadingsCard'
@@ -49,7 +49,7 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
       <section className="card intro-card">
         <div>
           <p className="eyebrow">{t('overview.selected')}</p>
-          <h2>{field.name}</h2>
+          <h2>{fieldName(field)}</h2>
           <p className="lead">{t('overview.lead')}</p>
         </div>
         <button className="btn primary" onClick={onAnalyse}>{t('field.analyse')}</button>
@@ -59,7 +59,7 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
         <h3>{field.status === 'USER-INPUT' ? t('mine.heading') : t('field.heading')}</h3>
         <div className="facts">
           <Fact label={t('field.area')} value={t('field.acres', { a: field.area_acres })} />
-          <Fact label={t('field.reference')} value={`${field.town_name} · ${t('field.distance', { d: field.town_distance_km })}`} />
+          <Fact label={t('field.reference')} value={`${townName(field.town_id, field.town_name)} · ${t('field.distance', { d: field.town_distance_km })}`} />
           <Fact label={t('field.irrigation')} value={field.irrigation} />
           <Fact label={t('field.history')} value={field.status === 'USER-INPUT' ? t('map.noCrop') :
             field.crop_history.map((crop) => crop === 'rice' ? t('crop.rice') : crop).join(' → ') || t('map.noCrop')} />

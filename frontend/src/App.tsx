@@ -16,7 +16,7 @@ import type { Snapshot, SnapshotField } from './data'
 import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
 import type { LatLng, Readings, UserField } from './userfields'
 import type { Econ, Priorities, Scenario } from './engine/types'
-import { initialLang, setLang, t } from './i18n'
+import { initialLang, setLang, t, townName, fieldName } from './i18n'
 import type { Key, Lang } from './i18n'
 import './app.css'
 
@@ -163,7 +163,7 @@ export default function App() {
 
   const mapView = field && snap ? (
     <MapView snap={snap} selectedId={selectedId} onSelect={page === 'home' && !drawing ? enterField : select}
-      rotation={{ fieldName: field.name, previous: isUserField ? undefined : field.crop_history.at(-1), next: nextCrops }}
+      rotation={{ fieldName: fieldName(field), previous: isUserField ? undefined : field.crop_history.at(-1), next: nextCrops }}
       fieldOptions={Object.values(profiles)} details={fieldOverview(true)} scenario={scenarioPanel}
       initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
       agentRun={field.agent_run ?? null} runId={runId}
@@ -221,7 +221,7 @@ export default function App() {
                     {Object.values(snap.fields).map((f) => (
                       <button key={f.id} role="tab" aria-selected={f.id === selectedId}
                         className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
-                        <b>{f.id}</b> {f.town_name}
+                        <b>{f.id}</b> {townName(f.town_id, f.town_name)}
                         <small>{t('mine.example')} · {t('field.acres', { a: f.area_acres })}</small>
                       </button>
                     ))}

@@ -43,3 +43,17 @@ export function fmtDate(value: string | null | undefined): string {
   if (Number.isNaN(d.getTime())) return value
   return d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC'
 }
+
+/** A reference town's name in the current language; falls back to the name in the data. */
+export function townName(id: string | null | undefined, fallback: string): string {
+  if (!id) return fallback
+  const key = `town.${id}`
+  return dictionaries[current][key] ?? (en as Record<string, string>)[key] ?? fallback
+}
+
+/** A field's title: the example fields (F-01..) are named after their town in the current language;
+ *  a field the farmer drew keeps the name they typed. */
+export function fieldName(f: { id: string; name: string; town_id?: string | null; town_name?: string | null }): string {
+  if (!/^F-\d+$/.test(f.id) || !f.town_id) return f.name
+  return t('field.demoName' as Key, { town: townName(f.town_id, f.town_name ?? f.name) })
+}

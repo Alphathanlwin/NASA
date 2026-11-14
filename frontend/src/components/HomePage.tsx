@@ -5,7 +5,7 @@
 import type { ReactNode } from 'react'
 import type { runPlans, Snapshot, SnapshotField, Status } from '../data'
 import { doyLabel } from '../engine/engine'
-import { fmtDate, t } from '../i18n'
+import { fmtDate, t, townName } from '../i18n'
 import type { Key } from '../i18n'
 import type { UserField } from '../userfields'
 import { CropArt } from './CropArt'
@@ -102,7 +102,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
           <div>
             <span className="tile-label">{t('tile.field')}</span>
             <select value={selectedId ?? ''} onChange={(e) => onSelect(e.target.value)} aria-label={t('tile.field')}>
-              {examples.map((f) => <option key={f.id} value={f.id}>{f.id} {f.town_name}</option>)}
+              {examples.map((f) => <option key={f.id} value={f.id}>{f.id} {townName(f.town_id, f.town_name)}</option>)}
               {userFields.map((u) => <option key={u.id} value={u.id}>✎ {u.name}</option>)}
             </select>
             <span className="tile-sub">{t('field.acres', { a: field.area_acres })} · {t(field.status === 'USER-INPUT' ? 'mine.badge' : 'mine.example')}</span>
@@ -126,7 +126,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             {map}
             <div className="glance-facts">
               <span><Icon d={ICON.area} size={18} /><small>{t('field.area')}</small><b>{t('field.acres', { a: field.area_acres })}</b></span>
-              <span><Icon d={ICON.pin} size={18} /><small>{t('glance.location')}</small><b>{t('glance.near', { town: field.town_name, d: field.town_distance_km })}</b></span>
+              <span><Icon d={ICON.pin} size={18} /><small>{t('glance.location')}</small><b>{t('glance.near', { town: townName(field.town_id, field.town_name), d: field.town_distance_km })}</b></span>
               <span><Icon d={ICON.db} size={18} /><small>{t('glance.source')}</small><b>{t('glance.sourceVal')}</b></span>
             </div>
           </section>
@@ -198,7 +198,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
               <button className="btn ghost small" onClick={onAdd}>+ {t('mine.add')}</button>
             </div>
             <ul className="field-list">
-              {[...examples.map((f) => ({ id: f.id, label: `${f.id} ${f.town_name}`, acres: f.area_acres, mine: false })),
+              {[...examples.map((f) => ({ id: f.id, label: `${f.id} ${townName(f.town_id, f.town_name)}`, acres: f.area_acres, mine: false })),
                 ...userFields.map((u) => ({ id: u.id, label: u.name, acres: profiles[u.id]?.area_acres, mine: true }))].map((f) => (
                 <li key={f.id}>
                   <button className={f.id === selectedId ? 'active' : ''} onClick={() => onSelect(f.id)}>
