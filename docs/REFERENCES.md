@@ -23,22 +23,23 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
    Subset service: https://modis.ornl.gov/rst/api/v1/MOD13Q1
    Status: `CACHED`. A 250 m pixel can include neighbouring land.
 
-4. **NASA GIBS - MODIS_Terra_CorrectedReflectance_TrueColor.**
-   WMTS `epsg3857`, `best`, tile matrix `GoogleMapsCompatible_Level9`, fixed date 2026-01-10,
-   `maxNativeZoom` 9. Loaded by the map only when the satellite layer is switched on.
-   https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/
-   Status: `LIVE` while the layer is visible. Relatively clear date, not cloud-free.
+4. **Esri World Imagery (not NASA).**
+   Tile service for the map's Satellite view: https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer
+   Attribution: Esri, Maxar, Earthstar Geographics. Status: `LIVE` while the Satellite view is on.
 
 5. **NASA GPM IMERG Late Run V07 (`GPM_3IMERGDL`).**
-   The fetch script `backend/app/data_sources/fetch_imerg.py` records the run (`Late`) on every
-   row. Not retrieved in this build because it needs an Earthdata login.
-   https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary
-   Status: `UNAVAILABLE`.
+   Daily precipitation for the 0.1 degree cell nearest each reference town, 15 Sep - 12 Nov 2026,
+   read through NASA OPeNDAP with an Earthdata token by `backend/app/data_sources/fetch_imerg.py`,
+   which records the run (`Late`) on every row. https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary
+   Status: `CACHED`.
 
 6. **NASA SMAP SPL3SMP_E v006 soil moisture.**
-   Not retrieved: needs an Earthdata login (AppEEARS).
+   AM and PM surface soil moisture with retrieval quality flags, last 120 days, 9 km grid cell, point
+   samples requested through NASA AppEEARS by `backend/app/data_sources/fetch_appeears.py`.
+   Only retrievals flagged "recommended quality" are kept (44 of 944).
    https://appeears.earthdatacloud.nasa.gov/
-   Status: `UNAVAILABLE`. The UI lists satellite soil moisture as missing.
+   Status: `CACHED` for Myaungmya, Pathein and Bogale; `UNAVAILABLE` for Twante (no recommended-quality
+   reading in the window), which the UI lists as missing information.
 
 7. **ISRIC SoilGrids v2.0 (not NASA).**
    `phh2o`, `clay`, `silt`, `sand` (0-5 cm mean), 250 m.

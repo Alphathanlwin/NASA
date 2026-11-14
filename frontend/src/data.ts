@@ -131,7 +131,9 @@ let backend: boolean | null = null
 export async function loadSnapshot(): Promise<Snapshot> {
   if (cached) return cached
   const url = `${import.meta.env.BASE_URL}snapshot.json`
-  const res = await fetch(url)
+  // snapshot.json keeps the same name between data updates, so ask the server every time
+  // instead of trusting a browser-cached copy (it is small, and 304 responses are cheap).
+  const res = await fetch(url, { cache: 'no-cache' })
   if (!res.ok) throw new Error(`snapshot: ${res.status}`)
   cached = (await res.json()) as Snapshot
   return cached

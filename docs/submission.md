@@ -26,8 +26,8 @@
 ## What is included
 
 - Four demo fields, one per reference town, at real coordinates with illustrative geometry.
-- NASA POWER recent and 30-year climatology, MODIS NDVI, SoilGrids topsoil, optional NASA GIBS
-  imagery, source catalogue and cleaning report.
+- NASA POWER recent and 30-year climatology, NASA GPM IMERG (Late run) rainfall, NASA SMAP soil
+  moisture, MODIS NDVI, SoilGrids topsoil, source catalogue and cleaning report.
 - A deterministic rules engine with a Python canonical implementation and a parity-tested
   TypeScript port.
 - Twelve hero scenarios and a what-if comparison screen.
@@ -38,15 +38,15 @@
 ## Deliberate limitations
 
 - No yield, profit, or price prediction. Income ranks farmer-entered numbers only.
-- SMAP and IMERG are not retrieved (Earthdata login). They are labelled `UNAVAILABLE` and their
-  absence is listed as missing information.
+- SMAP has no recommended-quality reading for the Twante cell in the last 120 days; that field shows
+  `UNAVAILABLE` and lists it as missing information.
 - Salinity is not in these datasets.
 - Field geometry, crop history and irrigation flags are `DEMO`.
 - Crop rules have not been reviewed by a local agronomist; the `verified` flag separates FAO
   EcoCrop ranges from team assumptions.
 - The Burmese dictionary is a first draft and has not been reviewed by a native speaker.
 - The map uses keyless OpenStreetMap tiles because CARTO's keyless light basemap was retired in
-  2026. GIBS imagery is a fixed date, not live.
+  2026. The Satellite view uses Esri World Imagery (not NASA), credited on the map.
 
 ## AI disclosure
 

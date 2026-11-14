@@ -5,7 +5,7 @@ import { StatusPill } from './Provenance'
 
 const STATUS: Record<string, Status> = {
   power_recent: 'CACHED', power_history: 'CACHED', modis: 'CACHED', soilgrids: 'CACHED',
-  outputs: 'CACHED', ecocrop: 'CACHED', gibs: 'LIVE', osm: 'LIVE', fields: 'DEMO',
+  outputs: 'CACHED', ecocrop: 'CACHED', esri: 'LIVE', osm: 'LIVE', fields: 'DEMO',
 }
 // Sources that need an Earthdata login: CACHED once a retrieval is recorded, otherwise UNAVAILABLE.
 const LOGIN_SOURCES = new Set(['imerg', 'smap'])

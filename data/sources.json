@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-11-14T07:56:15Z",
+  "retrieved_at": "2026-11-14T08:04:15Z",
   "sources": [
     {
       "id": "power_recent",
@@ -45,21 +45,6 @@
       "licence": "NASA open data (LP DAAC / ORNL DAAC)",
       "retrieved_at": "2026-11-14T03:37:45Z",
       "used_for": "vegetation index shown in the field profile"
-    },
-    {
-      "id": "gibs",
-      "name": "NASA GIBS imagery",
-      "nasa": true,
-      "product": "MODIS_Terra_CorrectedReflectance_TrueColor",
-      "version": "WMTS epsg3857, best",
-      "variables": "true-colour imagery",
-      "spatial_resolution": "250 m (tile level 9 native)",
-      "period": "one fixed clear-sky date",
-      "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/",
-      "files": "not stored (loaded by the map)",
-      "licence": "NASA open data; acknowledge NASA GIBS",
-      "retrieved_at": null,
-      "used_for": "optional satellite layer on the map"
     },
     {
       "id": "imerg",
@@ -137,6 +122,21 @@
       "used_for": "base map (CARTO's keyless light tiles were retired in 2026)"
     },
     {
+      "id": "esri",
+      "name": "Esri World Imagery",
+      "nasa": false,
+      "product": "World_Imagery tile service",
+      "version": "live",
+      "variables": "high-resolution aerial / satellite imagery",
+      "spatial_resolution": "sub-metre to 1 m, varies by area",
+      "period": "live; capture date varies by area",
+      "url": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+      "files": "not stored",
+      "licence": "Esri, Maxar, Earthstar Geographics; attribution shown on the map (non-NASA)",
+      "retrieved_at": null,
+      "used_for": "'Satellite' map view"
+    },
+    {
       "id": "fields",
       "name": "Demo fields",
       "nasa": false,
@@ -163,7 +163,7 @@
       "url": "n/a",
       "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
       "licence": "project team; source licences still apply",
-      "retrieved_at": "2026-11-14T07:56:15Z",
+      "retrieved_at": "2026-11-14T08:04:15Z",
       "used_for": "served by the API and the static snapshot"
     }
   ]

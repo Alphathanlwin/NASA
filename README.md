@@ -47,7 +47,7 @@ text is set in a self-hosted Noto Sans Myanmar font, not a font CDN.
 | Day-of-year climatology, 1996-2025 | `CACHED` | Computed by this project from NASA POWER daily history. Historical average, not a forecast. |
 | MODIS NDVI | `CACHED` | MOD13Q1 v061, one 250 m pixel at each field centre via the ORNL DAAC subset service. Cloudy composites removed. |
 | Topsoil pH and texture | `CACHED` | ISRIC SoilGrids v2.0, 250 m, 0-5 cm mean. Predicted map value, not a soil test. Not a NASA product. |
-| NASA GIBS imagery | `LIVE` when the layer is switched on | MODIS Terra corrected reflectance, WMTS `epsg3857`, one fixed date (2026-01-10) chosen for relatively clear conditions. Not cloud-free. |
+| Esri World Imagery (not NASA) | `LIVE` when the Satellite view is on | High-resolution imagery for the map's Satellite view; capture date varies by area. Credited on the map. |
 | GPM IMERG Late V07 rainfall | `CACHED` | Real NASA data, 15 Sep - 12 Nov 2026, 0.1° cell nearest each town, via NASA OPeNDAP (Earthdata token). Shown as a 30-day total; every row records the Late run. Observed by satellite, next to the modelled POWER rain. |
 | SMAP soil moisture | `CACHED` (3 fields) / `UNAVAILABLE` (Twante) | Real NASA SPL3SMP_E v006 via AppEEARS, last 120 days, 9 km cell (district scale). Only retrievals flagged "recommended quality" are kept (44 of 944); the Twante cell had none, so it shows UNAVAILABLE with that reason. |
 | Field shape, name, crop history, irrigation flag | `DEMO` | Illustrative polygons at real coordinates, one per reference town. |
