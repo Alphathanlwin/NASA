@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 
 from .engine import agent, planner
 from .engine.crops import CROPS, SLOTS
-from .services import power, store
+from .services import analysis, models, power, store
 
 router = APIRouter(prefix="/api")
 
@@ -101,6 +101,21 @@ def plan(field_id: str, body: PlanRequest, live: bool = True):
 def agent_run(field_id: str, live: bool = True):
     rec = with_live_weather(field_or_404(field_id), live)
     return agent.build_run(rec, store.agent_base())
+
+
+@router.post("/analysis")
+def post_analysis(payload: dict):
+    try:
+        return analysis.analyse(payload)
+    except KeyError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(422, str(e))
+
+
+@router.get("/models/status")
+def models_status():
+    return models.get_model_status()
 
 
 @router.get("/datasets/status")
