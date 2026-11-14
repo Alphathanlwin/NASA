@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { t } from '../i18n'
 import type { FieldDetail, PlanResult, Priorities, ScenarioRequest, Crop, IoTTelemetry } from '../api'
+import { CropArt } from './CropArt'
 
 interface CommonProps {
   field: FieldDetail | null
@@ -566,8 +567,17 @@ export const F4Compare: React.FC<CommonProps> = ({
                 <tr key={p.id} className={p.is_existing ? 'row-existing' : ''}>
                   <td className="tabular">{p.rank != null ? `#${p.rank}` : '–'}</td>
                   <td>
-                    <strong>{p.sequence.map((s) => s.crop_name).join(' → ')}</strong>
-                    {p.is_existing && <span className="tag-baseline">Baseline</span>}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ display: 'flex', gap: '0.2rem' }}>
+                        {p.sequence.map((s, idx) => (
+                          <CropArt key={idx} crop={s.crop_id} size={28} />
+                        ))}
+                      </div>
+                      <div>
+                        <strong>{p.sequence.map((s) => s.crop_name).join(' → ')}</strong>
+                        {p.is_existing && <span className="tag-baseline" style={{ marginLeft: '0.5rem' }}>Baseline</span>}
+                      </div>
+                    </div>
                   </td>
                   <td className="num-col tabular font-bold">{p.score != null ? p.score : '–'}</td>
                   <td className="num-col tabular">{p.breakdown.soil != null ? p.breakdown.soil : '–'}</td>

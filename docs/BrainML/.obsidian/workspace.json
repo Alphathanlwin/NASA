@@ -206,8 +206,9 @@
       "codex-panel:Open panel": false
     }
   },
-  "active": "3a4a9d9ba25a5f2b",
+  "active": "fcb09bb6cb9e3fdf",
   "lastOpenFiles": [
+    "Welcome.md",
     "02_Engine_Rules/Rule_9_Input_Shock_Adaptation.md",
     "04_IoT_Sensors/IoT_Ground_Truth_Sensor_Mesh.md",
     "03_Physics_Timeseries/Physics_and_Timeseries_Hydrology.md",
@@ -220,7 +221,6 @@
     "02_Engine_Rules",
     "01_NASA_Data",
     "00_MOC",
-    "AGENTS.md",
-    "Welcome.md"
+    "AGENTS.md"
   ]
 }
