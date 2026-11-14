@@ -96,10 +96,12 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
         </label>
       </div>
 
-      <div className="readings-foot">
-        <span>{used > 0 ? t('readings.used', { n: used }) : t('readings.none')}</span>
-        {used > 0 && <button className="btn ghost small" onClick={() => onChange({})}>{t('readings.clear')}</button>}
-      </div>
+      {used > 0 && (
+        <div className="readings-foot">
+          <span>{t('readings.used', { n: used })}</span>
+          <button className="btn ghost small" onClick={() => onChange({})}>{t('readings.clear')}</button>
+        </div>
+      )}
     </section>
   )
 }
