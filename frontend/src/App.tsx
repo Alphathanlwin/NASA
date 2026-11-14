@@ -152,7 +152,6 @@ export default function App() {
               <>
                 <p className="hello">မင်္ဂလာပါ! <span>Mingalaba!</span> <span aria-hidden="true">☀</span></p>
                 <h1>{greet}</h1>
-                <p className="lead">{t('home.sub')}</p>
               </>
             ) : (
               <>
