@@ -476,5 +476,10 @@
   "phguide.done": "Enter my pH",
   "phguide.close": "Close",
   "phguide.again": "Test each field every 3 years, or once per crop rotation. Not sure? Ask your township extension officer.",
-  "phguide.source": "Sampling steps: Mississippi State University Extension, Soil Testing for the Farmer."
+  "phguide.source": "Sampling steps: Mississippi State University Extension, Soil Testing for the Farmer.",
+  "town.myaungmya": "Myaungmya",
+  "town.pathein": "Pathein",
+  "town.bogale": "Bogale",
+  "town.twante": "Twante",
+  "field.demoName": "{town} demo field"
 }

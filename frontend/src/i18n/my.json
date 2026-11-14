@@ -391,5 +391,10 @@
   "phguide.done": "ကျွန်ုပ်၏ pH ထည့်မည်",
   "phguide.close": "ပိတ်ရန်",
   "phguide.again": "လယ်ကွက်တိုင်းကို ၃ နှစ်တစ်ကြိမ် သို့မဟုတ် သီးနှံ အလှည့်ကျ တစ်ကြိမ်လျှင် တစ်ခါ စစ်ပါ။ မသေချာလျှင် မြို့နယ် စိုက်ပျိုးရေး အရာရှိကို မေးပါ။",
-  "phguide.source": "နမူနာယူနည်း: Mississippi State University Extension, Soil Testing for the Farmer။"
+  "phguide.source": "နမူနာယူနည်း: Mississippi State University Extension, Soil Testing for the Farmer။",
+  "town.myaungmya": "မြောင်းမြ",
+  "town.pathein": "ပုသိမ်",
+  "town.bogale": "ဘိုကလေး",
+  "town.twante": "တွံတေး",
+  "field.demoName": "{town} နမူနာ လယ်ကွက်"
 }

@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css'
 import type { Snapshot, SnapshotField } from '../data'
 import type { runPlans } from '../data'
 import type { LatLng, UserField } from '../userfields'
-import { t } from '../i18n'
+import { t, fieldName } from '../i18n'
 import type { Key } from '../i18n'
 import { Icon } from './Sidebar'
 import { CropArt } from './CropArt'
@@ -180,7 +180,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
         {expanded && (
           <select className="map-field-select" aria-label={t('field.choose')} value={selectedId ?? ''}
             onChange={(event) => onSelect(event.target.value)}>
-            {fieldOptions.map((field) => <option key={field.id} value={field.id}>{field.name}</option>)}
+            {fieldOptions.map((field) => <option key={field.id} value={field.id}>{fieldName(field)}</option>)}
           </select>
         )}
         <div className="layer-seg" role="group" aria-label={t('map.layers')}>

@@ -4,7 +4,7 @@ import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { climatologyOf } from '../data'
 import type { Snapshot, SnapshotField, runPlans } from '../data'
 import type { Action } from '../field3d/layout'
-import { t } from '../i18n'
+import { t, townName, fieldName } from '../i18n'
 import { contextFor } from '../sim/presets'
 import { ACTION_MS, useSim } from '../sim/useSim'
 import { PlanCards, cropName } from './PlanCards'
@@ -56,7 +56,7 @@ export function FieldView({ snap, field, plans, onMap }: {
     : api.phase === 'sowing' ? t('field3d.sowing', { crop: cropName(api.sim.schedule?.cropId) }) : null
 
   return (
-    <section className="field-view" aria-label={t('field3d.title', { name: field.name })}>
+    <section className="field-view" aria-label={t('field3d.title', { name: fieldName(field) })}>
       <div className="fv-stage">
         <div className="fv-canvas">
           {webgl ? (
@@ -73,8 +73,8 @@ export function FieldView({ snap, field, plans, onMap }: {
             ← {t('field3d.map')}
           </button>
           <div className="fv-title">
-            <b>{field.name}</b>
-            <span>{field.town_name}</span>
+            <b>{fieldName(field)}</b>
+            <span>{townName(field.town_id, field.town_name)}</span>
           </div>
           <SimStatus sim={api.sim} />
           <span className="badge badge-sim fv-badge">{t('field3d.badge')}</span>
