@@ -3,7 +3,7 @@
 // crop calendar and the farmer's fields. Everything shown here comes from the snapshot, the
 // engine or the farmer; nothing is a forecast.
 import type { ReactNode } from 'react'
-import type { Snapshot, SnapshotField, Status } from '../data'
+import type { runPlans, Snapshot, SnapshotField, Status } from '../data'
 import { doyLabel } from '../engine/engine'
 import { fmtDate, t } from '../i18n'
 import type { Key } from '../i18n'
@@ -57,20 +57,21 @@ const ICON = {
   db: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6',
 }
 
-export function HomePage({ snap, field, plans, map, profiles, userFields, selectedId, onSelect, onPage, onAdd, readingsMoisture }: {
+export function HomePage({ snap, field, plans, map, profiles, userFields, selectedId, onSelect, onPage, onMeasurements, onAdd, readingsMoisture }: {
   snap: Snapshot
   field: SnapshotField
-  plans: any
+  plans: ReturnType<typeof runPlans> | null
   map: ReactNode
   profiles: Record<string, SnapshotField>
   userFields: UserField[]
   selectedId: string | null
   onSelect: (id: string) => void
   onPage: (p: 'fields' | 'field3d' | 'planner' | 'scenarios' | 'quality') => void
+  onMeasurements: () => void
   onAdd: () => void
   readingsMoisture?: string | null
 }) {
-  const best = plans?.plans?.find((p: any) => p.rank === 1)
+  const best = plans?.plans.find((p) => p.rank === 1)
   const cal = best?.calendar as { sow: string; harvest: string; sow_day: number; harvest_day: number; onset_doy: number | null } | undefined
   const now = todayDoy()
   // Dry-season sowing is in Nov-Dec; days after day 366 belong to the next year.
@@ -101,10 +102,10 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
           <div>
             <span className="tile-label">{t('tile.field')}</span>
             <select value={selectedId ?? ''} onChange={(e) => onSelect(e.target.value)} aria-label={t('tile.field')}>
-              {examples.map((f) => <option key={f.id} value={f.id}>{f.id} {f.town_name} · {t('mine.example')}</option>)}
+              {examples.map((f) => <option key={f.id} value={f.id}>{f.id} {f.town_name}</option>)}
               {userFields.map((u) => <option key={u.id} value={u.id}>✎ {u.name}</option>)}
             </select>
-            <span className="tile-sub">{t('field.acres', { a: field.area_acres })}</span>
+            <span className="tile-sub">{t('field.acres', { a: field.area_acres })} · {t(field.status === 'USER-INPUT' ? 'mine.badge' : 'mine.example')}</span>
           </div>
         </div>
         <Tile icon={best ? <CropArt crop={best.dry_crop} size={40} /> : null} label={t('tile.next')}
@@ -156,6 +157,10 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
               <span>{t('cond.note')}</span>
               <button className="link" onClick={() => onPage('quality')}>{t('cond.more')}</button>
             </div>
+            <div className="field-nutrients">
+              <h4>{t('overview.nutrients')}</h4>
+              <p className="note">{t('overview.nutrientsNote')}</p>
+            </div>
           </section>
         </div>
 
@@ -165,7 +170,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             <button className="act-3d" onClick={() => onPage('field3d')}><Icon d="M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7" /><b>{t('home.enter3d')}</b><small>{t('home.enter3dSub')}</small></button>
             <button onClick={() => onPage('planner')}><Icon d="M4 20V10M10 20V4M16 20v-7" /><b>{t('act.compare')}</b><small>{t('act.compareSub')}</small></button>
             <button onClick={() => onPage('scenarios')}><Icon d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" /><b>{t('act.scen')}</b><small>{t('act.scenSub')}</small></button>
-            <button onClick={() => onPage('fields')}><Icon d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" /><b>{t('act.measure')}</b><small>{t('act.measureSub')}</small></button>
+            <button onClick={onMeasurements}><Icon d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" /><b>{t('act.measure')}</b><small>{t('act.measureSub')}</small></button>
           </section>
 
           {cal && (
