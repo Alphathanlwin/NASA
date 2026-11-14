@@ -29,7 +29,7 @@ const cache = new Map<string, Machine>()
 const reducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
-export const ACTION_MS = { harvest: 2600, sow: 2600 }
+export const ACTION_MS = { harvest: 6500, sow: 2600 }  // harvest: time to watch the machine work
 const PLAY_MS = 450
 
 export function useSim(field: FieldLike, ctx: SimContext, plans: PlanLike[]) {
