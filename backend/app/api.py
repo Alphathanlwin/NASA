@@ -1,4 +1,6 @@
 import copy
+import json
+from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
@@ -171,4 +173,26 @@ def post_field_iot(field_id: str, packet: iot.IoTTelemetryPacket):
     if packet.field_id != field_id:
         raise HTTPException(422, f"Payload field_id '{packet.field_id}' does not match URL field_id '{field_id}'")
     return iot.record_telemetry(packet)
+
+
+@router.get("/regional/pawsan-coverage")
+def get_pawsan_coverage():
+    clean_dir = Path(__file__).resolve().parents[2] / "data" / "clean"
+    ndvi_path = clean_dir / "ndvi.json"
+    smap_path = clean_dir / "smap.json"
+
+    ndvi_data = json.loads(ndvi_path.read_text(encoding="utf-8")) if ndvi_path.exists() else {}
+    smap_data = json.loads(smap_path.read_text(encoding="utf-8")) if smap_path.exists() else {}
+
+    return {
+        "dataset": "pawsan-ayeyarwady",
+        "task_id": "14cb26b2-28d6-4415-b328-38c29df7865e",
+        "spatial_scope": "Ayeyarwady Delta (7 Townships)",
+        "modis_townships": list(ndvi_data.keys()),
+        "smap_townships_passing": list(smap_data.keys()),
+        "smap_townships_zero_passing": [t for t in ndvi_data.keys() if t not in smap_data],
+        "phenology_verdict": "Single monsoon rice cycle (sown Jun-Jul, flower Oct-Nov, harvest Dec-Jan). Severe dry-season soil moisture floor (0.02-0.09 VWC) Feb-Apr dictates dry-season pulse rotation.",
+        "ndvi_series": ndvi_data,
+        "smap_series": smap_data,
+    }
 

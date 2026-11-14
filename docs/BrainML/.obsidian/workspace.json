@@ -185,13 +185,23 @@
               "icon": "lucide-list",
               "title": "Outline"
             }
+          },
+          {
+            "id": "a95c1105bbb7b718",
+            "type": "leaf",
+            "state": {
+              "type": "antigravity-hub-view",
+              "state": {},
+              "icon": "sparkles",
+              "title": "Antigravity hub"
+            }
           }
-        ]
+        ],
+        "currentTab": 5
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -208,6 +218,9 @@
   },
   "active": "fcb09bb6cb9e3fdf",
   "lastOpenFiles": [
+    "Garvesty_Neural_Brain.canvas",
+    "03_Physics_Timeseries/PINN_Hydrology_Mathematical_Formulation.md",
+    "01_NASA_Data/AppEEARS_PawSan_Ayeyarwady_Data_Pack.md",
     "Welcome.md",
     "02_Engine_Rules/Rule_9_Input_Shock_Adaptation.md",
     "04_IoT_Sensors/IoT_Ground_Truth_Sensor_Mesh.md",

@@ -149,3 +149,12 @@ def test_api_timeseries_and_iot_endpoints():
     assert post_res.status_code == 200
     assert post_res.json()["telemetry"]["soil_moisture_40cm_vwc"] == 0.44
 
+    # Test regional Paw San coverage endpoint
+    res_pawsan = client.get("/api/regional/pawsan-coverage")
+    assert res_pawsan.status_code == 200
+    data_pawsan = res_pawsan.json()
+    assert data_pawsan["dataset"] == "pawsan-ayeyarwady"
+    assert len(data_pawsan["modis_townships"]) == 7
+    assert len(data_pawsan["smap_townships_passing"]) == 3
+    assert len(data_pawsan["smap_townships_zero_passing"]) == 4
+

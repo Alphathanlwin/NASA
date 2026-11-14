@@ -25,17 +25,18 @@ graph TD
 
 ### 1. 🛰️ [[NASA_Earth_Observations|NASA Earth Observations]]
 - **NASA POWER**: Meteorological daily time series (25-year climatology, MERRA-2/GEOS model, 0.5° × 0.625° grid).
-- **MODIS Terra MOD13Q1**: 250m 16-day NDVI / EVI with pixel reliability screening.
-- **NASA SMAP SPL3SMP_E**: 9km district-scale surface soil moisture.
+- **MODIS Terra MOD13Q1**: 250m 16-day NDVI / EVI with pixel reliability screening (126 clean composites).
+- **NASA SMAP SPL3SMP_E**: 9km district-scale surface soil moisture (114 QA-passing field days).
 - **ISRIC SoilGrids v2.0**: Topsoil pH, clay, silt, sand, and organic carbon (0–5 cm depth).
 - **FAO EcoCrop**: Biological crop tolerance limits.
-*See: [[NASA_Earth_Observations]], [[Data_Provenance_and_Attribution]]*
+*See: [[NASA_Earth_Observations]], [[01_NASA_Data/AppEEARS_PawSan_Ayeyarwady_Data_Pack|AppEEARS Paw San Data Pack]], [[Data_Provenance_and_Attribution]]*
 
 ### 2. ⚡ [[Physics_and_Timeseries_Hydrology|Physics & Time-Series Hydrology]]
+- **PyTorch PINN Hydrology Brain**: Differentiable FAO-56 PET + bucket mass balance + non-crossing quantile heads ($NSE = 0.6731$).
 - **Physics Bucket Recession**: FAO-56 Penman-Monteith daily reference evapotranspiration (PET) water-balance depletion.
 - **Conformal Prediction Intervals**: 90% non-parametric confidence bands calibrated on historical weather.
 - **Desaturation Risk Index**: Time-to-wilting horizon for post-monsoon legume establishment.
-*See: [[Physics_and_Timeseries_Hydrology]], [[Conformal_Prediction_Calibration]]*
+*See: [[Physics_and_Timeseries_Hydrology]], [[03_Physics_Timeseries/PINN_Hydrology_Mathematical_Formulation|PINN Mathematical Formulation]], [[Conformal_Prediction_Calibration]]*
 
 ### 3. 📡 [[IoT_Ground_Truth_Sensor_Mesh|In-Situ IoT Sensor Mesh]]
 - **LoRaWAN AS923 Deployment**: Ayeyarwady Delta field gateway specs (15km radius).
