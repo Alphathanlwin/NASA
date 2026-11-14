@@ -120,10 +120,6 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
         <p className="note small">
           {t('footer.data')} · {snap.sources_retrieved_at?.slice(0, 10)}
         </p>
-        <div className="field-nutrients">
-          <h4>{t('overview.nutrients')}</h4>
-          <p className="note">{t('overview.nutrientsNote')}</p>
-        </div>
       </section>
     </div>
   )

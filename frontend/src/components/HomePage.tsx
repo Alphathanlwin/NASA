@@ -153,10 +153,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
               <span>{t('cond.note')}</span>
               <a className="link" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">{t('cond.more')}</a>
             </div>
-            <div className="field-nutrients">
-              <h4>{t('overview.nutrients')}</h4>
-              <p className="note">{t('overview.nutrientsNote')}</p>
-            </div>
           </section>
         </div>
 
