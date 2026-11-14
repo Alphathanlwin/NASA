@@ -803,3 +803,4 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (max-width: 820px) { .conds > .cond:nth-child(odd) { border-left: 0; padding-left: 0; } .conds { row-gap: 16px; } }
+.crop-photo { border-radius: 50%; object-fit: cover; }

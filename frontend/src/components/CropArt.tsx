@@ -2,6 +2,8 @@
 // Drawn crop illustrations (no external images): each crop is shown as what the farmer harvests
 // and sells, so it can be recognised at a glance. Decorative: the crop name is always shown next to them.
 
+import blackGramPhoto from '../assets/black_gram.jpg'
+
 // [x, y, rotation in degrees] for a small heap of seeds, back row first so front seeds overlap.
 const HEAP: [number, number, number][] = [
   [22, 22, -20], [34, 19, 15], [45, 25, -35],
@@ -12,6 +14,9 @@ const HEAP: [number, number, number][] = [
 const BG: Record<string, string> = { rice: '#fbf1d6', mung_bean: '#e8f1df', black_gram: '#ebe8e1' }
 
 export function CropArt({ crop, size = 72 }: { crop: string; size?: number }) {
+  if (crop === 'black_gram') {
+    return <img src={blackGramPhoto} width={size} height={size} alt="" className="crop-art crop-photo" />
+  }
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="crop-art">
       <circle cx="32" cy="32" r="31" fill={BG[crop] ?? '#eee'} />
