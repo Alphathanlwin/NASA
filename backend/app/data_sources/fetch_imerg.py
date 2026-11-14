@@ -58,11 +58,11 @@ def cell(lat: float, lon: float) -> tuple[int, int]:
     return round((lon + 179.95) / 0.1), round((lat + 89.95) / 0.1)
 
 
-def read_values(url: str, headers: dict, idx: list[tuple[int, int]]) -> list[float | None]:
+def read_values(url: str, headers: dict, idx: list[tuple[int, int]], var: str = "/precipitation") -> list[float | None]:
     """One small box covering every town (Hyrax accepts one slice per variable), then pick each cell."""
     i0, i1 = min(i for i, _ in idx), max(i for i, _ in idx)
     j0, j1 = min(j for _, j in idx), max(j for _, j in idx)
-    ce = f"/precipitation[0][{i0}:{i1}][{j0}:{j1}]"
+    ce = f"{var}[0][{i0}:{i1}][{j0}:{j1}]"
     for attempt in range(4):
         r = requests.get(f"{url}.dap.csv", params={"dap4.ce": ce}, headers=headers, timeout=120)
         if r.status_code == 200 and not r.text.startswith("Dataset: ERROR") and "Error {" not in r.text[:300]:
@@ -75,7 +75,7 @@ def read_values(url: str, headers: dict, idx: list[tuple[int, int]]) -> list[flo
     # Hyrax CSV: one line per longitude row "/precipitation[0][k], v_lat0, v_lat1, ...".
     grid = {}
     for line in r.text.splitlines():
-        if not line.startswith("/precipitation"):
+        if not line.startswith(var + "["):
             continue
         head, *vals = [p.strip() for p in line.split(",")]
         k = int(head.rsplit("[", 1)[1].rstrip("]"))

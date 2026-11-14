@@ -86,6 +86,19 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
 15. **Atkinson Hyperlegible** (Braille Institute of America). Bundled via `@fontsource/atkinson-hyperlegible`.
     SIL Open Font License 1.1.
 
+16. **NASA GPM IMERG monthly, Final run** - `GPM_3IMERGM` V07, 0.1 degree, 2001-2025, read through
+    GES DISC OPeNDAP for each reference town's cell. Used for monthly rainfall averages in the
+    "Other crops and fruits" list, because NASA POWER corrected precipitation at the west Delta
+    cells averages 600-1,100 mm a year at Pathein and Myaungmya, far below observed Delta rainfall.
+
+17. **EcoCrop suitability method** - Hijmans, R.J. et al. (2001) "Computer tools for spatial analysis
+    of plant genetic resources data: 1. DIVA-GIS", *Plant Genetic Resources Newsletter* 127: 15-19;
+    Ramirez-Villegas, J. et al. (2013) "Implications of regional improvement in global climate models
+    for agricultural impact research", *Environmental Research Letters* 8: 024018. Crop ranges for
+    20 Delta crops and fruits from the FAO EcoCrop database (entry 3 above); watermelon is left out
+    because EcoCrop gives it no growing-period length.
+
+
 ## Data-status vocabulary
 
 - `LIVE` - retrieved or streamed from the source during the current session.
