@@ -1081,3 +1081,18 @@ html:has(.map-surface:modal) { overflow: hidden; }
 /* the crop photo needs a real slot, unlike the 24 px line icons */
 .tile .tile-icon:has(.crop-photo) { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex: none; }
 .tile .tile-icon .crop-photo { width: 40px; height: 40px; display: block; }
+
+/* fertiliser guide as a column chart; colours follow how each product looks in the bag */
+.fert-chart { width: 100%; max-width: 520px; height: auto; display: block; margin: 4px 0 2px; overflow: visible; }
+.fert-chart .grid { stroke: var(--line); stroke-width: 1; }
+.fert-chart .axis { stroke: var(--muted); stroke-width: 1.2; }
+.fert-chart .tick { font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.fert-chart .val { font-size: 12px; font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
+.fert-chart .kg { font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
+.fert-chart .name { font-size: 11px; fill: var(--ink); }
+.fert-col rect { stroke: rgb(0 0 0 / 0.18); stroke-width: 1; transform-box: fill-box; transform-origin: bottom; animation: rise 800ms var(--ease-out) both; animation-delay: inherit; }
+.fert-urea rect { fill: #cfe0ea; }
+.fert-tsp rect { fill: #8a8a85; }
+.fert-potash rect { fill: #c8574a; }
+.fert-gypsum rect { fill: #e8dfc8; }
+@keyframes rise { from { transform: scaleY(0); } }
