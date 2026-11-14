@@ -69,7 +69,6 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
       <div className="split-head">
         <div>
           <h3 id={inMap ? undefined : 'field-measurements'} tabIndex={-1}>{t('readings.title')}</h3>
-          <p className="note">{t('readings.lead')}</p>
         </div>
         <StatusPill status="USER-INPUT" />
       </div>
