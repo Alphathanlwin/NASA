@@ -7,3 +7,5 @@ frontend/dist/
 .env
 .netrc
 _netrc
+.pnpm-store/
+
