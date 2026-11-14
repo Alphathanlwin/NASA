@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-14T08:04:15Z",
-  "retrieved_at": "2026-11-14T08:04:15Z",
+  "generated_at": "2026-11-14T18:10:35Z",
+  "retrieved_at": "2026-11-14T18:10:35Z",
   "sources": {
     "power_recent:myaungmya": {
       "rows_in": 401,
@@ -201,6 +201,8 @@
         "2024": 1206,
         "2025": 1115
       },
+      "rain_power_annual_mm": 934,
+      "rain_source": "imerg_monthly",
       "years": [
         1996,
         2025
@@ -302,6 +304,8 @@
         "2024": 1119,
         "2025": 947
       },
+      "rain_power_annual_mm": 810,
+      "rain_source": "imerg_monthly",
       "years": [
         1996,
         2025
@@ -403,6 +407,8 @@
         "2024": 1659,
         "2025": 1615
       },
+      "rain_power_annual_mm": 1377,
+      "rain_source": "imerg_monthly",
       "years": [
         1996,
         2025
@@ -504,6 +510,8 @@
         "2024": 3520,
         "2025": 3768
       },
+      "rain_power_annual_mm": 2773,
+      "rain_source": "imerg_monthly",
       "years": [
         1996,
         2025

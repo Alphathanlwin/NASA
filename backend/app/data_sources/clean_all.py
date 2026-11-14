@@ -75,6 +75,20 @@ def clean_power_recent(report):
     return out, meta
 
 
+def imerg_rain_by_doy(town):
+    """Day-of-year rain (mm/day) from the IMERG monthly climatology, or None if it is not there."""
+    data = read_json(CLEAN / "imerg_monthly_climatology.json")
+    months = ((data or {}).get("towns") or {}).get(town, {}).get("rain_mm_month")
+    if not months or any(v is None for v in months):
+        return None
+    out = {}
+    for doy in range(1, 367):
+        d = date(2000, 1, 1) + pd.Timedelta(days=doy - 1)
+        days_in_month = (date(2000 + d.month // 12, d.month % 12 + 1, 1) - date(2000, d.month, 1)).days
+        out[doy] = months[d.month - 1] / days_in_month
+    return out
+
+
 def clean_power_climatology(report):
     """Day-of-year means from about 30 years of daily data. Index 1-366 on a leap-year calendar."""
     frames, meta = [], {}
@@ -103,6 +117,14 @@ def clean_power_climatology(report):
         stats["rain_annual_totals_mm"] = {int(y): round(float(v)) for y, v in annual.items()}
         stats["dropped"].append({"reason": "rainfall only: years with an annual total under 40% of the recent median (inhomogeneous series)",
                                  "rows": int(df.index.year.isin(excluded).sum())})
+        imerg = imerg_rain_by_doy(t["id"])
+        if imerg is not None:
+            # POWER corrected precipitation runs far below observed Delta rainfall (600-1,100 mm a year
+            # at Pathein and Myaungmya), so rain comes from NASA GPM IMERG monthly means 2001-2025,
+            # each month's total spread evenly over its days. Temperature and humidity stay POWER.
+            stats["rain_power_annual_mm"] = round(float(clim["rain_mm"].sum()))
+            clim["rain_mm"] = clim["doy"].map(imerg)
+            stats["rain_source"] = "imerg_monthly"
         clim.insert(0, "town", t["id"])
         frames.append(clim)
         stats["years"] = [int(df.index.min().year), int(df.index.max().year)]
@@ -313,18 +335,30 @@ def build_snapshot(recent, recent_meta, clim, clim_meta, soil, ndvi, ndvi_retrie
             if town in climatology:
                 c = clim[clim["town"] == town].set_index("doy")
                 days = [date(2000, d.month, d.day).timetuple().tm_yday for d in pd.date_range(end=last["date"], periods=30)]
-                values["rain_30d_normal"] = obs(c.loc[days, "rain_mm"].sum(), "mm", "PRECTOTCORR",
-                                                f"same 30 calendar days, mean of {len(clim_meta[town]['rain_years_used'])} years in {min(clim_meta[town]['rain_years_used'])}-{max(clim_meta[town]['rain_years_used'])}", "power_clim", 1)
+                if clim_meta[town].get("rain_source") == "imerg_monthly":
+                    values["rain_30d_normal"] = obs(c.loc[days, "rain_mm"].sum(), "mm", "precipitation",
+                                                    "same 30 calendar days, monthly means 2001-2025", "imerg_clim", 1)
+                else:
+                    values["rain_30d_normal"] = obs(c.loc[days, "rain_mm"].sum(), "mm", "PRECTOTCORR",
+                                                    f"same 30 calendar days, mean of {len(clim_meta[town]['rain_years_used'])} years in {min(clim_meta[town]['rain_years_used'])}-{max(clim_meta[town]['rain_years_used'])}", "power_clim", 1)
         if town in climatology:
             y = [min(clim_meta[town]["rain_years_used"]), max(clim_meta[town]["rain_years_used"])]
             prov["power_clim"] = {"dataset": "NASA POWER", "product": f"Daily API {clim_meta[town]['api_version']}, day-of-year means computed by this project",
                                   "spatial_resolution": POWER_RES, "retrieved_at": clim_meta[town]["retrieved_at"], "status": "CACHED",
-                                  "scale": ref + " Historical average, not a forecast. Modelled rainfall: totals here are well below what is usually reported for the Delta, so treat them as indicative."}
+                                  "scale": ref + " Historical average, not a forecast." + (" Rainfall in this average comes from NASA GPM IMERG, because POWER rainfall here is far below observed Delta totals." if clim_meta[town].get("rain_source") == "imerg_monthly" else " Modelled rainfall: totals here are well below what is usually reported for the Delta, so treat them as indicative.")}
             c = clim[clim["town"] == town]
             dry = c[(c["doy"] >= 306) | (c["doy"] <= 121)]["rain_mm"].sum()   # 1 Nov - 30 Apr
             wetsum = c[(c["doy"] > 121) & (c["doy"] < 306)]["rain_mm"].sum()  # 1 May - 31 Oct
-            values["dry_season_rain_normal"] = obs(dry, "mm", "PRECTOTCORR", f"1 Nov - 30 Apr, mean of {y[0]}-{y[1]}", "power_clim", 0)
-            values["monsoon_rain_normal"] = obs(wetsum, "mm", "PRECTOTCORR", f"1 May - 31 Oct, mean of {y[0]}-{y[1]}", "power_clim", 0)
+            if clim_meta[town].get("rain_source") == "imerg_monthly":
+                prov["imerg_clim"] = {"dataset": "NASA GPM IMERG", "product": "GPM_3IMERGM V07 (Final run), monthly means 2001-2025",
+                                      "spatial_resolution": "0.1 degree grid cell (about 11 km)", "retrieved_at": (read_json(CLEAN / "imerg_monthly_climatology.json") or {}).get("retrieved_at"),
+                                      "status": "CACHED",
+                                      "scale": ref + " Historical average, not a forecast. Each month's total is spread evenly over its days."}
+                values["dry_season_rain_normal"] = obs(dry, "mm", "precipitation", "1 Nov - 30 Apr, monthly means 2001-2025", "imerg_clim", 0)
+                values["monsoon_rain_normal"] = obs(wetsum, "mm", "precipitation", "1 May - 31 Oct, monthly means 2001-2025", "imerg_clim", 0)
+            else:
+                values["dry_season_rain_normal"] = obs(dry, "mm", "PRECTOTCORR", f"1 Nov - 30 Apr, mean of {y[0]}-{y[1]}", "power_clim", 0)
+                values["monsoon_rain_normal"] = obs(wetsum, "mm", "PRECTOTCORR", f"1 May - 31 Oct, mean of {y[0]}-{y[1]}", "power_clim", 0)
 
         if f["id"] in soil:
             s = soil[f["id"]]
