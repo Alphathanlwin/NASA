@@ -42,7 +42,6 @@ export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page
             <Icon d={ICONS[p]} />
             <span>
               <b>{t(`side.${p}` as Key)}</b>
-              <small>{t(`side.${p}Sub` as Key)}</small>
             </span>
           </button>
         ))}
