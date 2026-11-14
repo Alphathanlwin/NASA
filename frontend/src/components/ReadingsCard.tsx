@@ -77,7 +77,7 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
         <NumberInput label={t('readings.ph')} hint={t('readings.phHint')} value={readings.soil_ph} min={3} max={10} step={0.1}
           id={inMap ? 'soil-ph-map' : 'soil-ph'} help={<PhGuideButton inputId={inMap ? 'soil-ph-map' : 'soil-ph'} />}
           onChange={(v) => set({ soil_ph: v })} />
-        <Choices label={t('readings.moisture')} hint={t('readings.moistureHint')} value={readings.moisture}
+        <Choices label={t('readings.moisture')} value={readings.moisture}
           options={[{ value: 'dry', key: 'm.dry' }, { value: 'moist', key: 'm.moist' }, { value: 'wet', key: 'm.wet' }]}
           onChange={(v) => set({ moisture: v })} />
         <Choices label={t('readings.water')} value={readings.standing_water}
