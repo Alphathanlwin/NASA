@@ -10,24 +10,26 @@
 ## What the judges can do in five minutes
 
 1. Open the public URL. It loads in English with no login and no backend.
-2. Pick a field (Myaungmya, Pathein, Bogale, Twante). Note the nearest-reference line: the values
-   are for a NASA POWER grid cell, not the field.
-3. Open **Overview** and expand any value. The panel shows dataset, product, variable, unit,
-   spatial resolution, period, retrieval time and status.
-4. Open **Compare crops**. Three rotations are scored. Rice to rice is the baseline. Each plan
-   shows reasons for, reasons against, evidence references, missing information and local checks.
-   Change the priority sliders; the weights renormalise to 100. Enter a price and a cost for all
-   three crops to enable income.
-5. Open **Scenarios**, choose a 14-day planting delay. Rice-to-rice falls from 14.7 to 11.2 while
-   the legumes hold. The screen lists the changed assumptions and the reason text that moved.
-6. Open **Data & Quality** for the source catalogue and the cleaning report.
+2. **Home**: pick a field. Note the key conditions, each with its NASA source and status, and the
+   recommended dry-season crop.
+3. **My Fields**: expand any value to see dataset, product, variable, unit, resolution, period,
+   retrieval time and status. Tap **(?)** next to soil pH for the picture guide.
+4. **Field view**: press **Plant this** on a rotation. The harvester cuts the rice, the farmer sows
+   the next crop, and the season runs on NASA normals to a summary against rice-to-rice.
+5. **Crop Planner**: three rotations with reasons; the fertiliser chart for each; scroll down for
+   **Other crops and fruits** ranked for this place.
+6. **Scenarios**: choose a 14-day planting delay. Rice-to-rice falls from 14.7 to 11.2 while the
+   legumes hold.
 7. Switch to Burmese with the toggle or `?lang=my`.
 
 ## What is included
 
 - Four demo fields, one per reference town, at real coordinates with illustrative geometry.
-- NASA POWER recent and 30-year climatology, NASA GPM IMERG (Late run) rainfall, NASA SMAP soil
-  moisture, MODIS NDVI, SoilGrids topsoil, source catalogue and cleaning report.
+- NASA POWER recent weather and temperature normals, NASA GPM IMERG rainfall (Late run daily for
+  the last 30 days; monthly 2001-2025 for long-term averages), NASA SMAP soil moisture, MODIS NDVI,
+  SoilGrids topsoil, source catalogue and cleaning report.
+- A 3D field built in Blender with a harvester and an animated season; a cited fertiliser guide;
+  a soil pH test guide; 20 other crops and fruits ranked by FAO EcoCrop suitability.
 - A deterministic rules engine with a Python canonical implementation and a parity-tested
   TypeScript port.
 - Twelve hero scenarios and a what-if comparison screen.
