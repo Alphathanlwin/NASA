@@ -5,7 +5,7 @@
 import type { ReactNode } from 'react'
 import type { runPlans, Snapshot, SnapshotField, Status } from '../data'
 import { doyLabel } from '../engine/engine'
-import { fmtDate, t, townName } from '../i18n'
+import { fmtDate, t, townName, getLang } from '../i18n'
 import type { Key } from '../i18n'
 import type { UserField } from '../userfields'
 import { StatusPill } from './Provenance'
@@ -31,17 +31,31 @@ function Tile({ icon, label, value, sub, tone }: { icon: ReactNode; label: strin
   )
 }
 
-function Cond({ icon, label, value, unit, sub, status }: {
-  icon: string; label: string; value: string; unit?: string; sub: string; status: Status
+function Cond({ icon, label, period, value, unit, sub, status, tone }: {
+  icon: string; label: string; period?: string; value: string; unit?: string; sub: string; status: Status; tone: string
 }) {
   return (
-    <div className="cond">
-      <div className="cond-head"><Icon d={icon} size={20} /><span>{label}</span></div>
+    <div className={`cond cond-${tone}`}>
+      <span className="cond-top">
+        <span className="cond-icon"><Icon d={icon} size={22} /></span>
+        <span className="cond-name">
+          <b>{label}</b>
+          {period && <small>{period}</small>}
+        </span>
+      </span>
       <b className="cond-value">{value}{unit && value !== '—' && <small> {unit}</small>}</b>
       <span className="cond-sub">{sub}</span>
       <StatusPill status={status} />
     </div>
   )
+}
+
+/** 2026-11-10 -> 10 Nov 2026 (month name in the current language). */
+function niceDate(iso: string | undefined) {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso ?? '—'
+  const [y, m, d] = iso.split('-').map(Number)
+  const name = t(`month.${m}` as Key)
+  return `${d} ${getLang() === 'en' ? name.slice(0, 3) : name} ${y}`
 }
 
 const ICON = {
@@ -134,28 +148,30 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
           <section className="card">
             <div className="card-head">
               <h3>{t('cond.title')}</h3>
-              <span className="note small">{t('cond.updated', { d: v.rain_7d?.period?.replace('7 days to ', '') ?? '—' })}</span>
+              <span className="cond-updated"><Icon d={ICON.cal} size={18} />{t('cond.updated', { d: niceDate(v.rain_7d?.period?.replace('7 days to ', '')) })}</span>
             </div>
             <div className="conds">
-              <Cond icon={ICON.rain} label={t('cond.rain7')} value={v.rain_7d?.value != null ? String(v.rain_7d.value) : '—'} unit="mm"
+              <Cond tone="rain" icon={ICON.rain} label={t('cond.rainTitle')} period={t('cond.last7')} value={v.rain_7d?.value != null ? String(v.rain_7d.value) : '—'} unit="mm"
                 sub={t('cond.rain7Src')} status={(field.provenance.power_recent?.status ?? 'UNAVAILABLE') as Status} />
-              <Cond icon={ICON.sat} label={t('cond.rain30')} value={v.imerg_rain_30d?.value != null ? String(v.imerg_rain_30d.value) : '—'} unit="mm"
+              <Cond tone="sat" icon={ICON.sat} label={t('cond.satTitle')} period={t('cond.last30')} value={v.imerg_rain_30d?.value != null ? String(v.imerg_rain_30d.value) : '—'} unit="mm"
                 sub={t('cond.rain30Src')} status={(v.imerg_rain_30d?.value != null ? 'CACHED' : 'UNAVAILABLE') as Status} />
               {soilUser ? (
-                <Cond icon={ICON.drop} label={t('cond.soil')} value={t(`m.${readingsMoisture ?? soilUser.value}` as Key)}
+                <Cond tone="soil" icon={ICON.drop} label={t('cond.soil')} value={t(`m.${readingsMoisture ?? soilUser.value}` as Key)}
                   sub={t('cond.soilYours')} status="USER-INPUT" />
               ) : (
-                <Cond icon={ICON.drop} label={t('cond.soil')} value={sm?.value != null ? String(sm.value) : t('cond.unknown')}
+                <Cond tone="soil" icon={ICON.drop} label={t('cond.soil')} value={sm?.value != null ? String(sm.value) : t('cond.unknown')}
                   unit={sm?.value != null ? 'm³/m³' : undefined} sub={sm?.value != null ? t('cond.soilSat') : t('cond.soilNone')}
                   status={(sm?.value != null ? 'CACHED' : 'UNAVAILABLE') as Status} />
               )}
-              <Cond icon={ICON.tap} label={t('cond.irr')} value={t(`irr.${field.irrigation}` as Key)}
+              <Cond tone="tap" icon={ICON.tap} label={t('cond.irr')} value={t(`irr.${field.irrigation}` as Key)}
                 sub={field.status === 'USER-INPUT' || field.values.user_drainage || field.values.user_moisture ? t('cond.irrYours') : t('cond.irrDemo')}
                 status={field.status === 'DEMO' ? 'DEMO' : 'USER-INPUT'} />
             </div>
             <div className="cond-foot">
-              <span>{t('cond.note')}</span>
-              <a className="link" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">{t('cond.more')}</a>
+              <span className="cond-note"><Icon d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7.5v.01" size={22} />{t('cond.note')}</span>
+              <a className="cond-more" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">
+                {t('cond.more')}<Icon d="M9 6l6 6-6 6" size={18} />
+              </a>
             </div>
             <div className="field-nutrients">
               <h4>{t('overview.nutrients')}</h4>
