@@ -66,6 +66,9 @@ export default function App() {
     planting_delay_days: 0,
     irrigation: 'available',
     drainage: 'good',
+    fertilizer: 'normal',
+    pesticide: 'available',
+    cash: 'normal',
   })
   const [scenarioResult, setScenarioResult] = useState<PlanResult | null>(null)
 
