@@ -1129,3 +1129,18 @@ html:has(.map-surface:modal) { overflow: hidden; }
   .guide-backdrop { place-items: end center; padding: 0; }
   .guide { width: 100%; border-radius: 20px 20px 0 0; max-height: 92vh; padding-bottom: 20px; }
 }
+
+/* every control shows its own box, not only the selected one */
+.tile-select select {
+  border: 1.5px solid #c9c2ad; border-radius: 10px; background: #fff; padding: 8px 32px 8px 12px;
+  text-decoration: none; appearance: none; -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 17px) 50%, calc(100% - 12px) 50%; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.tile-select select:hover { border-color: var(--turmeric); }
+@media (min-width: 821px) {
+  .side-nav { gap: 8px; }
+  .side-nav button { border: 1px solid rgb(255 255 255 / 0.16); background: rgb(255 255 255 / 0.04); }
+  .side-nav button:hover { border-color: rgb(255 255 255 / 0.32); background: rgb(255 255 255 / 0.08); }
+  .side-nav button.active { border-color: rgb(255 255 255 / 0.4); }
+}

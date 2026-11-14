@@ -396,5 +396,7 @@
   "town.pathein": "ပုသိမ်",
   "town.bogale": "ဘိုကလေး",
   "town.twante": "တွံတေး",
-  "field.demoName": "{town} နမူနာ လယ်ကွက်"
+  "field.demoName": "{town} နမူနာ လယ်ကွက်",
+  "side.field3d": "လယ်ကွက် မြင်ကွင်း",
+  "side.field3dSub": "လယ်ထဲ ဝင်ကြည့်ပြီး သီးနှံ စမ်းစိုက်ရန်"
 }
