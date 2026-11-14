@@ -112,6 +112,10 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
     - Paddy: Undeka 11, "Ripening rice plants in paddy field, Indonesia.jpg", CC BY-SA 4.0,
       <https://commons.wikimedia.org/wiki/File:Ripening_rice_plants_in_paddy_field,_Indonesia.jpg>
 
+20. **Soil reaction (pH) classes** - Soil Science Division Staff (2017), *Soil Survey Manual*, USDA
+    Handbook 18, chapter 3. Used only to name the topsoil pH class (for example 6.1-6.5 "slightly acid")
+    on My Fields; no suitability verdict is drawn from it.
+
 ## Data-status vocabulary
 
 - `LIVE` - retrieved or streamed from the source during the current session.
