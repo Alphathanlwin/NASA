@@ -3,9 +3,9 @@ import copy
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from .engine import agent, planner
+from .engine import agent, planner, timeseries_hybrid
 from .engine.crops import CROPS, SLOTS
-from .services import analysis, models, power, store
+from .services import analysis, iot, models, power, store
 
 router = APIRouter(prefix="/api")
 
@@ -130,3 +130,44 @@ def datasets_status():
             p["status"] = "LIVE"
         layers.append({"layer": name, **p})
     return {"layers": layers, "power_live": power.last_status, "cleaning_report": store.cleaning_report()}
+
+
+@router.get("/timeseries/hybrid-nowcast")
+def hybrid_nowcast(field_id: str = "F-01", days_forward: int = Query(28, ge=7, le=60)):
+    rec = field_or_404(field_id)
+    wetness = rec.get("wetness") or {}
+    weather = rec.get("weather") or {}
+    soil = rec.get("soil") or {}
+    
+    current_wet = float(wetness.get("gwetroot", 0.70))
+    texture = str(soil.get("texture", "clay")).lower()
+    
+    return timeseries_hybrid.predict_rootzone_recession(
+        current_rootzone_wetness=current_wet,
+        recent_weather=weather,
+        soil_texture=texture,
+        days_forward=days_forward,
+        confidence_level=0.90
+    )
+
+
+@router.get("/iot/devices")
+def get_iot_devices():
+    return iot.list_devices()
+
+
+@router.get("/fields/{field_id}/iot")
+def get_field_iot(field_id: str):
+    field_or_404(field_id)
+    data = iot.get_field_telemetry(field_id)
+    if not data:
+        raise HTTPException(404, f"No active in-situ IoT telemetry registered for field {field_id}")
+    return data
+
+
+@router.post("/fields/{field_id}/iot")
+def post_field_iot(field_id: str, packet: iot.IoTTelemetryPacket):
+    if packet.field_id != field_id:
+        raise HTTPException(422, f"Payload field_id '{packet.field_id}' does not match URL field_id '{field_id}'")
+    return iot.record_telemetry(packet)
+

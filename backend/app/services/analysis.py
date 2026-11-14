@@ -11,8 +11,8 @@ import math
 from typing import Any
 
 from app.engine.crops import CROPS
-from app.engine import planner
-from app.services import store
+from app.engine import planner, timeseries_hybrid
+from app.services import iot, store
 
 ENGINE_VERSION = "1.2.0"
 COVERAGE_BBOX = {"min_lat": 16.2, "max_lat": 17.2, "min_lon": 95.5, "max_lon": 96.6}
@@ -171,7 +171,47 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
             limitations.append("Geometry is outside supported regional observation coverage; satellite layers unavailable.")
             processing.append({"step": "environmental_retrieval", "status": "unavailable", "details": "Out of observation coverage"})
 
-    # 2. Baseline Plan
+    # 1.5 IoT In-Situ Ground Truth Telemetry Fusion
+    iot_telemetry = None
+    if field.get("id"):
+        iot_telemetry = iot.get_field_telemetry(field["id"])
+        if iot_telemetry and iot_telemetry.get("telemetry"):
+            tel = iot_telemetry["telemetry"]
+            for alert in iot_telemetry.get("alerts", []):
+                limitations.append(f"IoT Sensor Alert [{alert['severity']}]: {alert['message']}")
+            processing.append({
+                "step": "iot_sensor_fusion",
+                "status": "complete",
+                "details": f"Fused in-situ ground truth from {tel.get('device_id')} (VWC: {tel.get('soil_moisture_40cm_vwc')}, EC: {tel.get('salinity_ec_ds_m')} dS/m)"
+            })
+
+    # 2. Hybrid Hydrological Time-Series Nowcasting
+    soil_texture = "clay"
+    if field.get("soil") and field["soil"].get("texture"):
+        soil_texture = str(field["soil"]["texture"]).lower()
+
+    hydrological_nowcast = None
+    if supported and field.get("weather"):
+        current_wet = 0.70
+        if field.get("wetness") and field["wetness"].get("gwetroot") is not None:
+            current_wet = float(field["wetness"]["gwetroot"])
+        elif field["weather"].get("rain_7d") is not None:
+            current_wet = min(0.9, 0.4 + field["weather"]["rain_7d"] / 100.0)
+
+        hydrological_nowcast = timeseries_hybrid.predict_rootzone_recession(
+            current_rootzone_wetness=current_wet,
+            recent_weather=field["weather"],
+            soil_texture=soil_texture,
+            days_forward=28,
+            confidence_level=0.90
+        )
+        processing.append({
+            "step": "hydrological_time_series_hybrid",
+            "status": "complete",
+            "details": f"Computed 28-day FAO-56 PET recession trajectory with 90% conformal calibration (risk: {hydrological_nowcast['desaturation_risk']})"
+        })
+
+    # 3. Baseline Plan
     if supported and field.get("climatology"):
         baseline_plan = planner.plan(field, priorities, returns)
         baseline_assessment = "complete"
@@ -189,7 +229,7 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
     }
     processing.append({"step": "rotation_planning", "status": "complete", "details": "Computed candidate rotation scores and trade-offs"})
 
-    # 3. Scenario Projection (if requested)
+    # 4. Scenario Projection (if requested)
     scenario_result = None
     if scenario_req:
         scenario_field = copy.deepcopy(field)
@@ -249,6 +289,8 @@ def analyse(payload: dict[str, Any]) -> dict[str, Any]:
         "field": field,
         "baseline": baseline_result,
         "scenario": scenario_result,
+        "hydrological_trajectory": hydrological_nowcast,
+        "iot_telemetry": iot_telemetry,
         "limitations": limitations,
         "processing": processing,
     }
