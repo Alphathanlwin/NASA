@@ -1,0 +1,64 @@
+// AI-assisted: Claude Code
+// Overlay on the map while the farmer draws their own field: tap corners, see the area, name it.
+import { useState } from 'react'
+import { t } from '../i18n'
+import { areaAcres } from '../userfields'
+import type { LatLng, UserField } from '../userfields'
+
+type Irrigation = UserField['irrigation']
+
+export function DrawPanel({ draft, onUndo, onCancel, onSave }: {
+  draft: LatLng[]
+  onUndo: () => void
+  onCancel: () => void
+  onSave: (name: string, irrigation: Irrigation) => void
+}) {
+  const [step, setStep] = useState<'corners' | 'details'>('corners')
+  const [name, setName] = useState('')
+  const [irrigation, setIrrigation] = useState<Irrigation | null>(null)
+  const acres = Math.round(areaAcres(draft) * 10) / 10
+  const canFinish = draft.length >= 3
+
+  return (
+    <div className="draw-panel" role="dialog" aria-label={t('draw.title')}>
+      {step === 'corners' ? (
+        <>
+          <b className="draw-title">{t('draw.title')}</b>
+          <p>{t('draw.help')}</p>
+          <div className="draw-stats">
+            <span>{t('draw.corners', { n: draft.length })}</span>
+            {canFinish && <b>{t('field.acres', { a: acres })}</b>}
+          </div>
+          <div className="draw-actions">
+            <button className="btn ghost" onClick={onUndo} disabled={draft.length === 0}>{t('draw.undo')}</button>
+            <button className="btn ghost" onClick={onCancel}>{t('draw.cancel')}</button>
+            <button className="btn primary" onClick={() => setStep('details')} disabled={!canFinish}>{t('draw.done')}</button>
+          </div>
+        </>
+      ) : (
+        <>
+          <b className="draw-title">{t('field.acres', { a: acres })}</b>
+          <label className="draw-field">
+            <span>{t('draw.name')}</span>
+            <input value={name} placeholder={t('draw.namePlaceholder')} onChange={(e) => setName(e.target.value)} maxLength={40} />
+          </label>
+          <div className="draw-field">
+            <span>{t('readings.irrigation')}</span>
+            <div className="choice-row">
+              {(['available', 'sometimes', 'unavailable'] as Irrigation[]).map((v) => (
+                <button key={v} className={`choice ${irrigation === v ? 'on' : ''}`} aria-pressed={irrigation === v}
+                  onClick={() => setIrrigation(v)}>{t(`irr.${v}` as never)}</button>
+              ))}
+            </div>
+          </div>
+          <div className="draw-actions">
+            <button className="btn ghost" onClick={() => setStep('corners')}>{t('draw.back')}</button>
+            <button className="btn primary" disabled={!irrigation}
+              onClick={() => onSave(name.trim() || t('draw.namePlaceholder'), irrigation!)}>{t('draw.save')}</button>
+          </div>
+          <p className="draw-note">{t('mine.note')}</p>
+        </>
+      )}
+    </div>
+  )
+}
