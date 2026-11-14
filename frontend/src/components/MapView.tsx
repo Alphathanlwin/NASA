@@ -31,6 +31,13 @@ function DrawClicks({ onPoint }: { onPoint: (p: LatLng) => void }) {
   return null
 }
 
+/** When drawing starts, zoom close to the current field so one paddy is several taps wide. */
+function DrawFocus({ center }: { center: LatLng }) {
+  const map = useMap()
+  useEffect(() => { map.setView(center, 16, { animate: true }) }, [map, center])
+  return null
+}
+
 function FitField({ coords }: { coords: [number, number][] | null }) {
   const map = useMap()
   useEffect(() => {
@@ -83,7 +90,7 @@ function AgentTrace({ waypoints, runId }: { waypoints: [number, number][]; runId
 }
 
 export function MapView({ snap, selectedId, onSelect, agentRun, runId, userFields = [], drawing = false,
-  draft = [], onDraftPoint, overlay }: {
+  draft = [], onDraftPoint, overlay, initialLayer = 'map', compact = false }: {
   snap: Snapshot
   selectedId: string | null
   onSelect: (id: string) => void
@@ -94,8 +101,10 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   draft?: LatLng[]
   onDraftPoint?: (p: LatLng) => void
   overlay?: ReactNode
+  initialLayer?: Layer
+  compact?: boolean
 }) {
-  const [layer, setLayer] = useState<Layer>('map')
+  const [layer, setLayer] = useState<Layer>(initialLayer)
   // Fields are easiest to trace on imagery, so drawing switches to the satellite view.
   useEffect(() => { if (drawing) setLayer('satellite') }, [drawing])
   const imagery = layer !== 'map'
@@ -114,10 +123,12 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   return (
     <section className="map-card" aria-label={t('map.title')}>
       <div className="map-toolbar">
-        <div className="map-title">
-          <b>{t('map.title')}</b>
-          <span>{t('app.region')}</span>
-        </div>
+        {!compact && (
+          <div className="map-title">
+            <b>{t('map.title')}</b>
+            <span>{t('app.region')}</span>
+          </div>
+        )}
         <div className="layer-seg" role="group" aria-label={t('map.layers')}>
           {(['map', 'satellite'] as Layer[]).map((l) => (
             <button key={l} className={layer === l ? 'active' : ''} aria-pressed={layer === l}
@@ -165,6 +176,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
             </Polygon>
           ))}
           {drawing && onDraftPoint && <DrawClicks onPoint={onDraftPoint} />}
+          {drawing && <DrawFocus center={center} />}
           {drawing && draft.length >= 3 && <Polygon positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.length === 2 && <Polyline positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.map((p, i) => (

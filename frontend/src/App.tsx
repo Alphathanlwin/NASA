@@ -6,7 +6,9 @@ import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
-import { RecommendedCrop } from './components/RecommendedCrop'
+import { HomePage } from './components/HomePage'
+import { Sidebar } from './components/Sidebar'
+import type { Page } from './components/Sidebar'
 import { ScenarioPanel } from './components/ScenarioPanel'
 import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
 import type { Snapshot, SnapshotField } from './data'
@@ -17,15 +19,6 @@ import { initialLang, setLang, t } from './i18n'
 import type { Lang } from './i18n'
 import './app.css'
 
-type Tab = 'overview' | 'compare' | 'scenarios' | 'agent' | 'quality'
-
-const TABS: { id: Tab; key: Parameters<typeof t>[0] }[] = [
-  { id: 'overview', key: 'nav.overview' },
-  { id: 'compare', key: 'nav.compare' },
-  { id: 'scenarios', key: 'nav.scenarios' },
-  { id: 'agent', key: 'nav.agent' },
-  { id: 'quality', key: 'nav.quality' },
-]
 
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
@@ -43,7 +36,7 @@ export default function App() {
   const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
   const [online, setOnline] = useState(false)
-  const [tab, setTab] = useState<Tab>('overview')
+  const [page, setPage] = useState<Page>('home')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [priorities, setPriorities] = useState<Priorities>(DEFAULT_PRIORITIES)
   const [econ, setEcon] = useState<Econ>({})
@@ -124,110 +117,106 @@ export default function App() {
 
   const calendar = plans?.plans[0]?.calendar ?? null
 
+  const mapView = field && snap ? (
+    <MapView snap={snap} selectedId={selectedId} onSelect={select}
+      initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
+      agentRun={field.agent_run ?? null} runId={runId}
+      userFields={userFields} drawing={drawing} draft={drawPts}
+      onDraftPoint={(pt) => setDrawPts((d) => [...d, pt])}
+      overlay={drawing ? (
+        <DrawPanel draft={drawPts} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
+          onCancel={() => { setDrawing(false); setDrawPts([]) }} onSave={saveDrawn} />
+      ) : null} />
+  ) : null
+  const hour = new Date().getHours()
+  const greet = hour < 12 ? t('home.morning') : hour < 17 ? t('home.afternoon') : t('home.evening')
+  const addField = () => { setPage('fields'); startDrawing() }
+
   return (
-    <div className="app">
-      <header className="topbar">
-        <div className="brand">
-          <div className="brand-mark" aria-hidden="true">FS</div>
+    <div className="shell">
+      <Sidebar page={page} onPage={setPage} online={online} />
+
+      <div className="main">
+        <header className="main-head">
           <div>
-            <b>{t('app.name')}</b>
-            <span>{t('app.tagline')}</span>
+            <p className="hello">မင်္ဂလာပါ! <span>Mingalaba!</span> <span aria-hidden="true">☀</span></p>
+            <h1>{greet}</h1>
+            <p className="lead">{t('home.sub')}</p>
           </div>
-        </div>
-
-        <div className="top-actions">
-          <span className={`mode ${online ? 'mode-online' : 'mode-offline'}`}>
-            {online ? t('mode.backend') : t('mode.cached')}
-          </span>
-          <div className="lang-toggle" role="group" aria-label={t('lang.label')}>
-            <button className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
-            <button className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
-          </div>
-        </div>
-      </header>
-
-      {error && <div className="banner error">{t('common.error')}</div>}
-      {!snap && !error && <div className="banner">{t('common.loading')}</div>}
-
-      {snap && field && (
-        <>
-          <div className="field-strip" role="tablist" aria-label={t('field.choose')}>
-            <span className="strip-label">{t('field.choose')}</span>
-            {Object.values(snap.fields).map((f) => (
-              <button key={f.id} role="tab" aria-selected={f.id === selectedId}
-                className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
-                <b>{f.id}</b> {f.name.replace(' demo field', '')}
-                <small>{t('mine.example')} · {t('field.acres', { a: f.area_acres })}</small>
-              </button>
-            ))}
-            {userFields.map((u) => (
-              <button key={u.id} role="tab" aria-selected={u.id === selectedId}
-                className={`field-chip mine ${u.id === selectedId ? 'active' : ''}`} onClick={() => select(u.id)}>
-                <b>✎</b> {u.name}
-                <small>{t('mine.badge')} · {t('field.acres', { a: profiles[u.id]?.area_acres })}</small>
-              </button>
-            ))}
-            <button className="field-chip add" onClick={startDrawing} disabled={drawing}>
-              <b>+</b> {t('mine.add')}
-            </button>
-          </div>
-
-          <main className="layout">
-            <div className="map-col">
-              <MapView snap={snap} selectedId={selectedId} onSelect={select}
-                agentRun={field.agent_run ?? null} runId={runId}
-                userFields={userFields} drawing={drawing} draft={drawPts}
-                onDraftPoint={(pt) => setDrawPts((d) => [...d, pt])}
-                overlay={drawing ? (
-                  <DrawPanel draft={drawPts} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
-                    onCancel={() => { setDrawing(false); setDrawPts([]) }} onSave={saveDrawn} />
-                ) : null} />
-              {plans && <RecommendedCrop result={plans} onOpen={() => setTab('compare')} />}
+          <div className="head-actions">
+            <span className={`mode ${online ? 'mode-online' : 'mode-offline'}`}>
+              {online ? t('mode.backend') : t('mode.cached')}
+            </span>
+            <div className="lang-toggle" role="group" aria-label={t('lang.label')}>
+              <button className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
+              <button className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
             </div>
+          </div>
+        </header>
 
-            <div className="content">
-              <nav className="tabs" aria-label={t('nav.sections')}>
-                {TABS.map((item) => (
-                  <button key={item.id} className={tab === item.id ? 'active' : ''}
-                    onClick={() => setTab(item.id)} aria-current={tab === item.id ? 'page' : undefined}>
-                    {t(item.key)}
-                  </button>
-                ))}
-              </nav>
+        {error && <div className="banner error">{t('common.error')}</div>}
+        {!snap && !error && <div className="banner">{t('common.loading')}</div>}
 
-              <div className="page">
-                {tab === 'overview' && (
-                  <FieldOverview snap={snap} field={field} calendar={calendar}
-                    readings={(selectedId && readings[selectedId]) || {}} onReadings={updateReadings}
-                    onDelete={isUserField ? deleteUserField : undefined}
-                    onAnalyse={() => { setTab('compare'); setRunId((n) => n + 1) }} />
-                )}
-                {tab === 'compare' && plans && (
-                  <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}
-                    econ={econ} onEcon={setEcon} />
-                )}
-                {tab === 'scenarios' && (
-                  <ScenarioPanel draft={draft} onChange={setDraft} result={comparison}
-                    fieldIrrigation={field.irrigation} />
-                )}
-                {tab === 'agent' && field.agent_run && (
-                  <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
-                )}
-                {tab === 'quality' && <DataQuality snap={snap} />}
+        {snap && field && (
+          <main className="page-body">
+            {page === 'home' && (
+              <HomePage snap={snap} field={field} plans={plans} map={mapView} profiles={profiles}
+                userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage} onAdd={addField} />
+            )}
+            {page === 'fields' && (
+              <div className="fields-page">
+                <div className="fields-map">
+                  <div className="field-strip" role="tablist" aria-label={t('field.choose')}>
+                    {Object.values(snap.fields).map((f) => (
+                      <button key={f.id} role="tab" aria-selected={f.id === selectedId}
+                        className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
+                        <b>{f.id}</b> {f.town_name}
+                        <small>{t('mine.example')} · {t('field.acres', { a: f.area_acres })}</small>
+                      </button>
+                    ))}
+                    {userFields.map((u) => (
+                      <button key={u.id} role="tab" aria-selected={u.id === selectedId}
+                        className={`field-chip mine ${u.id === selectedId ? 'active' : ''}`} onClick={() => select(u.id)}>
+                        <b>✎</b> {u.name}
+                        <small>{t('mine.badge')} · {t('field.acres', { a: profiles[u.id]?.area_acres })}</small>
+                      </button>
+                    ))}
+                    <button className="field-chip add" onClick={startDrawing} disabled={drawing}>
+                      <b>+</b> {t('mine.add')}
+                    </button>
+                  </div>
+                  {mapView}
+                </div>
+                <FieldOverview snap={snap} field={field} calendar={calendar}
+                  readings={(selectedId && readings[selectedId]) || {}} onReadings={updateReadings}
+                  onDelete={isUserField ? deleteUserField : undefined}
+                  onAnalyse={() => { setPage('planner'); setRunId((n) => n + 1) }} />
               </div>
-            </div>
+            )}
+            {page === 'planner' && plans && (
+              <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}
+                econ={econ} onEcon={setEcon} />
+            )}
+            {page === 'scenarios' && (
+              <ScenarioPanel draft={draft} onChange={setDraft} result={comparison}
+                fieldIrrigation={field.irrigation} />
+            )}
+            {page === 'log' && field.agent_run && (
+              <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
+            )}
+            {page === 'quality' && <DataQuality snap={snap} />}
           </main>
-        </>
-      )}
+        )}
 
-      <footer className="footer">
-        <p className="disclaimer">{t('footer.disclaimer')}</p>
-        <p>{t('footer.data')} · {t('footer.built')}</p>
-        <p className="small">
-          Snapshot {snap?.generated_at?.slice(0, 10) ?? '—'} · Engine {snap?.engine_version ?? '—'} ·
-          Retrieval {snap?.retrieved_at?.slice(0, 10) ?? '—'}
-        </p>
-      </footer>
+        <footer className="foot">
+          <p className="disclaimer">{t('footer.disclaimer')}</p>
+          <p>{t('footer.data')} · {t('footer.built')}</p>
+          <p className="small">
+            Snapshot {snap?.generated_at?.slice(0, 10) ?? '—'} · Engine {snap?.engine_version ?? '—'} ·
+            Retrieval {snap?.retrieved_at?.slice(0, 10) ?? '—'}
+          </p>
+        </footer>
+      </div>
     </div>
   )
 }
