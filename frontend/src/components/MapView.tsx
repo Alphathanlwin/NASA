@@ -190,7 +190,6 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           </CircleMarker>
           {!drawing && <FitField coords={selectedCoords} />}
         </MapContainer>
-        {layer === 'satellite' && !drawing && <div className="map-caption">{t('map.esriNote')}</div>}
         {overlay}
         {tilesDown && (
           <div className="map-offline">
