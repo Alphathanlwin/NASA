@@ -11,8 +11,16 @@ const BASE = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
 const GIBS_DATE = '2026-01-10'
 const GIBS =
   `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/MODIS_Terra_CorrectedReflectance_TrueColor/default/${GIBS_DATE}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`
+// High-resolution imagery for the "Satellite" view. Esri World Imagery is not a NASA product;
+// it is credited on the map. NASA imagery stays available as its own layer (GIBS, 250 m).
+const ESRI =
+  'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+type Layer = 'map' | 'satellite' | 'nasa'
 const BASE_STYLE = { color: '#1f3d2b', weight: 1.6, opacity: 0.7, dashArray: '3 3', fillOpacity: 0.08 }
 const ACTIVE_STYLE = { color: '#1f6b43', weight: 2.6, opacity: 1, fillColor: '#2e7d4f', fillOpacity: 0.28 }
+// On imagery the outlines need to be bright to stay visible.
+const BASE_STYLE_IMG = { ...BASE_STYLE, color: '#ffffff', opacity: 0.9, fillOpacity: 0.05 }
+const ACTIVE_STYLE_IMG = { ...ACTIVE_STYLE, color: '#facc15', fillColor: '#facc15', fillOpacity: 0.18 }
 
 function FitField({ coords }: { coords: [number, number][] | null }) {
   const map = useMap()
@@ -72,7 +80,8 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId }: {
   agentRun: { waypoints: [number, number][] } | null
   runId: number
 }) {
-  const [satellite, setSatellite] = useState(false)
+  const [layer, setLayer] = useState<Layer>('map')
+  const imagery = layer !== 'map'
   const [tileErrors, setTileErrors] = useState(0)
   const selected = selectedId ? snap.fields[selectedId] : null
   const center: [number, number] = selected ? selected.centroid : [16.7, 95.2]
@@ -91,30 +100,29 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId }: {
           <b>{t('map.title')}</b>
           <span>{t('app.region')}</span>
         </div>
-        <label className="switch">
-          <input type="checkbox" checked={satellite} onChange={(e) => setSatellite(e.target.checked)} />
-          <span>{t('map.satellite')}</span>
-        </label>
+        <div className="layer-seg" role="group" aria-label={t('map.layers')}>
+          {(['map', 'satellite', 'nasa'] as Layer[]).map((l) => (
+            <button key={l} className={layer === l ? 'active' : ''} aria-pressed={layer === l}
+              onClick={() => { setTileErrors(0); setLayer(l) }}>
+              {t(l === 'map' ? 'map.layerMap' : l === 'satellite' ? 'map.layerSatellite' : 'map.layerNasa')}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="map-box">
         <MapContainer center={center} zoom={selected ? 12 : 9} scrollWheelZoom className="leaflet-host">
-          {!tilesDown && (
-            <TileLayer
-              url={BASE}
-              attribution={t('map.attribution')}
-              eventHandlers={{ tileerror: tileError }}
-              maxZoom={19}
-            />
+          {!tilesDown && layer === 'map' && (
+            <TileLayer key="map" url={BASE} attribution={t('map.attribution')}
+              eventHandlers={{ tileerror: tileError }} maxZoom={19} />
           )}
-          {satellite && !tilesDown && (
-            <TileLayer
-              url={GIBS}
-              opacity={0.65}
-              maxNativeZoom={9}
-              maxZoom={18}
-              eventHandlers={{ tileerror: tileError }}
-            />
+          {!tilesDown && layer === 'satellite' && (
+            <TileLayer key="satellite" url={ESRI} attribution={t('map.attributionEsri')}
+              eventHandlers={{ tileerror: tileError }} maxNativeZoom={17} maxZoom={19} />
+          )}
+          {!tilesDown && layer === 'nasa' && (
+            <TileLayer key="nasa" url={GIBS} attribution={t('map.attributionNasa')}
+              eventHandlers={{ tileerror: tileError }} maxNativeZoom={9} maxZoom={18} />
           )}
           {snap.geojson.features.map((f) => {
             const active = f.id === selectedId
@@ -123,7 +131,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId }: {
               <Polygon
                 key={f.id}
                 positions={coords}
-                pathOptions={active ? ACTIVE_STYLE : BASE_STYLE}
+                pathOptions={imagery ? (active ? ACTIVE_STYLE_IMG : BASE_STYLE_IMG) : (active ? ACTIVE_STYLE : BASE_STYLE)}
                 eventHandlers={{ click: () => onSelect(f.id) }}
               >
                 <Tooltip sticky>
@@ -141,7 +149,8 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId }: {
           </CircleMarker>
           <FitField coords={selectedCoords} />
         </MapContainer>
-        {satellite && <div className="map-caption">{t('map.fixedDate', { d: GIBS_DATE })}</div>}
+        {layer === 'nasa' && <div className="map-caption">{t('map.fixedDate', { d: GIBS_DATE })}</div>}
+        {layer === 'satellite' && <div className="map-caption">{t('map.esriNote')}</div>}
         {tilesDown && (
           <div className="map-offline">
             <b>{t('map.offline')}</b>
@@ -149,7 +158,9 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId }: {
           </div>
         )}
       </div>
-      <div className="map-foot">{t('map.attribution')}</div>
+      <div className="map-foot">
+        {layer === 'map' ? t('map.attribution') : layer === 'satellite' ? t('map.attributionEsri') : t('map.attributionNasa')}
+      </div>
     </section>
   )
 }

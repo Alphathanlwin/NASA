@@ -386,3 +386,36 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
   .tabs button { flex: 1 1 45%; }
   .evidence ul { columns: 1; }
 }
+
+/* ---------- recommended crop (under the map) ---------- */
+.rec-card {
+  background: var(--paper); border: 1px solid var(--line); border-left: 5px solid #2e7d4f;
+  border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px 16px 12px; display: grid; gap: 10px;
+}
+.rec-card.rec-possible_with_caution { border-left-color: #d99a1b; }
+.rec-card.rec-weak_fit { border-left-color: #d97706; }
+.rec-card.rec-not_workable { border-left-color: #b91c1c; }
+.rec-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.rec-hero { display: grid; grid-template-columns: auto 1fr auto; gap: 14px; align-items: center; }
+.rec-arts { display: flex; gap: 4px; }
+.rec-name { display: grid; gap: 6px; justify-items: start; }
+.rec-name b { font-size: 1.5rem; line-height: 1.2; color: var(--ink); }
+/* One shared grid so every bar starts at the same place, whatever the crop-name length. */
+.rec-bars { display: grid; grid-template-columns: 38px max-content 1fr 32px; column-gap: 10px; row-gap: 8px; align-items: center; }
+.rec-bar { display: contents; }
+.rec-bar > * { opacity: 0.75; }
+.rec-bar.is-top > * { opacity: 1; }
+.rec-label { display: grid; line-height: 1.2; font-size: 0.92rem; font-weight: 600; }
+.rec-label small { font-size: 0.72rem; font-weight: 600; color: #854d0e; }
+.rec-after { font-size: 0.85rem; color: var(--muted); }
+.rec-bar b { text-align: right; font-size: 1rem; font-variant-numeric: tabular-nums; }
+.rec-track { height: 14px; background: #eee8d8; border-radius: 6px; overflow: hidden; }
+.rec-fill { height: 100%; border-radius: 6px; transition: width 0.35s ease; }
+.rec-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.74rem; color: var(--muted); }
+.crop-art { flex: none; display: block; }
+
+/* ---------- map layer switch ---------- */
+.layer-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: #fff; }
+.layer-seg button { border: 0; background: none; padding: 6px 12px; font: inherit; font-size: 0.78rem; cursor: pointer; color: var(--ink); }
+.layer-seg button + button { border-left: 1px solid var(--line); }
+.layer-seg button.active { background: var(--forest); color: #fff; font-weight: 700; }

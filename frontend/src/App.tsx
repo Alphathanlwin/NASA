@@ -5,6 +5,7 @@ import { DataQuality } from './components/DataQuality'
 import { FieldOverview } from './components/FieldOverview'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
+import { RecommendedCrop } from './components/RecommendedCrop'
 import { ScenarioPanel } from './components/ScenarioPanel'
 import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
 import type { Snapshot } from './data'
@@ -26,7 +27,16 @@ const TABS: { id: Tab; key: Parameters<typeof t>[0] }[] = [
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
 export default function App() {
-  const [lang, setLanguage] = useState<Lang>(initialLang())
+  const [lang, setLanguageState] = useState<Lang>(() => {
+    const l = initialLang()
+    setLang(l)
+    return l
+  })
+  // Switch t() first, then re-render, so the new render already uses the chosen language.
+  const setLanguage = (l: Lang) => {
+    setLang(l)
+    setLanguageState(l)
+  }
   const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
   const [online, setOnline] = useState(false)
@@ -36,10 +46,6 @@ export default function App() {
   const [econ, setEcon] = useState<Econ>({})
   const [draft, setDraft] = useState<Scenario>({})
   const [runId, setRunId] = useState(0)
-
-  useEffect(() => {
-    setLang(lang)
-  }, [lang])
 
   useEffect(() => {
     loadSnapshot()
@@ -113,10 +119,7 @@ export default function App() {
             <div className="map-col">
               <MapView snap={snap} selectedId={selectedId} onSelect={select}
                 agentRun={field.agent_run ?? null} runId={runId} />
-              <div className="map-note">
-                <b>{t('field.reference')}:</b> {field.town_name}, {t('field.distance', { d: field.town_distance_km })}.
-                <span> {snap.geojson.note}</span>
-              </div>
+              {plans && <RecommendedCrop result={plans} onOpen={() => setTab('compare')} />}
             </div>
 
             <div className="content">
