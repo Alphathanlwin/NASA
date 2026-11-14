@@ -33,5 +33,15 @@
   "backend/tests/test_planner.py::test_rice_pulse_beats_rice_rice_on_soil",
   "backend/tests/test_planner.py::test_same_crop_penalised_and_legume_break_rewarded",
   "backend/tests/test_planner.py::test_season_fit_rejects_long_and_wrong_season_crops",
-  "backend/tests/test_planner.py::test_summer_rice_needs_irrigation"
+  "backend/tests/test_planner.py::test_summer_rice_needs_irrigation",
+  "backend/tests/test_timeseries_hybrid.py::test_api_timeseries_and_iot_endpoints",
+  "backend/tests/test_timeseries_hybrid.py::test_api_timeseries_and_rag_endpoints",
+  "backend/tests/test_timeseries_hybrid.py::test_conformal_calibrator_bounds",
+  "backend/tests/test_timeseries_hybrid.py::test_iot_telemetry_and_alerts",
+  "backend/tests/test_timeseries_hybrid.py::test_kalman_filter_state_update",
+  "backend/tests/test_timeseries_hybrid.py::test_predict_rootzone_recession_full_pipeline",
+  "backend/tests/test_timeseries_hybrid.py::test_rag_agronomy_retriever",
+  "backend/tests/test_timeseries_hybrid.py::test_soil_physics_conservation_and_decay",
+  "backend/tests/test_timeseries_hybrid.py::test_unified_analysis_includes_hybrid_nowcast_and_iot",
+  "backend/tests/test_timeseries_hybrid.py::test_unified_analysis_includes_hybrid_nowcast_and_rag"
 ]
