@@ -13,5 +13,5 @@ retrieval time (`retrieved_utc`). `pipeline/clean_all.py` turns them into `data/
 | `raw/appeears/*` (not present yet) | MODIS MOD13Q1.061 NDVI and SMAP SPL3SMP_E.006 soil moisture point samples | NASA AppEEARS, needs an Earthdata login in `~/.netrc` | `pipeline/fetch_appeears.py` |
 | `fields.geojson` | DEMO. Hand-made field blocks near Twante, Yangon Region | n/a | `pipeline/make_fields.py` |
 
-Map tiles are loaded live and are not stored: CARTO / OpenStreetMap base map, and NASA GIBS
-VIIRS NOAA-20 true-colour imagery.
+Map tiles are loaded live and are not stored: CARTO / OpenStreetMap base map and Esri
+World Imagery satellite (high resolution, no key).

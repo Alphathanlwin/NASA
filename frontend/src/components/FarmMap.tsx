@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import L from 'leaflet'
 import { CircleMarker, GeoJSON, MapContainer, Marker, Polyline, TileLayer, Tooltip, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -9,11 +9,8 @@ type Fields = GeoJSON.FeatureCollection & { agent_base: { lat: number; lon: numb
 const agentIcon = L.divIcon({ className: 'agent-icon', html: '<div class="agent-dot"><span>▲</span></div>', iconSize: [34, 34], iconAnchor: [17, 17] })
 const baseIcon = L.divIcon({ className: 'base-icon', html: '<div class="base-dot"></div>', iconSize: [14, 14], iconAnchor: [7, 7] })
 
-// NASA GIBS true-colour imagery. Two days back, so the global mosaic is complete.
-function gibsUrl() {
-  const d = new Date(Date.now() - 2 * 86400000).toISOString().slice(0, 10)
-  return `https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/VIIRS_NOAA20_CorrectedReflectance_TrueColor/default/${d}/GoogleMapsCompatible_Level9/{z}/{y}/{x}.jpg`
-}
+// High-resolution satellite basemap (no key needed). Real detail to zoom 18 in this area; above that it upscales.
+const SAT_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
 
 function FitToFields({ fields }: { fields: Fields }) {
   const map = useMap()
@@ -43,7 +40,6 @@ export function FarmMap({ fields, selectedId, agentPos, route, scanning, onSelec
     tileload: () => setTiles((s) => ({ ...s, loaded: s.loaded + 1 })),
   }
   const switchLayer = (l: 'map' | 'sat') => { setTiles({ loaded: 0, errors: 0 }); setLayer(l) }
-  const satUrl = useMemo(gibsUrl, [])
   const selected = fields.features.find((f) => f.properties?.id === selectedId)
   const base: [number, number] = [fields.agent_base.lat, fields.agent_base.lon]
 
@@ -51,7 +47,7 @@ export function FarmMap({ fields, selectedId, agentPos, route, scanning, onSelec
     <div className={`map-wrap ${tilesFailed ? 'tiles-failed' : ''}`}>
       <MapContainer center={base} zoom={13} zoomControl={true} className="map">
         <FitToFields fields={fields} />
-        {layer === 'map' ? (
+        {layer === 'map' && (
           <TileLayer
             key="map"
             url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -59,12 +55,14 @@ export function FarmMap({ fields, selectedId, agentPos, route, scanning, onSelec
             attribution="&copy; OpenStreetMap contributors"
             eventHandlers={tileEvents}
           />
-        ) : (
+        )}
+        {layer === 'sat' && (
           <TileLayer
             key="sat"
-            url={satUrl}
-            maxNativeZoom={9}
-            attribution="Imagery: NASA GIBS, VIIRS NOAA-20 true colour (250 m)"
+            url={SAT_URL}
+            maxZoom={19}
+            maxNativeZoom={18}
+            attribution="Imagery: Esri, Maxar, Earthstar Geographics"
             eventHandlers={tileEvents}
           />
         )}

@@ -14,7 +14,7 @@ const en = {
   eventLog: 'Agent log',
   simTime: 'sim time',
   baseMap: 'Map',
-  satellite: 'NASA satellite',
+  satellite: 'Satellite',
   usualRotation: 'Usual rotation',
   irrigated: 'Irrigated',
   rainfed: 'Rain-fed',
