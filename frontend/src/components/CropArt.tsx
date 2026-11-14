@@ -3,6 +3,9 @@
 // and sells, so it can be recognised at a glance. Decorative: the crop name is always shown next to them.
 
 import blackGramPhoto from '../assets/black_gram.jpg'
+import mungBeanPhoto from '../assets/mung_bean.jpg'
+
+const PHOTOS: Record<string, string> = { black_gram: blackGramPhoto, mung_bean: mungBeanPhoto }
 
 // [x, y, rotation in degrees] for a small heap of seeds, back row first so front seeds overlap.
 const HEAP: [number, number, number][] = [
@@ -14,9 +17,8 @@ const HEAP: [number, number, number][] = [
 const BG: Record<string, string> = { rice: '#fbf1d6', mung_bean: '#e8f1df', black_gram: '#ebe8e1' }
 
 export function CropArt({ crop, size = 72 }: { crop: string; size?: number }) {
-  if (crop === 'black_gram') {
-    return <img src={blackGramPhoto} width={size} height={size} alt="" className="crop-art crop-photo" />
-  }
+  const photo = PHOTOS[crop]
+  if (photo) return <img src={photo} width={size} height={size} alt="" className="crop-art crop-photo" />
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true" className="crop-art">
       <circle cx="32" cy="32" r="31" fill={BG[crop] ?? '#eee'} />
