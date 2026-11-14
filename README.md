@@ -19,19 +19,33 @@ farmer's judgment or local advice.
 
 ## 1. The farmer flow
 
-1. **Overview** - pick one of four demo fields (one per reference town: Myaungmya, Pathein,
-   Bogale, Twante). The map shows the boundary; the cards show rainfall, temperature, root-zone
-   wetness, topsoil and NDVI. Expand any card to see the full provenance record.
-2. **Compare crops** - three rotations are scored with published rules: rice to rice (always the
-   baseline), rice to mung bean, and rice to black gram. Each plan lists reasons for, reasons
-   against, neutral findings, evidence references, missing information and local checks.
-3. **Scenarios** - change irrigation, planting delay, residual moisture, drainage or dry-season
-   rainfall. The same three rotations are recalculated and the screen shows what moved, by how
-   much, and why.
-4. **Analysis log** - a deterministic nine-step log of the analysis with a simulated clock. It is
-   labelled as a visualisation of the analysis steps, not a live agent travelling to the field.
-5. **Data & Quality** - one analyst screen with the source catalogue, retrieval dates, status
-   labels and the cleaning report.
+The app has six pages in the sidebar (a bottom bar on phones):
+
+1. **Home** - pick a field (one of four demo fields, one per reference town: Myaungmya, Pathein,
+   Bogale, Twante, or a field you drew). Tiles show the next crop to consider, sowing and harvest
+   dates, a satellite map of the field, key conditions (7-day POWER rain, 30-day IMERG rain, SMAP
+   soil moisture, irrigation), the recommended dry-season crop and a crop calendar.
+2. **My Fields** - the field's map and facts. **Add my field** lets a farmer tap the corners of
+   their own field on the satellite map. **Your field measurements** takes their own soil-test pH,
+   soil feel, standing water, irrigation and rain gauge; the round **(?)** next to pH opens an
+   eight-step picture guide to testing soil pH with a kit.
+3. **Field view** - a 3D field built in Blender (`scripts/blender/build_field_assets.py`) with
+   Myaungmya-style surroundings. Pick a rotation: a crawler rice harvester, driven by the farmer,
+   cuts the rice, then the farmer sows the next crop, and the season plays forward on NASA normals
+   to a summary against the usual rice-to-rice rotation. Labelled `SIMULATED`.
+4. **Crop Planner** - three rotations scored with published rules: rice to rice (always the
+   baseline), rice to mung bean, rice to black gram, with reasons for and against, evidence,
+   missing information and local checks. Each plan shows a **fertiliser guide** (Myanmar Department
+   of Agriculture rates as a chart, cited). Below, **Other crops and fruits** ranks 20 Delta crops and
+   fruits for the field's location by FAO EcoCrop climate and soil suitability.
+5. **Scenarios** - change irrigation, planting delay, residual moisture, drainage or dry-season
+   rainfall. The same three rotations are recalculated and the screen shows what moved and why.
+6. **Analysis log** - a deterministic nine-step log of the analysis, labelled as a visualisation
+   of the steps, not a live agent.
+
+The source catalogue and cleaning report that used to be an in-app page are in
+[data/SOURCES.md](data/SOURCES.md) and `data/reports/cleaning_report.json`; every value in the app
+still shows its own source and status.
 
 The interface ships in English by default and switches to Burmese with the language toggle or
 `?lang=my`. All strings go through `t()`; `en.json` and `my.json` hold the dictionaries. Burmese
@@ -43,8 +57,9 @@ text is set in a self-hosted Noto Sans Myanmar font, not a font CDN.
 
 | Item | Status shown | Reality |
 |---|---|---|
-| Temperature, humidity, rainfall, root-zone wetness | `CACHED` | NASA POWER daily point data, community AG, MERRA-2 / GEOS modelled values on a 0.5 x 0.625 degree grid (about 55 x 67 km). Grid-cell value, not a field measurement. |
-| Day-of-year climatology, 1996-2025 | `CACHED` | Computed by this project from NASA POWER daily history. Historical average, not a forecast. |
+| Temperature, humidity, recent rainfall, root-zone wetness | `CACHED` | NASA POWER daily point data, community AG, MERRA-2 / GEOS modelled values on a 0.5 x 0.625 degree grid (about 55 x 67 km). Grid-cell value, not a field measurement. |
+| Long-term rainfall averages | `CACHED` | NASA GPM IMERG monthly, Final run (GPM_3IMERGM V07), 2001-2025, 0.1° cell per town, each month spread evenly over its days. Used for planting windows, dry-season and monsoon totals, the simulator and the crop and fruit list. POWER rainfall is not used here: at the west Delta cells it averages 600-1,100 mm a year, far below observed Delta totals of about 2,500-3,000 mm. |
+| Day-of-year climatology | `CACHED` | Temperature and humidity: NASA POWER daily history 1996-2025; rainfall: IMERG monthly 2001-2025 (row above). Historical average, not a forecast. |
 | MODIS NDVI | `CACHED` | MOD13Q1 v061, one 250 m pixel at each field centre via the ORNL DAAC subset service. Cloudy composites removed. |
 | Topsoil pH and texture | `CACHED` | ISRIC SoilGrids v2.0, 250 m, 0-5 cm mean. Predicted map value, not a soil test. Not a NASA product. |
 | Esri World Imagery (not NASA) | `LIVE` when the Satellite view is on | High-resolution imagery for the map's Satellite view; capture date varies by area. Credited on the map. |
@@ -174,9 +189,15 @@ The backend serves `frontend/dist` at `/NASA/` (the same base path as GitHub Pag
 .venv/Scripts/python backend/app/data_sources/fetch_power.py
 .venv/Scripts/python backend/app/data_sources/fetch_soilgrids.py
 .venv/Scripts/python backend/app/data_sources/fetch_modis_ornl.py
+.venv/Scripts/python backend/app/data_sources/fetch_imerg.py           # Earthdata token
+.venv/Scripts/python backend/app/data_sources/fetch_imerg_monthly.py   # rain normals 2001-2025
+.venv/Scripts/python backend/app/data_sources/fetch_appeears.py submit # then: collect (SMAP)
+.venv/Scripts/python backend/app/data_sources/extract_ecocrop_shortlist.py <EcoCrop_DB.csv>
 .venv/Scripts/python backend/app/data_sources/clean_all.py
 .venv/Scripts/python backend/app/data_sources/make_fields.py
 .venv/Scripts/python scripts/build_snapshot.py
+# 3D models (Blender 5.0), written to frontend/public/models/
+"C:/Program Files/Blender Foundation/Blender 5.0/blender.exe" -b -P scripts/blender/build_field_assets.py
 ```
 
 Fetch scripts are re-runnable: POWER is requested only on its 0.5 x 0.625 degree grid, at most 20
