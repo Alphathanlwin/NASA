@@ -4,7 +4,7 @@ import { t } from '../i18n'
 import type { Key } from '../i18n'
 import { LogoMark } from './Logo'
 
-export type Page = 'home' | 'fields' | 'field3d' | 'planner' | 'scenarios' | 'log' | 'quality'
+export type Page = 'home' | 'fields' | 'field3d' | 'planner' | 'scenarios' | 'log'
 
 const ICONS: Record<Page, string> = {
   home: 'M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z',
@@ -13,7 +13,6 @@ const ICONS: Record<Page, string> = {
   planner: 'M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM8 12h3M8 16h6',
   scenarios: 'M4 20V10M10 20V4M16 20v-7M22 20H2',
   log: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',
-  quality: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6',
 }
 
 export function Icon({ d, size = 22 }: { d: string; size?: number }) {
@@ -23,7 +22,7 @@ export function Icon({ d, size = 22 }: { d: string; size?: number }) {
   )
 }
 
-const PAGES: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log', 'quality']
+const PAGES: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log']
 
 export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page) => void; online: boolean }) {
   return (
