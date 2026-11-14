@@ -379,10 +379,10 @@
   "sim.health": "Crop health",
   "sim.stress": "Stress days (heat · dry · waterlogged)",
   "sim.irrigation": "Irrigation water used",
-  "sim.srcNasa": "NASA POWER normal",
+  "sim.srcNasa": "NASA normal",
   "sim.srcSim": "SIMULATED",
-  "sim.rainNote": "Modelled rainfall, lower than local gauge totals. Indicative only.",
-  "sim.normalsNote": "NASA POWER day-of-year normals, not a forecast.",
+  "sim.rainNote": "Rain from NASA GPM IMERG monthly normals (2001–2025), spread over each month. Not a forecast.",
+  "sim.normalsNote": "NASA POWER temperature and NASA IMERG rain normals, not a forecast.",
   "sim.timeline": "Season timeline",
   "sim.event.start": "Paw San rice standing, close to harvest",
   "sim.event.harvest": "{crop} harvested",
@@ -483,5 +483,6 @@
   "town.twante": "Twante",
   "field.demoName": "{town} demo field",
   "footer.photos": "Crop photos from Wikimedia Commons:",
-  "footer.photosNote": "cropped and resized; shared under the same licence."
+  "footer.photosNote": "cropped and resized; shared under the same licence.",
+  "other.global": "FAO ranges are worldwide. Some crops grown in the Delta, such as mango on raised land, can still score low here."
 }
