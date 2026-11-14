@@ -18,14 +18,20 @@ def clamp(x, lo=0.0, hi=100.0):
     return max(lo, min(hi, x))
 
 
-def context_from_field(field: dict) -> Context:
-    """Build the rule context from one record of fields_snapshot.json."""
+def context_from_field(field: dict, scenario: dict | None = None) -> Context:
+    """Build the rule context from one record of fields_snapshot.json.
+
+    scenario carries the farmer-reported input conditions (fertilizer,
+    pesticide, cash) for Rule 9. Unknown values fall back to "no shock", so a
+    bad value can never crash the planner or invent a shock.
+    """
     history = field.get("crop_history") or []
     seasons = (field.get("climatology") or {}).get("seasons") or {}
     winter, summer = seasons.get("winter") or {}, seasons.get("summer") or {}
     dry_rain = None
     if winter.get("rain_mm") is not None and summer.get("rain_mm") is not None:
         dry_rain = winter["rain_mm"] + summer["rain_mm"]
+    scenario = scenario or {}
     return Context(
         prev_crop=CROPS.get(history[0]) if history else None,
         irrigated=({"available": True, "unavailable": False}.get(field["irrigation"])
@@ -36,6 +42,9 @@ def context_from_field(field: dict) -> Context:
         dry_rain_mm=dry_rain,
         temps={"monsoon": seasons.get("monsoon"), "winter": winter, "summer": summer},
         drainage=field.get("drainage", "unknown"),
+        fertilizer=scenario.get("fertilizer") if scenario.get("fertilizer") in ("normal", "expensive", "unavailable") else "normal",
+        pesticide=scenario.get("pesticide") if scenario.get("pesticide") in ("available", "unavailable") else "available",
+        cash=scenario.get("cash") if scenario.get("cash") in ("normal", "tight") else "normal",
     )
 
 
@@ -91,6 +100,10 @@ def gaps(field: dict, ctx: Context, returns: dict | None, pair) -> list[str]:
         out.append("Reliable irrigation availability is unknown; irrigation-dependent crops require confirmation.")
     if ctx.drainage == "unknown":
         out.append("Drainage is unknown; it has not been inferred from crop history or elevation.")
+    if ctx.fertilizer != "normal" or ctx.pesticide != "available" or ctx.cash != "normal":
+        out.append("Scenario assumes farmer-reported input conditions (fertilizer "
+                   f"{ctx.fertilizer}, pesticide {ctx.pesticide}, cash {ctx.cash}); "
+                   "verify local availability and prices before deciding.")
     out.append("Rule points are transparent team assumptions, not validated probabilities of crop success.")
     out.append("Soil salinity is not in these datasets.")
     out.append("Sowing windows are regional; confirm the dates for your township.")
@@ -117,14 +130,15 @@ def score_pair(dry, monsoon, ctx: Context) -> dict:
     return {"findings": findings, "soil": soil, "water": water, "adjustment": adjustment}
 
 
-def plan(field: dict, priorities: dict | None = None, returns: dict | None = None) -> dict:
-    """returns: optional {crop_id: farmer's own expected return per acre}."""
+def plan(field: dict, priorities: dict | None = None, returns: dict | None = None, scenario: dict | None = None) -> dict:
+    """returns: optional {crop_id: farmer's own expected return per acre}.
+    scenario: optional farmer-reported input conditions for Rule 9."""
     weights = {**DEFAULT_PRIORITIES, **(priorities or {})}
     weights = {k: max(0.0, float(weights[k])) for k in ("income", "soil", "water")}
     if sum(weights.values()) == 0:
         weights = {k: 1.0 for k in weights}
     returns = {k: float(v) for k, v in (returns or {}).items() if v is not None and k in CROPS} or None
-    ctx = context_from_field(field)
+    ctx = context_from_field(field, scenario)
 
     scored, rejected = [], []
     for dry_id, monsoon_id in product(sorted(CROPS), sorted(CROPS)):

@@ -29,6 +29,12 @@ class Context:
     dry_rain_mm: float | None
     temps: dict                     # {"monsoon": {"t2m":..,"t2m_max":..}, "winter": {...}, "summer": {...}}
     drainage: str = "unknown"
+    # Farmer-reported input conditions for the scenario (Rule 9). Defaults mean
+    # "no shock": the rule emits nothing and the baseline is unchanged. The
+    # satellite cannot see these; the farmer reports them in the scenario.
+    fertilizer: str = "normal"     # "normal" | "expensive" | "unavailable"
+    pesticide: str = "available"   # "available" | "unavailable"
+    cash: str = "normal"           # "normal" | "tight"
 
 
 def same_crop(a: Crop, b: Crop) -> bool:
@@ -239,5 +245,60 @@ def rule_paddy_drainage(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]
             for crop in (dry, monsoon) if not crop.flooded and crop.id != "fallow"]
 
 
+# Rule 9 ------------------------------------------- input shock adaptation
+def rule_input_shock(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
+    """Farmer-reported input conditions re-rank the rotation under a shock.
+
+    Fertilizer expensive/unavailable: legumes (own nitrogen) rise, crops that
+    need bought nitrogen fall. Pesticide unavailable: the rotation break is
+    the pest control, so pairs with a real family break rise and pairs without
+    one fall. Cash tight: low bought-input crops rise, high-input crops fall.
+    All findings are scenario adjustments: they shift the total score without
+    distorting the soil/water sub-scores, and every point carries its reason.
+    Point sizes are team parameters, not measurements. With no shock (the
+    defaults) this rule emits nothing, so the baseline is unchanged.
+    """
+    out = []
+    pair = (dry, monsoon)
+    if ctx.fertilizer in ("expensive", "unavailable"):
+        bonus = 12 if ctx.fertilizer == "unavailable" else 8
+        penalty = -10 if ctx.fertilizer == "unavailable" else -6
+        word = "unavailable" if ctx.fertilizer == "unavailable" else "expensive"
+        for crop in pair:
+            if crop.id == "fallow":
+                continue
+            if crop.legume:
+                out.append(Finding("Input shock adaptation", "adjustment", bonus,
+                                   f"Fertilizer is {word} (farmer-reported): {crop.name} fixes its own nitrogen, "
+                                   "so this rotation needs less bought fertilizer."))
+            else:
+                out.append(Finding("Input shock adaptation", "adjustment", penalty,
+                                   f"Fertilizer is {word} (farmer-reported): {crop.name} needs bought nitrogen."))
+    if ctx.pesticide == "unavailable":
+        pairs = [(ctx.prev_crop, dry), (dry, monsoon)] if ctx.prev_crop else [(dry, monsoon)]
+        has_break = any(
+            "fallow" in (a.id, b.id) or a.family != b.family
+            for a, b in pairs
+        )
+        if has_break:
+            out.append(Finding("Input shock adaptation", "adjustment", 6,
+                               "Pesticide is unavailable (farmer-reported): this rotation breaks pest cycles "
+                               "across families, so the rotation itself is the pest control."))
+        else:
+            out.append(Finding("Input shock adaptation", "adjustment", -8,
+                               "Pesticide is unavailable (farmer-reported) and this rotation has no family break: "
+                               "pest carry-over risk is unmanaged."))
+    if ctx.cash == "tight":
+        for crop in pair:
+            if crop.input_cost in ("low", "none"):
+                out.append(Finding("Input shock adaptation", "adjustment", 6,
+                                   f"Cash is tight (farmer-reported): {crop.name} needs little or no bought input."))
+            elif crop.input_cost == "high":
+                out.append(Finding("Input shock adaptation", "adjustment", -8,
+                                   f"Cash is tight (farmer-reported): {crop.name} needs bought fertilizer, pesticide and water."))
+    return out
+
+
 SCORED_RULES = [rule_legume_credit, rule_paddy_cycle, rule_pest_break, rule_soil_fit,
-                rule_diversity, rule_water_budget, rule_temperature, rule_paddy_drainage]
+                rule_diversity, rule_water_budget, rule_temperature, rule_paddy_drainage,
+                rule_input_shock]
