@@ -106,7 +106,6 @@ export function FieldView({ snap, field, plans, onMap }: {
       <div className="fv-bottom">
         <SimControls api={api} />
         <SimTimeline sim={api.sim} />
-        <p className="disclaimer">{t('field3d.disclaimer')}</p>
       </div>
     </section>
   )
