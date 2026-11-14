@@ -86,7 +86,7 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
         <Choices label={t('readings.irrigation')} value={readings.irrigation}
           options={[{ value: 'available', key: 'irr.available' }, { value: 'sometimes', key: 'irr.sometimes' }, { value: 'unavailable', key: 'irr.unavailable' }]}
           onChange={(v) => set({ irrigation: v })} />
-        <NumberInput label={t('readings.rain')} hint={t('readings.rainHint')} value={readings.rain_gauge_mm} min={0} max={2000} step={1}
+        <NumberInput label={t('readings.rain')} value={readings.rain_gauge_mm} min={0} max={2000} step={1}
           onChange={(v) => set({ rain_gauge_mm: v })} />
         <label className="reading">
           <span className="reading-label">{t('readings.date')}</span>
