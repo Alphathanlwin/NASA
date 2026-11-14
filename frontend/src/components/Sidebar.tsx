@@ -24,7 +24,7 @@ export function Icon({ d, size = 22 }: { d: string; size?: number }) {
 
 const PAGES: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log']
 
-export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page) => void; online: boolean }) {
+export function Sidebar({ page, onPage }: { page: Page; onPage: (p: Page) => void }) {
   return (
     <aside className="side">
       <div className="side-brand">
@@ -48,13 +48,6 @@ export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page
         ))}
       </nav>
 
-      <div className={`side-status ${online ? 'on' : 'off'}`}>
-        <Icon d={online ? 'M5 12l4 4 10-10' : 'M7 18a4 4 0 0 1-.6-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z'} />
-        <span>
-          <b>{online ? t('side.online') : t('side.offline')}</b>
-          <small>{online ? t('side.onlineSub') : t('side.offlineSub')}</small>
-        </span>
-      </div>
     </aside>
   )
 }

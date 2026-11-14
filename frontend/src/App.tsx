@@ -11,7 +11,7 @@ import { HomePage } from './components/HomePage'
 import { Sidebar } from './components/Sidebar'
 import type { Page } from './components/Sidebar'
 import { ScenarioPanel } from './components/ScenarioPanel'
-import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
+import { loadSnapshot, runCompare, runPlans } from './data'
 import type { Snapshot, SnapshotField } from './data'
 import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
 import type { LatLng, Readings, UserField } from './userfields'
@@ -39,7 +39,6 @@ export default function App() {
   }
   const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
-  const [online, setOnline] = useState(false)
   const [page, setPageState] = useState<Page>('home')
   const [dir, setDir] = useState<1 | -1>(1)
   const [focusMeasurements, setFocusMeasurements] = useState(false)
@@ -77,7 +76,6 @@ export default function App() {
         setSelectedId(Object.keys(s.fields)[0] ?? null)
       })
       .catch(() => setError(true))
-    backendOnline().then(setOnline)
   }, [])
 
   // Every field the farmer can pick: the demo examples, then their own drawn fields.
@@ -180,7 +178,7 @@ export default function App() {
 
   return (
     <div className={`shell${drawing ? ' is-drawing' : ''}`}>
-      <Sidebar page={page} onPage={setPage} online={online} />
+      <Sidebar page={page} onPage={setPage} />
       <div className="main">
         <header className="main-head" key={`h-${page}`} data-dir={dir}>
           <div>
