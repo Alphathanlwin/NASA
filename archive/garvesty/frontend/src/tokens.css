@@ -1,0 +1,80 @@
+/* Design tokens for Garvesty — NASA Space Apps Challenge 2026 */
+:root {
+  /* Spacing Scale (4pt grid) */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s8: 48px;
+
+  /* Radii */
+  --r1: 4px;
+  --r2: 8px;
+  --r3: 12px;
+  --r4: 16px;
+  --r-full: 9999px;
+
+  /* Typography Scale */
+  --t-xs: 0.72rem;
+  --t-sm: 0.82rem;
+  --t-md: 0.92rem;
+  --t-lg: 1.15rem;
+  --t-xl: 1.45rem;
+  --t-2xl: 1.85rem;
+
+  /* Figma Palette - Garvesty System */
+  --sidebar-bg: #111C15;
+  --sidebar-surface: #203023;
+  --sidebar-border: #354A34;
+  --sidebar-divider: #2D3D2C;
+  --sidebar-text: #F8FBF4;
+  --sidebar-muted: #9AAB99;
+  --sidebar-sub: #C2CFBD;
+
+  /* Brand Accents */
+  --accent-lime: #BCEB86;
+  --accent-lime-text: #1B3213;
+  --accent-green: #A7DC75;
+  --accent-soft: #D6F4B8;
+  --accent-forest: #1F5F3A;
+
+  /* Light Surfaces (Fewer containers, white/off-white clarity) */
+  --surface-base: #FFFFFF;
+  --surface-alt: #F8FBF4;
+  --surface-muted: #F2F5ED;
+  --ink: #111C15;
+  --ink-secondary: #4A5B4D;
+  --ink-muted: #7A8E7E;
+  --border-line: #E5EDE3;
+  --border-subtle: #EDF3EB;
+
+  /* Elevation Shadows */
+  --elev-base: none;
+  --elev-raised: 0 4px 16px rgba(17, 28, 21, 0.07);
+  --elev-overlay: 0 8px 24px rgba(17, 28, 21, 0.12);
+  --elev-modal: 0 16px 48px rgba(17, 28, 21, 0.18);
+
+  /* Refraction for Floating Map Controls */
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-blur: blur(10px);
+  --glass-border: 1px solid rgba(229, 237, 227, 0.7);
+
+  /* Provenance Badges */
+  --live-color: #15803D;
+  --live-bg: #DCFCE7;
+  --cached-color: #1D4ED8;
+  --cached-bg: #DBEAFE;
+  --demo-color: #A16207;
+  --demo-bg: #FEF3C7;
+  --user-color: #7E22CE;
+  --user-bg: #F3E8FF;
+  --warn-color: #C2410C;
+  --warn-bg: #FDEEDE;
+  --off-color: #57534E;
+  --off-bg: #E7E5E4;
+
+  /* Font Families */
+  --font: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Myanmar", sans-serif;
+}
