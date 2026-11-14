@@ -76,6 +76,31 @@ class ModelEvaluationTests(unittest.TestCase):
                 path.write_text("not-json", encoding="utf-8")
                 self.assertTrue(all(not t["used_in_recommendations"] for t in models.get_model_status()["tracks"]))
 
+    def test_manifest_path_points_at_repo_root_data(self):
+        """The manifest lives at <repo>/data/reports/, the same root store.py reads.
+        parents[2] resolved to <repo>/backend/data/, which does not exist, so a
+        valid manifest was never found and every track stayed blocked."""
+        from app.services import store
+        self.assertEqual(models.MANIFEST_PATH.parent, store.DATA / "reports")
+        self.assertEqual(models.MANIFEST_PATH.name, "model_evaluation.json")
+
+    def test_valid_manifest_is_read(self):
+        manifest = {"tracks": [
+            {"id": "regional_wetness", "status": "experimental", "used_in_recommendations": False,
+             "metrics": {"ridge": {"mae": 0.0337, "rmse": 0.0535}}},
+            {"id": "vegetation_anomalies", "status": "blocked", "used_in_recommendations": False},
+            {"id": "yield_feasibility", "status": "blocked", "used_in_recommendations": False},
+        ]}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "evaluation.json"
+            path.write_text(json.dumps(manifest), encoding="utf-8")
+            with patch.object(models, "MANIFEST_PATH", path):
+                result = models.get_model_status()
+                wetness = next(t for t in result["tracks"] if t["id"] == "regional_wetness")
+                self.assertEqual(wetness["status"], "experimental")
+                self.assertFalse(wetness["used_in_recommendations"])
+                self.assertAlmostEqual(wetness["metrics"]["ridge"]["mae"], 0.0337)
+
 
 if __name__ == "__main__":
     unittest.main()

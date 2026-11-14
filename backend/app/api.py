@@ -70,7 +70,8 @@ def fields():
 def crops():
     return {"slots": SLOTS,
             "crops": [{"id": c.id, "name": c.name, "family": c.family, "slots": c.slots,
-                       "duration_days": c.duration_days, "water_class": c.water_class, "legume": c.legume}
+                       "duration_days": c.duration_days, "water_class": c.water_class, "legume": c.legume,
+                       "input_cost": c.input_cost}
                       for c in CROPS.values()]}
 
 
