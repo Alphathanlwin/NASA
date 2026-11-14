@@ -50,7 +50,6 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
         <div>
           <p className="eyebrow">{t('overview.selected')}</p>
           <h2>{fieldName(field)}</h2>
-          <p className="lead">{t('overview.lead')}</p>
         </div>
         <button className="btn primary" onClick={onAnalyse}>{t('field.analyse')}</button>
       </section>
