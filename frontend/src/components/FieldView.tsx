@@ -83,9 +83,10 @@ export function FieldView({ snap, field, plans, onMap }: {
         {!webgl && <div className="fv-note">{t('field3d.noWebgl')}</div>}
         {working && <div className="fv-working" aria-live="polite">{working}</div>}
 
-        <div className="fv-side">
+        {/* while the harvester or the farmer is working, the side panel steps aside so the whole field shows */}
+        {api.phase !== 'harvesting' && api.phase !== 'sowing' && <div className="fv-side">
           {plans && list.length > 0 ? (
-            api.phase === 'choose' || api.phase === 'harvesting' || api.phase === 'sowing' ? (
+            api.phase === 'choose' ? (
               <PlanCards result={plans} chosenId={api.planId} disabled={api.phase !== 'choose'} onChoose={api.choose} />
             ) : (
               <SimParams sim={api.sim} noClim={!clim} />
@@ -93,7 +94,7 @@ export function FieldView({ snap, field, plans, onMap }: {
           ) : (
             <div className="plan-card">{t('field3d.noPlans')}</div>
           )}
-        </div>
+        </div>}
 
         {api.summary && (
           <div className="fv-summary-wrap">
