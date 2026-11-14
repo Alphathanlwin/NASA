@@ -1,6 +1,5 @@
 // AI-assisted: Claude Code
 // Left navigation (desktop) that becomes a bottom bar on phones.
-import { useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../i18n'
 import type { Key } from '../i18n'
 import { LogoMark } from './Logo'
@@ -26,18 +25,6 @@ export function Icon({ d, size = 22 }: { d: string; size?: number }) {
 const PAGES: Page[] = ['home', 'fields', 'planner', 'scenarios', 'log', 'quality']
 
 export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page) => void; online: boolean }) {
-  // One marker that travels between items, so the eye follows where you went.
-  const nav = useRef<HTMLElement>(null)
-  const [mark, setMark] = useState<{ x: number; y: number; w: number; h: number } | null>(null)
-  useLayoutEffect(() => {
-    const measure = () => {
-      const b = nav.current?.querySelector<HTMLElement>('button.active')
-      if (b) setMark({ x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight })
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [page])
   return (
     <aside className="side">
       <div className="side-brand">
@@ -48,11 +35,7 @@ export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page
         </div>
       </div>
 
-      <nav className="side-nav" ref={nav} aria-label={t('nav.sections')}>
-        {mark && (
-          <span className="nav-mark" aria-hidden="true"
-            style={{ transform: `translate(${mark.x}px, ${mark.y}px)`, width: mark.w, height: mark.h }} />
-        )}
+      <nav className="side-nav" aria-label={t('nav.sections')}>
         {PAGES.map((p) => (
           <button key={p} className={page === p ? 'active' : ''} aria-current={page === p ? 'page' : undefined}
             onClick={() => onPage(p)}>

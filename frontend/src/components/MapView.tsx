@@ -1,11 +1,15 @@
 // AI-assisted: Claude Code
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { CircleMarker, MapContainer, Polygon, Polyline, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
-import type { Snapshot } from '../data'
+import type { Snapshot, SnapshotField } from '../data'
+import type { runPlans } from '../data'
 import type { LatLng, UserField } from '../userfields'
 import { t } from '../i18n'
+import type { Key } from '../i18n'
+import { Icon } from './Sidebar'
+import { CropArt } from './CropArt'
 
 // CARTO's keyless light basemap was retired in 2026 (tiles now carry an "API KEY REQUIRED"
 // watermark), so the public build uses OpenStreetMap's keyless tiles instead.
@@ -34,19 +38,32 @@ function DrawClicks({ onPoint }: { onPoint: (p: LatLng) => void }) {
 /** When drawing starts, zoom close to the current field so one paddy is several taps wide. */
 function DrawFocus({ center }: { center: LatLng }) {
   const map = useMap()
-  useEffect(() => { map.setView(center, 16, { animate: true }) }, [map, center])
+  useEffect(() => { map.setView(center, 16, { animate: !matchMedia('(prefers-reduced-motion: reduce)').matches }) }, [map, center])
   return null
 }
 
 function FitField({ coords }: { coords: [number, number][] | null }) {
   const map = useMap()
   useEffect(() => {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     if (coords && coords.length > 2) {
-      map.flyToBounds(coords as never, { padding: [40, 40], maxZoom: 15, duration: 0.7 })
+      if (reduced) map.fitBounds(coords, { padding: [40, 40], maxZoom: 15, animate: false })
+      else map.flyToBounds(coords, { padding: [40, 40], maxZoom: 15, duration: 0.7 })
     } else {
-      map.flyTo([16.7, 95.2], 9, { duration: 0.7 })
+      if (reduced) map.setView([16.7, 95.2], 9, { animate: false })
+      else map.flyTo([16.7, 95.2], 9, { duration: 0.7 })
     }
   }, [coords, map])
+  return null
+}
+
+function ResizeMap() {
+  const map = useMap()
+  useEffect(() => {
+    const observer = new ResizeObserver(() => map.invalidateSize({ animate: false, debounceMoveend: true }))
+    observer.observe(map.getContainer())
+    return () => observer.disconnect()
+  }, [map])
   return null
 }
 
@@ -60,6 +77,10 @@ function AgentTrace({ waypoints, runId }: { waypoints: [number, number][]; runId
   const raf = useRef(0)
   useEffect(() => {
     if (!waypoints.length) return
+    if (waypoints.length === 1 || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setPos(waypoints[waypoints.length - 1])
+      return
+    }
     const start = performance.now()
     const duration = 2200
     const step = (now: number) => {
@@ -90,7 +111,7 @@ function AgentTrace({ waypoints, runId }: { waypoints: [number, number][]; runId
 }
 
 export function MapView({ snap, selectedId, onSelect, agentRun, runId, userFields = [], drawing = false,
-  draft = [], onDraftPoint, overlay, initialLayer = 'map', compact = false }: {
+  draft = [], onDraftPoint, overlay, initialLayer = 'map', compact = false, rotation, fieldOptions, details, scenario }: {
   snap: Snapshot
   selectedId: string | null
   onSelect: (id: string) => void
@@ -103,7 +124,28 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   overlay?: ReactNode
   initialLayer?: Layer
   compact?: boolean
+  rotation: { fieldName: string; previous?: string; next: ReturnType<typeof runPlans>['plans'] }
+  fieldOptions: SnapshotField[]
+  details: ReactNode
+  scenario: ReactNode
 }) {
+  const surface = useRef<HTMLDialogElement>(null)
+  const expandButton = useRef<HTMLButtonElement>(null)
+  const [expanded, setExpanded] = useState(false)
+  const [panel, setPanel] = useState<'details' | 'scenario' | null>(null)
+  const inspector = useRef<HTMLElement>(null)
+  useEffect(() => {
+    if (expanded && panel) inspector.current?.focus({ preventScroll: true })
+  }, [expanded, panel])
+  const toggleExpanded = () => {
+    const dialog = surface.current
+    if (!dialog) return
+    dialog.close()
+    if (expanded) dialog.show()
+    else dialog.showModal()
+    setExpanded(!expanded)
+    expandButton.current?.focus()
+  }
   const [layer, setLayer] = useState<Layer>(initialLayer)
   // Fields are easiest to trace on imagery, so drawing switches to the satellite view.
   useEffect(() => { if (drawing) setLayer('satellite') }, [drawing])
@@ -113,21 +155,33 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   const center: [number, number] = selected ? selected.centroid : [16.7, 95.2]
   const feature = selectedId ? snap.geojson.features.find((f) => f.id === selectedId) : null
   const userSelected = userFields.find((u) => u.id === selectedId)
-  const selectedCoords = feature
-    ? feature.geometry.coordinates[0].map(([lon, lat]) => [lat, lon] as [number, number])
-    : userSelected ? userSelected.points : null
+  const selectedCoords = useMemo(() => feature
+    ? feature.geometry.coordinates[0].map(([lon, lat]) => [lat, lon] as LatLng)
+    : userSelected?.points ?? null, [feature, userSelected])
 
   const tileError = () => setTileErrors((n) => n + 1)
   const tilesDown = tileErrors > 6
+  const cropName = (crop: string) => t(`crop.${crop}` as Key)
 
   return (
     <section className="map-card" aria-label={t('map.title')}>
+      <dialog open ref={surface} className={`map-surface${expanded ? ' is-expanded' : ''}`}
+        role={expanded ? 'dialog' : 'group'} aria-label={t('map.title')} onCancel={(event) => {
+          event.preventDefault()
+          if (expanded) toggleExpanded()
+        }}>
       <div className="map-toolbar">
-        {!compact && (
+        {(!compact || expanded) && (
           <div className="map-title">
             <b>{t('map.title')}</b>
-            <span>{t('app.region')}</span>
+            {!expanded && <span>{t('app.region')}</span>}
           </div>
+        )}
+        {expanded && (
+          <select className="map-field-select" aria-label={t('field.choose')} value={selectedId ?? ''}
+            onChange={(event) => onSelect(event.target.value)}>
+            {fieldOptions.map((field) => <option key={field.id} value={field.id}>{field.name}</option>)}
+          </select>
         )}
         <div className="layer-seg" role="group" aria-label={t('map.layers')}>
           {(['map', 'satellite'] as Layer[]).map((l) => (
@@ -139,8 +193,17 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
         </div>
       </div>
 
+      <div className="map-workspace">
       <div className="map-box">
+        {!drawing && (
+          <button ref={expandButton} type="button" className="map-expand" aria-expanded={expanded}
+            onClick={toggleExpanded}>
+            <Icon size={17} d={expanded ? 'M4 9h5V4m11 5h-5V4M4 15h5v5m11-5h-5v5' : 'M9 4H4v5m11-5h5v5M9 20H4v-5m11 5h5v-5'} />
+            {t(expanded ? 'map.collapse' : 'map.expand')}
+          </button>
+        )}
         <MapContainer center={center} zoom={selected ? 12 : 9} scrollWheelZoom className="leaflet-host">
+          <ResizeMap />
           {!tilesDown && layer === 'map' && (
             <TileLayer key="map" url={BASE} attribution={t('map.attribution')}
               eventHandlers={{ tileerror: tileError }} maxZoom={19} />
@@ -195,13 +258,59 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
         {tilesDown && (
           <div className="map-offline">
             <b>{t('map.offline')}</b>
-            <span>{t('map.attribution')}</span>
+            <span>{t(imagery ? 'map.attributionEsri' : 'map.attribution')}</span>
           </div>
         )}
       </div>
+      {expanded && panel && (
+        <section className="map-inspector" aria-label={t(panel === 'details' ? 'glance.open' : 'map.tryScenario')}
+          tabIndex={0} id="map-inspector" ref={inspector}>
+          {panel === 'details' ? details : (
+            <>
+              <div className="map-inspector-heading">
+                <strong>{rotation.fieldName}</strong>
+                <p>{t('map.scenarioScope')}</p>
+              </div>
+              {scenario}
+            </>
+          )}
+        </section>
+      )}
+      </div>
+      {expanded && (
+        <section className="map-rotation" aria-label={t('rec.title')}>
+          <div className="map-crop-card">
+            {rotation.previous && <CropArt crop={rotation.previous} size={42} />}
+            <div>
+              <span>{t('map.previousCrop')}</span>
+              <strong>{rotation.previous ? cropName(rotation.previous) : t('map.noCrop')}</strong>
+              <small>{rotation.fieldName}</small>
+            </div>
+          </div>
+          {rotation.next.map((plan) => (
+            <div className="map-crop-card map-crop-next" key={plan.id}>
+              <CropArt crop={plan.dry_crop} size={42} />
+              <div>
+                <span>{t('tile.next')}{rotation.next.length > 1 ? ` · ${t('rec.tie')}` : ''}</span>
+                <strong>{cropName(plan.dry_crop)}</strong>
+                <small>{t(`cat.${plan.category}` as Key)} · {Math.round(plan.score)}/100</small>
+                <small>{t('overview.sow', { d: plan.calendar.sow })}</small>
+              </div>
+            </div>
+          ))}
+          {!rotation.next.length && <div className="map-crop-card"><div><span>{t('tile.next')}</span><strong>{t('map.noCrop')}</strong></div></div>}
+          <div className="map-workspace-actions">
+            <button type="button" aria-expanded={panel === 'details'} aria-controls={panel === 'details' ? 'map-inspector' : undefined}
+              onClick={() => setPanel(panel === 'details' ? null : 'details')}>{t('glance.open')}</button>
+            <button type="button" aria-expanded={panel === 'scenario'} aria-controls={panel === 'scenario' ? 'map-inspector' : undefined}
+              onClick={() => setPanel(panel === 'scenario' ? null : 'scenario')}>{t('map.tryScenario')}</button>
+          </div>
+        </section>
+      )}
       <div className="map-foot">
         {layer === 'map' ? t('map.attribution') : t('map.attributionEsri')}
       </div>
+      </dialog>
     </section>
   )
 }
