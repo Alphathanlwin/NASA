@@ -86,7 +86,7 @@ function textureClass(clay: number, sand: number | null): string {
 
 export function resolveScenario(inputs: EngineInputs, scenario?: Scenario | null): Required<Scenario> {
   const s = scenario ?? {}
-  let moisture = s.residual_moisture ?? null
+  let moisture = s.residual_moisture ?? inputs.field_moisture ?? null
   if (moisture === null) {
     const g = inputs.gwetroot
     moisture = g === null ? 'unknown' : (g < Number(TABLE.assumptions.moisture_threshold.value) ? 'low' : 'normal')
@@ -95,7 +95,7 @@ export function resolveScenario(inputs: EngineInputs, scenario?: Scenario | null
     irrigation: s.irrigation || inputs.field_irrigation || 'unavailable',
     planting_delay_days: s.planting_delay_days || 0,
     residual_moisture: moisture,
-    drainage: s.drainage || 'unknown',
+    drainage: s.drainage || inputs.field_drainage || 'unknown',
     rainfall_change_percent: s.rainfall_change_percent || 0,
   }
 }
@@ -416,6 +416,8 @@ export function inputsFromProfile(profile: any, climatology: Climatology | null)
     ph: val('soil_ph'), clay_pct: val('clay_pct'), sand_pct: val('sand_pct'), gwetroot: val('gwetroot'),
     dry_rain_mm: val('dry_season_rain_normal'), field_irrigation: profile?.irrigation ?? 'unavailable',
     smap_sm: val('smap_soil_moisture'), imerg_rain_30d: val('imerg_rain_30d'),
+    // The farmer's own observations, when entered, are the defaults for the scenario.
+    field_moisture: profile?.user_moisture ?? null, field_drainage: profile?.user_drainage ?? null,
     clim: climatology,
   }
 }

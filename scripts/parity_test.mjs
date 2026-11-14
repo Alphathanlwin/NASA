@@ -39,6 +39,11 @@ for (const [fid, rec] of Object.entries(snapshot.fields)) {
   const inputs = inputsFromProfile(rec, snapshot.climatology[rec.town_id] ?? null)
   assert.deepEqual(pick(evaluate(inputs)), pick(py[fid].base), `${fid} base`)
   checked++
+  const user = { ...rec, irrigation: 'sometimes', user_moisture: 'low', user_drainage: 'poor',
+    values: { ...rec.values, soil_ph: { ...rec.values.soil_ph, value: 5.2 } } }
+  assert.deepEqual(pick(evaluate(inputsFromProfile(user, snapshot.climatology[rec.town_id] ?? null))),
+    pick(py[fid].readings), `${fid} with farmer readings`)
+  checked++
   for (const s of snapshot.scenario_definitions) {
     assert.deepEqual(pick(evaluate(inputs, s.assumptions)), pick(py[fid].scenarios[s.id]), `${fid} ${s.id}`)
     checked++

@@ -98,7 +98,7 @@ def texture_class(clay, sand):
 def resolve_scenario(inputs: dict, scenario: dict | None) -> dict:
     """Fill a partial scenario with the field's own defaults."""
     s = scenario or {}
-    moisture = s.get("residual_moisture")
+    moisture = s.get("residual_moisture") or inputs.get("field_moisture")
     if moisture is None:
         g = inputs.get("gwetroot")
         moisture = "unknown" if g is None else ("low" if g < TABLE["assumptions"]["moisture_threshold"]["value"] else "normal")
@@ -106,7 +106,7 @@ def resolve_scenario(inputs: dict, scenario: dict | None) -> dict:
         "irrigation": s.get("irrigation") or inputs.get("field_irrigation") or "unavailable",
         "planting_delay_days": s.get("planting_delay_days") or 0,
         "residual_moisture": moisture,
-        "drainage": s.get("drainage") or "unknown",
+        "drainage": s.get("drainage") or inputs.get("field_drainage") or "unknown",
         "rainfall_change_percent": s.get("rainfall_change_percent") or 0,
     }
 
@@ -445,4 +445,7 @@ def inputs_from_profile(profile: dict, climatology: dict | None) -> dict:
 
     return {"ph": val("soil_ph"), "clay_pct": val("clay_pct"), "sand_pct": val("sand_pct"), "gwetroot": val("gwetroot"),
             "dry_rain_mm": val("dry_season_rain_normal"), "field_irrigation": profile.get("irrigation"),
-            "smap_sm": val("smap_soil_moisture"), "imerg_rain_30d": val("imerg_rain_30d"), "clim": climatology}
+            "smap_sm": val("smap_soil_moisture"), "imerg_rain_30d": val("imerg_rain_30d"),
+            # The farmer's own observations, when entered, are the defaults for the scenario.
+            "field_moisture": profile.get("user_moisture"), "field_drainage": profile.get("user_drainage"),
+            "clim": climatology}

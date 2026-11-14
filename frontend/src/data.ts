@@ -61,6 +61,8 @@ export interface SnapshotField {
   values: Record<string, FieldValue>
   provenance: Record<string, Provenance>
   nearest_reference?: string
+  user_moisture?: string | null
+  user_drainage?: string | null
   ndvi_series?: { date: string; value: number | null }[]
   plans?: ReturnType<typeof evaluate>
   scenarios?: unknown[]
@@ -113,6 +115,7 @@ export interface Snapshot {
   }
   fields: Record<string, SnapshotField>
   climatology: Record<string, unknown>
+  towns?: { id: string; name: string; lat: number; lon: number }[]
   sources: SourceRecord[]
   sources_retrieved_at: string
   cleaning_report: {

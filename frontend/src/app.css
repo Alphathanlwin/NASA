@@ -419,3 +419,40 @@ code { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-siz
 .layer-seg button { border: 0; background: none; padding: 6px 12px; font: inherit; font-size: 0.78rem; cursor: pointer; color: var(--ink); }
 .layer-seg button + button { border-left: 1px solid var(--line); }
 .layer-seg button.active { background: var(--forest); color: #fff; font-weight: 700; }
+
+/* ---------- farmer's own fields ---------- */
+.field-chip.mine { border-color: #fb923c; }
+.field-chip.mine.active { background: #c2410c; border-color: #c2410c; }
+.field-chip.add { border: 2px dashed #c2410c; color: #9a3412; background: #fff7ed; font-weight: 700; }
+.field-chip.add:disabled { opacity: 0.5; cursor: default; }
+.draw-panel {
+  position: absolute; z-index: 600; left: 12px; right: 12px; bottom: 12px; max-width: 420px;
+  background: #fffdf7; border-radius: 14px; box-shadow: 0 6px 24px rgb(0 0 0 / 0.3); padding: 14px 16px; display: grid; gap: 10px;
+}
+.draw-title { font-size: 1.1rem; }
+.draw-panel p { margin: 0; font-size: 0.9rem; line-height: 1.4; }
+.draw-stats { display: flex; justify-content: space-between; font-size: 0.95rem; }
+.draw-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.draw-actions .btn { min-height: 44px; padding: 0 16px; }
+.draw-field { display: grid; gap: 6px; font-size: 0.85rem; color: var(--muted); }
+.draw-field input { min-height: 44px; font: inherit; font-size: 1rem; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; color: var(--ink); }
+.draw-note { font-size: 0.75rem !important; color: var(--muted); }
+.choice-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.choice {
+  min-height: 44px; min-width: 64px; padding: 0 14px; font: inherit; font-size: 0.95rem; cursor: pointer;
+  border: 1.5px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink);
+}
+.choice.on { background: var(--forest); border-color: var(--forest); color: #fff; font-weight: 700; }
+.readings-card { border-left: 5px solid #c2410c; }
+.readings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px 18px; margin-top: 6px; }
+.reading { display: grid; gap: 6px; align-content: start; }
+.reading-label { font-weight: 700; font-size: 0.92rem; }
+.reading small { color: var(--muted); font-size: 0.75rem; }
+.reading input { min-height: 44px; font: inherit; font-size: 1rem; padding: 0 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+.reading input.invalid { border-color: #b91c1c; }
+.reading .invalid-note { color: #b91c1c; }
+.readings-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 12px; font-size: 0.85rem; color: var(--muted); }
+.btn.danger { color: #b91c1c; border-color: #fecaca; margin-top: 8px; }
+
+/* Wrap the field chips so 'Add my field' is never cut off. */
+.field-strip { flex-wrap: wrap; overflow-x: visible; row-gap: 8px; }

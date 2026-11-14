@@ -16560,6 +16560,32 @@
       ]
     }
   },
+  "towns": [
+    {
+      "id": "myaungmya",
+      "name": "Myaungmya",
+      "lat": 16.6,
+      "lon": 94.93
+    },
+    {
+      "id": "pathein",
+      "name": "Pathein",
+      "lat": 16.78,
+      "lon": 94.73
+    },
+    {
+      "id": "bogale",
+      "name": "Bogale",
+      "lat": 16.29,
+      "lon": 95.4
+    },
+    {
+      "id": "twante",
+      "name": "Twante",
+      "lat": 16.71,
+      "lon": 95.96
+    }
+  ],
   "sources": [
     {
       "id": "power_recent",

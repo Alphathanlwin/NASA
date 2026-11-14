@@ -68,6 +68,7 @@ def main():
         "geojson": geo,
         "fields": fields,
         "climatology": climatology,
+        "towns": [{k: t[k] for k in ("id", "name", "lat", "lon")} for t in read(DATA / "reference" / "towns.json")["towns"]],
         "sources": sources.get("sources", []),
         "sources_retrieved_at": sources.get("retrieved_at"),
         "cleaning_report": report,

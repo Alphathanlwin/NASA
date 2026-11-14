@@ -34,6 +34,8 @@ export interface EngineInputs {
   field_irrigation: string
   smap_sm?: number | null
   imerg_rain_30d?: number | null
+  field_moisture?: string | null
+  field_drainage?: string | null
   clim: Climatology | null
 }
 

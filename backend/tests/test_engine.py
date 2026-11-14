@@ -141,3 +141,21 @@ def test_compare_reports_what_changed_and_why():
     rice = next(p for p in cmp["plans"] if p["id"] == "rice_rice")
     assert rice["score_to"] < rice["score_from"]
     assert rice["why_it_changed"]
+
+
+def test_farmer_readings_become_defaults():
+    """Moisture and drainage the farmer observed replace the grid-cell estimate and 'unknown'."""
+    from app.engine import engine as e
+    base = {"ph": 6.0, "clay_pct": 30.0, "sand_pct": 30.0, "gwetroot": 0.8, "dry_rain_mm": 90.0,
+            "field_irrigation": "unavailable", "clim": None}
+    plain = e.resolve_scenario(base, None)
+    assert plain["residual_moisture"] == "normal" and plain["drainage"] == "unknown"
+    told = e.resolve_scenario({**base, "field_moisture": "low", "field_drainage": "poor"}, None)
+    assert told["residual_moisture"] == "low" and told["drainage"] == "poor"
+    # An explicit scenario still wins over the farmer's default.
+    assert e.resolve_scenario({**base, "field_drainage": "poor"}, {"drainage": "good"})["drainage"] == "good"
+    # Poor drainage the farmer reported lowers the pulse plans, not rice.
+    r1 = {p["id"]: p for p in e.evaluate(base)["plans"]}
+    r2 = {p["id"]: p for p in e.evaluate({**base, "field_drainage": "poor"})["plans"]}
+    assert r2["rice_rice"]["score"] == r1["rice_rice"]["score"]
+    assert r2["rice_black_gram"]["score"] < r1["rice_black_gram"]["score"]

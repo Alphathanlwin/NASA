@@ -2,13 +2,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AgentLog } from './components/AgentLog'
 import { DataQuality } from './components/DataQuality'
+import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
 import { RecommendedCrop } from './components/RecommendedCrop'
 import { ScenarioPanel } from './components/ScenarioPanel'
 import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
-import type { Snapshot } from './data'
+import type { Snapshot, SnapshotField } from './data'
+import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
+import type { LatLng, Readings, UserField } from './userfields'
 import type { Econ, Priorities, Scenario } from './engine/types'
 import { initialLang, setLang, t } from './i18n'
 import type { Lang } from './i18n'
@@ -46,6 +49,10 @@ export default function App() {
   const [econ, setEcon] = useState<Econ>({})
   const [draft, setDraft] = useState<Scenario>({})
   const [runId, setRunId] = useState(0)
+  const [userFields, setUserFields] = useState<UserField[]>(() => loadUserFields())
+  const [readings, setReadings] = useState<Record<string, Readings>>(() => loadReadings())
+  const [drawing, setDrawing] = useState(false)
+  const [drawPts, setDrawPts] = useState<LatLng[]>([])
 
   useEffect(() => {
     loadSnapshot()
@@ -57,7 +64,47 @@ export default function App() {
     backendOnline().then(setOnline)
   }, [])
 
-  const field = snap && selectedId ? snap.fields[selectedId] : null
+  // Every field the farmer can pick: the demo examples, then their own drawn fields.
+  const profiles = useMemo(() => {
+    const out: Record<string, SnapshotField> = {}
+    if (!snap) return out
+    for (const [id, f] of Object.entries(snap.fields)) out[id] = f
+    for (const u of userFields) out[u.id] = profileForUserField(snap, u)
+    return out
+  }, [snap, userFields])
+  const baseField = selectedId ? profiles[selectedId] ?? null : null
+  const field = useMemo(() => (baseField ? withReadings(baseField, selectedId ? readings[selectedId] : undefined) : null),
+    [baseField, readings, selectedId])
+  const isUserField = !!userFields.find((u) => u.id === selectedId)
+
+  const updateReadings = (r: Readings) => {
+    if (!selectedId) return
+    const next = { ...readings, [selectedId]: r }
+    if (Object.keys(r).length === 0) delete next[selectedId]
+    setReadings(next)
+    saveReadings(next)
+  }
+  const startDrawing = () => { setDrawPts([]); setDrawing(true) }
+  const saveDrawn = (name: string, irrigation: UserField['irrigation']) => {
+    const uf: UserField = { id: `MY-${Date.now().toString(36)}`, name, points: drawPts, irrigation, created_at: new Date().toISOString() }
+    const next = [...userFields, uf]
+    setUserFields(next)
+    saveUserFields(next)
+    setDrawing(false)
+    setDrawPts([])
+    select(uf.id)
+  }
+  const deleteUserField = () => {
+    if (!selectedId) return
+    const next = userFields.filter((u) => u.id !== selectedId)
+    setUserFields(next)
+    saveUserFields(next)
+    const r = { ...readings }
+    delete r[selectedId]
+    setReadings(r)
+    saveReadings(r)
+    if (snap) select(Object.keys(snap.fields)[0])
+  }
 
   const plans = useMemo(() => {
     if (!snap || !field) return null
@@ -110,15 +157,31 @@ export default function App() {
               <button key={f.id} role="tab" aria-selected={f.id === selectedId}
                 className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
                 <b>{f.id}</b> {f.name.replace(' demo field', '')}
-                <small>{t('field.acres', { a: f.area_acres })}</small>
+                <small>{t('mine.example')} · {t('field.acres', { a: f.area_acres })}</small>
               </button>
             ))}
+            {userFields.map((u) => (
+              <button key={u.id} role="tab" aria-selected={u.id === selectedId}
+                className={`field-chip mine ${u.id === selectedId ? 'active' : ''}`} onClick={() => select(u.id)}>
+                <b>✎</b> {u.name}
+                <small>{t('mine.badge')} · {t('field.acres', { a: profiles[u.id]?.area_acres })}</small>
+              </button>
+            ))}
+            <button className="field-chip add" onClick={startDrawing} disabled={drawing}>
+              <b>+</b> {t('mine.add')}
+            </button>
           </div>
 
           <main className="layout">
             <div className="map-col">
               <MapView snap={snap} selectedId={selectedId} onSelect={select}
-                agentRun={field.agent_run ?? null} runId={runId} />
+                agentRun={field.agent_run ?? null} runId={runId}
+                userFields={userFields} drawing={drawing} draft={drawPts}
+                onDraftPoint={(pt) => setDrawPts((d) => [...d, pt])}
+                overlay={drawing ? (
+                  <DrawPanel draft={drawPts} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
+                    onCancel={() => { setDrawing(false); setDrawPts([]) }} onSave={saveDrawn} />
+                ) : null} />
               {plans && <RecommendedCrop result={plans} onOpen={() => setTab('compare')} />}
             </div>
 
@@ -135,6 +198,8 @@ export default function App() {
               <div className="page">
                 {tab === 'overview' && (
                   <FieldOverview snap={snap} field={field} calendar={calendar}
+                    readings={(selectedId && readings[selectedId]) || {}} onReadings={updateReadings}
+                    onDelete={isUserField ? deleteUserField : undefined}
                     onAnalyse={() => { setTab('compare'); setRunId((n) => n + 1) }} />
                 )}
                 {tab === 'compare' && plans && (

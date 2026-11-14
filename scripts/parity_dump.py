@@ -17,6 +17,9 @@ def main():
         clim = snap["climatology"].get(rec["town_id"])
         inputs = engine.inputs_from_profile(rec, clim)
         out[fid] = {"base": engine.evaluate(inputs), "scenarios": {}}
+        user = dict(rec, irrigation="sometimes", user_moisture="low", user_drainage="poor",
+                    values={**rec["values"], "soil_ph": {**rec["values"]["soil_ph"], "value": 5.2}})
+        out[fid]["readings"] = engine.evaluate(engine.inputs_from_profile(user, clim))
         for s in snap["scenario_definitions"]:
             out[fid]["scenarios"][s["id"]] = engine.evaluate(inputs, s["assumptions"])
     json.dump(out, sys.stdout)
