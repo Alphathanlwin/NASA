@@ -262,6 +262,15 @@ export default function App() {
           <p className="disclaimer">{t('footer.disclaimer')}</p>
           <p>{t('footer.data')} · {t('footer.built')}</p>
           <p className="small">
+            {t('footer.photos')}{' '}
+            <a href="https://commons.wikimedia.org/wiki/File:Black_gram.jpg" target="_blank" rel="noreferrer">Sanjay Acharya</a>{' '}
+            (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noreferrer">CC BY-SA 3.0</a>),{' '}
+            <a href="https://commons.wikimedia.org/wiki/File:Green_Mung_Beans.jpg" target="_blank" rel="noreferrer">Sanjay Acharya</a>{' '}
+            (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>),{' '}
+            <a href="https://commons.wikimedia.org/wiki/File:Ripening_rice_plants_in_paddy_field,_Indonesia.jpg" target="_blank" rel="noreferrer">Undeka 11</a>{' '}
+            (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>), {t('footer.photosNote')}
+          </p>
+          <p className="small">
             Snapshot {snap?.generated_at?.slice(0, 10) ?? '—'} · Engine {snap?.engine_version ?? '—'} ·
             Retrieval {snap?.retrieved_at?.slice(0, 10) ?? '—'}
           </p>

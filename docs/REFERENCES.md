@@ -105,6 +105,13 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
     residue, 6 inch depth, mix after drying, test every 3 years or once per rotation. Kit amounts
     and waiting times are left to each kit's own leaflet.
 
+19. **Crop photos (Wikimedia Commons)** - cropped to 256 px squares in `frontend/src/assets/`; the
+    cropped versions are shared under the same licence.
+    - Black gram: Sanjay Acharya, "Black gram.jpg", CC BY-SA 3.0, <https://commons.wikimedia.org/wiki/File:Black_gram.jpg>
+    - Mung bean: Sanjay Acharya, "Green Mung Beans.jpg", CC BY-SA 4.0, <https://commons.wikimedia.org/wiki/File:Green_Mung_Beans.jpg>
+    - Paddy: Undeka 11, "Ripening rice plants in paddy field, Indonesia.jpg", CC BY-SA 4.0,
+      <https://commons.wikimedia.org/wiki/File:Ripening_rice_plants_in_paddy_field,_Indonesia.jpg>
+
 ## Data-status vocabulary
 
 - `LIVE` - retrieved or streamed from the source during the current session.

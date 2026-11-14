@@ -481,5 +481,7 @@
   "town.pathein": "Pathein",
   "town.bogale": "Bogale",
   "town.twante": "Twante",
-  "field.demoName": "{town} demo field"
+  "field.demoName": "{town} demo field",
+  "footer.photos": "Crop photos from Wikimedia Commons:",
+  "footer.photosNote": "cropped and resized; shared under the same licence."
 }
