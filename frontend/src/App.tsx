@@ -210,7 +210,7 @@ export default function App() {
             {page === 'home' && (
               <HomePage snap={snap} field={field} plans={plans} map={mapView} profiles={profiles}
                 userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage}
-                onMeasurements={() => { setFocusMeasurements(true); setPage('fields') }} onAdd={addField} />
+                onAdd={addField} />
             )}
             {page === 'fields' && (
               <div className="fields-page">
