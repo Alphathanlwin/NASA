@@ -16,7 +16,7 @@ function prov(rec: SnapshotField, key: string) {
   return source ? rec.provenance[source] : undefined
 }
 
-export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onReadings, onDelete }: {
+export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onReadings, onDelete, inMap }: {
   snap: Snapshot
   field: SnapshotField
   onAnalyse: () => void
@@ -24,6 +24,7 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
   readings: Readings
   onReadings: (r: Readings) => void
   onDelete?: () => void
+  inMap?: boolean
 }) {
   const userRain = val(field, 'user_rain_30d')
   const rain7 = val(field, 'rain_7d')
@@ -60,7 +61,8 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
           <Fact label={t('field.area')} value={t('field.acres', { a: field.area_acres })} />
           <Fact label={t('field.reference')} value={`${field.town_name} · ${t('field.distance', { d: field.town_distance_km })}`} />
           <Fact label={t('field.irrigation')} value={field.irrigation} />
-          <Fact label={t('field.history')} value={field.crop_history.join(' → ')} />
+          <Fact label={t('field.history')} value={field.status === 'USER-INPUT' ? t('map.noCrop') :
+            field.crop_history.map((crop) => crop === 'rice' ? t('crop.rice') : crop).join(' → ') || t('map.noCrop')} />
           <Fact label={t('field.status')} value={<StatusPill status={field.status} />} />
           <Fact label={t('field.grid')} value={`${field.power_grid[0]}, ${field.power_grid[1]}`} />
         </div>
@@ -82,7 +84,7 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
         )}
       </section>
 
-      <ReadingsCard readings={readings} onChange={onReadings} />
+      <ReadingsCard readings={readings} onChange={onReadings} inMap={inMap} />
 
       <section className="card">
         <h3>{t('overview.conditions')}</h3>
@@ -118,6 +120,10 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
         <p className="note small">
           {t('footer.data')} · {snap.sources_retrieved_at?.slice(0, 10)}
         </p>
+        <div className="field-nutrients">
+          <h4>{t('overview.nutrients')}</h4>
+          <p className="note">{t('overview.nutrientsNote')}</p>
+        </div>
       </section>
     </div>
   )

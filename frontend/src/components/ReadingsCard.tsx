@@ -48,7 +48,7 @@ function NumberInput({ label, hint, value, min, max, step, onChange }: {
   )
 }
 
-export function ReadingsCard({ readings, onChange }: { readings: Readings; onChange: (r: Readings) => void }) {
+export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings; onChange: (r: Readings) => void; inMap?: boolean }) {
   const set = (patch: Partial<Readings>) => {
     const next = { ...readings, ...patch }
     if (!next.measured_on) next.measured_on = new Date().toISOString().slice(0, 10)
@@ -61,7 +61,7 @@ export function ReadingsCard({ readings, onChange }: { readings: Readings; onCha
     <section className="card readings-card">
       <div className="split-head">
         <div>
-          <h3>{t('readings.title')}</h3>
+          <h3 id={inMap ? undefined : 'field-measurements'} tabIndex={-1}>{t('readings.title')}</h3>
           <p className="note">{t('readings.lead')}</p>
         </div>
         <StatusPill status="USER-INPUT" />

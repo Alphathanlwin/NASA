@@ -1,9 +1,10 @@
 // AI-assisted: Claude Code
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AgentLog } from './components/AgentLog'
 import { DataQuality } from './components/DataQuality'
 import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
+import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
 import { HomePage } from './components/HomePage'
@@ -20,7 +21,9 @@ import type { Key, Lang } from './i18n'
 import './app.css'
 
 
-const PAGE_ORDER: Page[] = ['home', 'fields', 'planner', 'scenarios', 'log', 'quality']
+const PAGE_ORDER: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log', 'quality']
+/** The map's agent trace runs 2.2 s before the field view opens. */
+const ENTER_DELAY_MS = 2200
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
 export default function App() {
@@ -39,9 +42,20 @@ export default function App() {
   const [online, setOnline] = useState(false)
   const [page, setPageState] = useState<Page>('home')
   const [dir, setDir] = useState<1 | -1>(1)
+  const [focusMeasurements, setFocusMeasurements] = useState(false)
+  useEffect(() => {
+    if (page === 'fields' && focusMeasurements) {
+      document.getElementById('field-measurements')?.focus()
+      setFocusMeasurements(false)
+    }
+  }, [page, focusMeasurements])
   // Pages enter from the side you are travelling towards (down the menu = from below).
+  const [backPage, setBackPage] = useState<Page>('home')
+  const enterTimer = useRef<number | null>(null)
   const setPage = (p: Page) => {
     if (p === page) return
+    if (enterTimer.current !== null) { window.clearTimeout(enterTimer.current); enterTimer.current = null }
+    if (p === 'field3d') setBackPage(page)
     setDir(PAGE_ORDER.indexOf(p) > PAGE_ORDER.indexOf(page) ? 1 : -1)
     setPageState(p)
     window.scrollTo({ top: 0 })
@@ -124,10 +138,33 @@ export default function App() {
     setRunId((n) => n + 1)
   }
 
+  // On the home map, clicking a field sends the agent there and then walks into the 3D field view.
+  const enterField = (id: string) => {
+    select(id)
+    if (enterTimer.current !== null) window.clearTimeout(enterTimer.current)
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    enterTimer.current = window.setTimeout(() => { enterTimer.current = null; setPage('field3d') }, reduce ? 0 : ENTER_DELAY_MS)
+  }
+  useEffect(() => () => { if (enterTimer.current !== null) window.clearTimeout(enterTimer.current) }, [])
+
   const calendar = plans?.plans[0]?.calendar ?? null
+  const nextCrops = plans?.plans.filter((plan) => plan.rank === 1) ?? []
+  const fieldOverview = (inMap = false) => field && snap && (
+    <FieldOverview snap={snap} field={field} calendar={calendar}
+      inMap={inMap}
+      readings={(selectedId && readings[selectedId]) || {}} onReadings={updateReadings}
+      onDelete={isUserField ? deleteUserField : undefined}
+      onAnalyse={() => { setPage('planner'); setRunId((n) => n + 1) }} />
+  )
+  const scenarioPanel = field && (
+    <ScenarioPanel draft={draft} onChange={setDraft} result={comparison}
+      fieldIrrigation={field.irrigation} />
+  )
 
   const mapView = field && snap ? (
-    <MapView snap={snap} selectedId={selectedId} onSelect={select}
+    <MapView snap={snap} selectedId={selectedId} onSelect={page === 'home' && !drawing ? enterField : select}
+      rotation={{ fieldName: field.name, previous: isUserField ? undefined : field.crop_history.at(-1), next: nextCrops }}
+      fieldOptions={Object.values(profiles)} details={fieldOverview(true)} scenario={scenarioPanel}
       initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
       agentRun={field.agent_run ?? null} runId={runId}
       userFields={userFields} drawing={drawing} draft={drawPts}
@@ -144,7 +181,6 @@ export default function App() {
   return (
     <div className={`shell${drawing ? ' is-drawing' : ''}`}>
       <Sidebar page={page} onPage={setPage} online={online} />
-
       <div className="main">
         <header className="main-head" key={`h-${page}`} data-dir={dir}>
           <div>
@@ -162,8 +198,8 @@ export default function App() {
           </div>
           <div className="head-actions">
             <div className="lang-toggle" role="group" aria-label={t('lang.label')}>
-              <button className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
-              <button className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
+              <button lang="en" aria-pressed={lang === 'en'} className={lang === 'en' ? 'active' : ''} onClick={() => setLanguage('en')}>{t('lang.en')}</button>
+              <button lang="my" aria-pressed={lang === 'my'} className={lang === 'my' ? 'active' : ''} onClick={() => setLanguage('my')}>{t('lang.my')}</button>
             </div>
           </div>
         </header>
@@ -175,7 +211,8 @@ export default function App() {
           <main className="page-body" key={page} data-dir={dir}>
             {page === 'home' && (
               <HomePage snap={snap} field={field} plans={plans} map={mapView} profiles={profiles}
-                userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage} onAdd={addField} />
+                userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage}
+                onMeasurements={() => { setFocusMeasurements(true); setPage('fields') }} onAdd={addField} />
             )}
             {page === 'fields' && (
               <div className="fields-page">
@@ -201,20 +238,17 @@ export default function App() {
                   </div>
                   {mapView}
                 </div>
-                <FieldOverview snap={snap} field={field} calendar={calendar}
-                  readings={(selectedId && readings[selectedId]) || {}} onReadings={updateReadings}
-                  onDelete={isUserField ? deleteUserField : undefined}
-                  onAnalyse={() => { setPage('planner'); setRunId((n) => n + 1) }} />
+                {fieldOverview()}
               </div>
+            )}
+            {page === 'field3d' && (
+              <FieldView key={field.id} snap={snap} field={field} plans={plans} onMap={() => setPage(backPage === 'field3d' ? 'home' : backPage)} />
             )}
             {page === 'planner' && plans && (
               <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}
                 econ={econ} onEcon={setEcon} />
             )}
-            {page === 'scenarios' && (
-              <ScenarioPanel draft={draft} onChange={setDraft} result={comparison}
-                fieldIrrigation={field.irrigation} />
-            )}
+            {page === 'scenarios' && scenarioPanel}
             {page === 'log' && field.agent_run && (
               <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
             )}
