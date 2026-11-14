@@ -14,14 +14,14 @@ Garvesty scores relative agronomic suitability; it does not promise crop yields 
 ### Farmer Mode (Decision Workflow: F1–F6)
 - **F1 Overview:** Farm selection, recent weather conditions, and quick resumption of saved analyses.
 - **F2 My Farm:** Interactive boundary drawing (polygon placement, vertex editing, planar acreage in Acres/Hectares) and field annotations (crop history, irrigation, drainage).
-- **F3 Environment:** Detailed rainfall, temperature, root-zone wetness, and ISRIC SoilGrids soil profile with satellite footprint disclosures.
+- **F3 Environment:** Detailed rainfall, temperature, root-zone wetness, ISRIC SoilGrids soil profile with satellite footprint disclosures, and **In-Situ IoT Soil Probes** (AgroGuard LoRaWAN edge nodes streaming 10cm/40cm root VWC, pore-water EC salinity alerts, node battery, and Space + Ground fusion).
 - **F4 Compare:** Multi-season rotation comparison (Rice → Rice, Rice → Mung Bean, Rice → Black Gram). Ineligible baselines (e.g. rainfed dry-season rice) remain visible with disqualification reasons.
 - **F5 Scenarios:** What-If simulator stress-testing rainfall deviations (−20% to +20%), planting delays (0–14 days), irrigation access, and drainage conditions.
 - **F6 Report:** Comprehensive, offline-printable Seasonal Decision Report with checklist and agronomic disclaimers.
 
 ### Analyst Mode (Telemetry & Provenance: A1–A4)
-- **A1 Mission Overview:** Regional monitoring coverage, active layer status (`LIVE`, `CACHED`, `DEMO`), and data latency metrics.
-- **A2 Field Intelligence:** Precise geometry inspection, weather time-series charts, and sensor footprint overlays.
+- **A1 Mission Overview:** Regional monitoring coverage, active layer status (`LIVE`, `CACHED`, `DEMO`), data latency metrics, and **In-Situ IoT Edge Sensor Mesh** telemetry gateway.
+- **A2 Field Intelligence:** Precise geometry inspection, weather time-series charts, sensor footprint overlays, and **Space + Ground Sensor Fusion** comparative analysis.
 - **A3 Catalogue:** NASA and external product catalogue (POWER, GPM, SMAP, MODIS, SoilGrids, EcoCrop) with DOIs and resolutions.
 - **A4 Quality & Models:** Cleaning pipeline audit (-999.0 sentinels, range checks) and 3 gated ML evaluation tracks (Root-Zone Wetness, Vegetation Anomaly, Yield Feasibility) evaluated with chronological holdouts and fails-closed release gates.
 
@@ -68,6 +68,7 @@ To rehearse with no internet connection, set `FIELDSHIFT_OFFLINE=1` before start
 | Custom field drawing & area | Real. Planar shoelace calculation from user-drawn coordinates | `USER-INPUT` |
 | Satellite soil moisture (SMAP) | Pipeline ready (QA filtered). Requires Earthdata token | `NOT CONNECTED` |
 | Vegetation index (MODIS NDVI) | Pipeline ready (pixel reliability QA). Requires Earthdata token | `NOT CONNECTED` |
+| In-situ IoT sensor probes & threshold alerts | Real software support. AgroGuard LoRaWAN probe packets ingested via `/api/fields/{id}/iot`, generating salinity intrusion (EC >= 2.0 dS/m) and drought alerts | `SPACE + GROUND FUSED` · AgroGuard IoT |
 | Reference field shapes & names | Demo illustrative blocks at real Twante coordinates | `DEMO` |
 | Rotation scores | Real deterministic agronomic rules applied to data above | score breakdown on every card |
 | Income calculations | Derived solely from user-entered prices; neutral weighting when omitted | stated in information gaps |
@@ -103,5 +104,5 @@ Cleaning report: `data/reports/cleaning_report.json` logs records read, nullifie
 
 - Expansion from Twante baseline to Bogale, Hinthada, and Myaungmya.
 - Automated token-refresh Earthdata pipeline for SMAP L4 and MODIS NDVI.
-- In-situ LoRaWAN field sensor integration for ground-truthing satellite moisture.
+- Production LoRaWAN hardware gateway deployment across expanded townships (software support fully active in current build).
 - Production field validation for the three gated ML tracks.
