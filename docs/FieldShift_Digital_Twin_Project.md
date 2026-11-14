@@ -849,21 +849,23 @@ Until these questions are answered, the application should be presented as a pro
 
 # 19. Project status snapshot
 
-| Component | Status based on the supplied project materials |
+| Component | Status in this build |
 |---|---|
-| NASA POWER daily data for four Delta towns | Available in the latest FieldShift overview |
-| GPM IMERG daily rainfall for four Delta towns | Available in the latest FieldShift overview |
-| Crop fact sheet and sample plan scores | Available in the latest FieldShift overview |
-| Map-first clickable mockup | Available |
-| Complete digital-twin application | Not yet established |
-| Agent orchestration | Proposed |
-| Agent animation and event stream | Proposed in earlier design |
-| Scenario simulator | Proposed |
-| Analyst Mode / TERRA | Proposed |
-| SRTM elevation layer | Not yet integrated in latest overview |
-| SMAP soil-moisture layer | Not yet integrated in latest overview |
-| Data-driven validated crop scoring | Not yet established; current overview describes demo rules |
-| Agronomic expert validation | Still required |
+| NASA POWER daily data for four Delta towns | Retrieved and cached; modelled 0.5 x 0.625 degree grid values |
+| NASA POWER 30-year day-of-year climatology | Retrieved, cleaned and cached as Parquet; historical means, not a forecast |
+| GPM IMERG daily rainfall | Not retrieved (Earthdata login required); labelled UNAVAILABLE |
+| SMAP soil moisture | Not retrieved (Earthdata login required); labelled UNAVAILABLE |
+| MODIS NDVI | One 250 m pixel per field centre, cached |
+| ISRIC SoilGrids topsoil | Cached, 250 m, non-NASA |
+| NASA GIBS true-colour layer | Optional map layer, fixed date, native zoom 9 |
+| Crop fact sheet with references and verification flags | Available in `backend/app/engine/crops.json` |
+| Rice to rice, rice to mung bean, rice to black gram comparison | Implemented and parity-tested in Python and TypeScript |
+| Deterministic agent workflow and event log | Implemented (nine steps), scripted, no live LLM |
+| Scenario simulator | Implemented with twelve hero scenarios |
+| Analyst Mode | Implemented as one Data & Quality screen |
+| Static build with offline snapshot | Implemented and tested with the backend stopped |
+| Burmese interface | Implemented; native-speaker review still required |
+| Agronomic expert validation | Still required; team assumptions are flagged unverified |
 | Real farm pilot | Not yet established |
 
 ---
