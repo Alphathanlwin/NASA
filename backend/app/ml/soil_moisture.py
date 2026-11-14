@@ -31,7 +31,10 @@ SMAP_FILES = [
     ROOT / "archive/garvesty/data/raw/appeears/fieldshift-demo-fields-SPL3SMP-E-006-results.csv",
     ROOT / "archive/garvesty/data/raw/appeears/pawsan-ayeyarwady-SPL3SMP-E-006-results.csv",
 ]
+HISTORY_DIR = DATA / "raw" / "appeears" / "ml_history"   # full 2015- history (fetch_smap_history.py)
 POWER_DIR = DATA / "raw" / "power" / "ml"
+CLEAN = DATA / "models" / "smap_training_table.parquet"
+MAX_ROWS = {"gaussian_process": 1500, "svr": 6000, "knn": 20000}  # slow algorithms train on a sample
 OUT = DATA / "models" / "soil_moisture_model.json"
 PARAMS = ["PRECTOTCORR", "T2M_MAX", "T2M_MIN", "RH2M", "ALLSKY_SFC_SW_DWN", "WS2M", "GWETTOP", "GWETROOT"]
 RAIN_WINDOWS = [1, 3, 7, 14, 30]
@@ -55,7 +58,7 @@ def clean_smap(raw: pd.DataFrame) -> pd.DataFrame:
 
 def load_smap() -> tuple[pd.DataFrame, dict]:
     frames, coords = [], {}
-    for f in SMAP_FILES:
+    for f in SMAP_FILES + sorted(HISTORY_DIR.glob("*SPL3SMP*.csv")):
         d = pd.read_csv(f)
         col = lambda end: next(c for c in d.columns if c.endswith(end))  # noqa: E731
         frames.append(pd.DataFrame({
@@ -72,6 +75,10 @@ def fetch_power(site: str, lat: float, lon: float, start: str, end: str) -> pd.D
     """NASA POWER daily point data for one site, cached in data/raw/power/ml/."""
     POWER_DIR.mkdir(parents=True, exist_ok=True)
     path = POWER_DIR / f"{site}.json"
+    if path.exists():
+        cached = power_frame(json.loads(path.read_text(encoding="utf-8"))["response"])
+        if cached.index.min() > pd.Timestamp(start) + pd.Timedelta(days=5):
+            path.unlink()  # cached range too short for the history; fetch again
     if not path.exists():
         import requests
         params = {"parameters": ",".join(PARAMS), "community": "AG", "latitude": lat, "longitude": lon,
@@ -113,9 +120,15 @@ FEATURES = [f"rain_{w}d" for w in RAIN_WINDOWS] + ["T2M_MAX", "T2M_MIN", "RH2M",
                                                    "GWETTOP", "GWETROOT", "doy_sin", "doy_cos"]
 
 
+def site_cv(groups, k=5):
+    """Hold out whole sites: one at a time when there are few, k rotating groups when there are many."""
+    from sklearn.model_selection import GroupKFold, LeaveOneGroupOut
+    n = pd.Series(groups).nunique()
+    return LeaveOneGroupOut() if n <= 10 else GroupKFold(n_splits=min(k, n))
+
+
 def site_folds(df: pd.DataFrame):
-    from sklearn.model_selection import LeaveOneGroupOut
-    return list(LeaveOneGroupOut().split(df, groups=df["site"]))
+    return list(site_cv(df["site"]).split(df, groups=df["site"]))
 
 
 # ---------- models ----------
@@ -170,10 +183,10 @@ def candidates():
 
 def tune(model, grid, X, y, groups):
     """Hyperparameter search scored on held-out sites only (inner leave-one-site-out)."""
-    from sklearn.model_selection import GridSearchCV, LeaveOneGroupOut
+    from sklearn.model_selection import GridSearchCV
     if not grid:
         return model.fit(X, y), {}
-    gs = GridSearchCV(model, grid, cv=LeaveOneGroupOut(), scoring="neg_root_mean_squared_error", n_jobs=-1)
+    gs = GridSearchCV(model, grid, cv=site_cv(groups, k=3), scoring="neg_root_mean_squared_error", n_jobs=-1)
     gs.fit(X, y, groups=groups)
     return gs.best_estimator_, gs.best_params_
 
@@ -186,14 +199,25 @@ def scores(y, p) -> dict:
             "r2": round(1 - float(np.sum((y - p) ** 2)) / ss, 3) if ss else None, "n": int(len(y))}
 
 
-def inner_rmse(model, grid, cols, df) -> tuple[float, object]:
-    """Tune on df, and score the tuning procedure on df's own held-out sites."""
-    from sklearn.model_selection import LeaveOneGroupOut, cross_val_predict
+def cap(df: pd.DataFrame, name: str) -> pd.DataFrame:
+    """Slow algorithms train on a fixed random sample of the training rows (never the test rows)."""
+    n = MAX_ROWS.get(name)
+    return df.sample(n=n, random_state=SEED) if n and len(df) > n else df
+
+
+def inner_rmse(name: str, df: pd.DataFrame) -> float:
+    """Best held-out-site RMSE this algorithm reaches when tuned on df alone."""
     from sklearn.base import clone
-    m, params = tune(clone(model), grid, df[cols], df["sm"], df["site"])
-    tuned = clone(model).set_params(**params) if params else clone(model)
-    pred = cross_val_predict(tuned, df[cols], df["sm"], groups=df["site"], cv=LeaveOneGroupOut())
-    return scores(df["sm"], pred)["rmse"], m
+    from sklearn.model_selection import GridSearchCV, cross_val_score
+    model, cols, grid = candidates()[name]
+    d = cap(df, name)
+    cv = site_cv(d["site"], k=3)
+    if grid:
+        gs = GridSearchCV(clone(model), grid, cv=cv, scoring="neg_root_mean_squared_error", n_jobs=-1)
+        gs.fit(d[cols], d["sm"], groups=d["site"])
+        return float(-gs.best_score_)
+    return float(-cross_val_score(clone(model), d[cols], d["sm"], groups=d["site"], cv=cv,
+                                  scoring="neg_root_mean_squared_error", n_jobs=-1).mean())
 
 
 def nested_selection(df: pd.DataFrame, names=None, on_fold=None) -> dict:
@@ -204,11 +228,12 @@ def nested_selection(df: pd.DataFrame, names=None, on_fold=None) -> dict:
     preds, picks = np.empty(len(df)), []
     for train, test in site_folds(df):
         tr, te = df.iloc[train], df.iloc[test]
-        best = min(names, key=lambda n: inner_rmse(cands[n][0], cands[n][2], cands[n][1], tr)[0])
+        best = min(names, key=lambda n: inner_rmse(n, tr))
         model, cols, grid = cands[best]
-        m, _ = tune(model, grid, tr[cols], tr["sm"], tr["site"])
+        trc = cap(tr, best)
+        m, _ = tune(model, grid, trc[cols], trc["sm"], trc["site"])
         preds[test] = m.predict(te[cols])
-        picks.append({"held_out": str(te["site"].iloc[0]), "picked": best})
+        picks.append({"held_out": ", ".join(sorted(map(str, te["site"].unique())))[:120], "picked": best})
         if on_fold:
             on_fold(set(tr["site"]), te["site"].iloc[0], best)
     return {**scores(df["sm"], preds), "picks": picks}
@@ -220,12 +245,13 @@ def evaluate(df: pd.DataFrame) -> dict:
     for name, (model, cols, grid) in candidates().items():
         preds = np.empty(len(df))
         for train, test in site_folds(df):
-            tr = df.iloc[train]
+            tr = cap(df.iloc[train], name)
             m, _ = tune(model, grid, tr[cols], tr["sm"], tr["site"])
             preds[test] = m.predict(df.iloc[test][cols])
         cut = df["date"].quantile(0.75)
-        tr, te = df[df["date"] < cut], df[df["date"] >= cut]
+        tr, te = cap(df[df["date"] < cut], name), df[df["date"] >= cut]
         m, _ = tune(model, grid, tr[cols], tr["sm"], tr["site"])
+        print(f"  tested {name}", flush=True)
         out[name] = {"unseen_sites": scores(df["sm"], preds),
                      "later_months": {**scores(te["sm"], m.predict(te[cols])), "from": str(cut.date())}}
     return out
@@ -251,11 +277,17 @@ def main():
     start = (smap["date"].min() - pd.Timedelta(days=40)).strftime("%Y%m%d")
     end = (pd.Timestamp(date.today()) - pd.Timedelta(days=2)).strftime("%Y%m%d")
     rows = []
+    have = set(smap["site"])
     for site, (lat, lon) in sorted(coords.items()):
+        if site not in have:  # no recommended-quality SMAP reading at this point (sea, river, wet paddy)
+            continue
         f = features(fetch_power(site, lat, lon, start, end))
+        print(f"  weather ready: {site}", flush=True)
         s = smap[smap["site"] == site].set_index("date")
         rows.append(s.join(f, how="inner").reset_index())
     df = pd.concat(rows).dropna(subset=FEATURES + ["sm"]).reset_index(drop=True)
+    CLEAN.parent.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(CLEAN, index=False)  # small, committed; the raw AppEEARS CSVs are not
     print(f"training rows: {len(df)} from {df['site'].nunique()} sites, {df['date'].min().date()} to {df['date'].max().date()}")
 
     results = evaluate(df)
@@ -270,9 +302,10 @@ def main():
 
     cands = candidates()
     algos = [n for n in cands if n not in BASELINES]
-    best = min(algos, key=lambda n: inner_rmse(cands[n][0], cands[n][2], cands[n][1], df)[0])
+    best = min(algos, key=lambda n: inner_rmse(n, df))
     model, cols, grid = cands[best]
-    final, params = tune(model, grid, df[cols], df["sm"], df["site"])
+    dfc = cap(df, best)
+    final, params = tune(model, grid, dfc[cols], dfc["sm"], dfc["site"])
 
     estimates = {}
     if beats:
