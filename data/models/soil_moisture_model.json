@@ -1,12 +1,8 @@
 {
-  "model": "boosted_trees",
+  "model": "lasso",
   "published": false,
   "params": {
-    "l2_regularization": 1.0,
-    "learning_rate": 0.03,
-    "max_depth": 2,
-    "max_iter": 100,
-    "min_samples_leaf": 10
+    "lasso__alpha": 0.01
   },
   "features": [
     "rain_1d",
@@ -24,7 +20,7 @@
     "doy_sin",
     "doy_cos"
   ],
-  "trained_at": "2026-11-14T14:10:16Z",
+  "trained_at": "2026-11-14T14:18:56Z",
   "seed": 7,
   "training": {
     "rows": 111,
@@ -84,6 +80,111 @@
         "from": "2026-08-16"
       }
     },
+    "lasso": {
+      "unseen_sites": {
+        "rmse": 0.0968,
+        "mae": 0.0795,
+        "r2": 0.269,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1072,
+        "mae": 0.0875,
+        "r2": 0.067,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "elastic_net": {
+      "unseen_sites": {
+        "rmse": 0.0978,
+        "mae": 0.0797,
+        "r2": 0.254,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1073,
+        "mae": 0.0876,
+        "r2": 0.065,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "knn": {
+      "unseen_sites": {
+        "rmse": 0.1033,
+        "mae": 0.0809,
+        "r2": 0.168,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1103,
+        "mae": 0.0947,
+        "r2": 0.013,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "svr": {
+      "unseen_sites": {
+        "rmse": 0.1055,
+        "mae": 0.0838,
+        "r2": 0.132,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1149,
+        "mae": 0.0831,
+        "r2": -0.071,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "random_forest": {
+      "unseen_sites": {
+        "rmse": 0.0995,
+        "mae": 0.0801,
+        "r2": 0.228,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1127,
+        "mae": 0.0858,
+        "r2": -0.031,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "extra_trees": {
+      "unseen_sites": {
+        "rmse": 0.0987,
+        "mae": 0.0797,
+        "r2": 0.24,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1033,
+        "mae": 0.0787,
+        "r2": 0.134,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "gradient_boosting": {
+      "unseen_sites": {
+        "rmse": 0.1027,
+        "mae": 0.0805,
+        "r2": 0.177,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1074,
+        "mae": 0.0788,
+        "r2": 0.064,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
     "boosted_trees": {
       "unseen_sites": {
         "rmse": 0.1005,
@@ -98,8 +199,59 @@
         "n": 28,
         "from": "2026-08-16"
       }
+    },
+    "gaussian_process": {
+      "unseen_sites": {
+        "rmse": 0.1077,
+        "mae": 0.0884,
+        "r2": 0.096,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1034,
+        "mae": 0.0819,
+        "r2": 0.133,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "neural_net": {
+      "unseen_sites": {
+        "rmse": 0.2356,
+        "mae": 0.1492,
+        "r2": -3.328,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1824,
+        "mae": 0.1562,
+        "r2": -1.7,
+        "n": 28,
+        "from": "2026-08-16"
+      }
     }
   },
+  "nested_selection": {
+    "rmse": 0.1092,
+    "mae": 0.0883,
+    "r2": 0.071,
+    "n": 111,
+    "picks": [
+      {
+        "held_out": "myaungmya",
+        "picked": "ridge"
+      },
+      {
+        "held_out": "pathein",
+        "picked": "ridge"
+      },
+      {
+        "held_out": "pyapon",
+        "picked": "svr"
+      }
+    ]
+  },
+  "publish_rule": "Shown only if the nested best-algorithm score beats both baselines on unseen sites.",
   "estimates": {},
   "label": "Model estimate, not a measurement. Trained on NASA SMAP and NASA POWER."
 }

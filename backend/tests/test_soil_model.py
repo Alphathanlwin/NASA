@@ -34,6 +34,39 @@ def test_rain_windows_sum_the_days_up_to_and_including_today():
     assert pd.isna(f.iloc[0]["rain_3d"])   # not enough history: unknown, not zero
 
 
+def toy(n_sites=4, n=30):
+    import numpy as np
+    rng = np.random.default_rng(0)
+    rows = []
+    for s in range(n_sites):
+        X = rng.normal(size=(n, len(sm.FEATURES)))
+        y = 0.25 + 0.05 * X[:, sm.FEATURES.index("GWETTOP")] + rng.normal(0, 0.01, n)
+        d = pd.DataFrame(X, columns=sm.FEATURES)
+        d["sm"], d["site"] = y, f"s{s}"
+        rows.append(d)
+    return pd.concat(rows, ignore_index=True)
+
+
+def test_every_algorithm_trains_and_predicts():
+    df = toy()
+    names = set(sm.candidates())
+    assert {"baseline_mean", "baseline_power_wetness", "ridge", "lasso", "elastic_net", "knn", "svr",
+            "random_forest", "extra_trees", "gradient_boosting", "boosted_trees", "gaussian_process",
+            "neural_net"} <= names
+    for name, (model, cols, grid) in sm.candidates().items():
+        m, _ = sm.tune(model, grid, df[cols], df["sm"], df["site"])
+        assert len(m.predict(df[cols])) == len(df), name
+
+
+def test_algorithm_choice_never_sees_the_test_site():
+    df = toy()
+    seen = []
+    result = sm.nested_selection(df, names=["ridge", "knn"], on_fold=lambda train_sites, test_site, pick: seen.append((train_sites, test_site)))
+    assert result["n"] == len(df)
+    for train_sites, test_site in seen:
+        assert test_site not in train_sites
+
+
 def test_site_holdout_never_trains_on_the_site_it_tests():
     df = pd.DataFrame({"site": ["a", "a", "b", "b", "c", "c"], "x": range(6), "sm": [0.1] * 6})
     for train, test in sm.site_folds(df):

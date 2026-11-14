@@ -59,9 +59,12 @@ POWER daily weather, to fill days and places SMAP misses. It is judged on sites 
 (leave-one-site-out, with tuning inside each fold) and on later months, against two baselines.
 
 Result on 14 Nov 2026: only 111 SMAP readings from 3 of 13 Delta sites passed the 'recommended'
-quality flag. Tuned ridge regression and boosted trees reached RMSE 0.101 and 0.100 m3/m3 on unseen
-sites; simply rescaling POWER's own soil wetness reached 0.098. Because the model did not beat the
-simple baseline, the app does not show its estimates. Full numbers: `data/models/soil_moisture_model.json`.
+quality flag. Eleven algorithms were tuned and tested (ridge, lasso, elastic net, k-nearest
+neighbours, support vector regression, random forest, extra trees, gradient boosting, histogram
+boosting, Gaussian process, neural network). Lasso scored best on unseen sites (RMSE 0.097 m3/m3)
+against 0.098 for simply rescaling POWER's own soil wetness, but that winner was picked after
+seeing the test scores. When the algorithm is chosen without seeing the held-out site (nested
+selection), the error is 0.109, worse than the baseline. So the app does not show model estimates. Full numbers: `data/models/soil_moisture_model.json`.
 More years of SMAP history (2015 onwards) are the obvious next step.
 
 ## Future work: a fertiliser model

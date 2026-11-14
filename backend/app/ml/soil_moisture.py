@@ -120,19 +120,51 @@ def site_folds(df: pd.DataFrame):
 
 # ---------- models ----------
 
+BASELINES = ("baseline_mean", "baseline_power_wetness")
+
+
 def candidates():
-    from sklearn.ensemble import HistGradientBoostingRegressor
-    from sklearn.linear_model import LinearRegression, Ridge
+    """Every algorithm family worth trying on ~100 rows, each with a small tuning grid.
+    Scale-sensitive models get a StandardScaler in the pipeline."""
+    from sklearn.dummy import DummyRegressor
+    from sklearn.ensemble import (ExtraTreesRegressor, GradientBoostingRegressor, HistGradientBoostingRegressor,
+                                  RandomForestRegressor)
+    from sklearn.gaussian_process import GaussianProcessRegressor
+    from sklearn.gaussian_process.kernels import RBF, WhiteKernel
+    from sklearn.linear_model import ElasticNet, Lasso, LinearRegression, Ridge
+    from sklearn.neighbors import KNeighborsRegressor
+    from sklearn.neural_network import MLPRegressor
     from sklearn.pipeline import make_pipeline
     from sklearn.preprocessing import StandardScaler
-    from sklearn.dummy import DummyRegressor
+    from sklearn.svm import SVR
+
+    def scaled(m):
+        return make_pipeline(StandardScaler(), m)
+
     return {
         "baseline_mean": (DummyRegressor(), ["GWETTOP"], {}),
         "baseline_power_wetness": (LinearRegression(), ["GWETTOP"], {}),
-        "ridge": (make_pipeline(StandardScaler(), Ridge()), FEATURES, {"ridge__alpha": [0.1, 1, 10, 100]}),
+        "ridge": (scaled(Ridge()), FEATURES, {"ridge__alpha": [0.1, 1, 10, 100]}),
+        "lasso": (scaled(Lasso(max_iter=20000)), FEATURES, {"lasso__alpha": [0.0005, 0.002, 0.01]}),
+        "elastic_net": (scaled(ElasticNet(max_iter=20000)), FEATURES,
+                        {"elasticnet__alpha": [0.001, 0.01], "elasticnet__l1_ratio": [0.2, 0.5, 0.8]}),
+        "knn": (scaled(KNeighborsRegressor()), FEATURES,
+                {"kneighborsregressor__n_neighbors": [5, 10, 20], "kneighborsregressor__weights": ["uniform", "distance"]}),
+        "svr": (scaled(SVR()), FEATURES, {"svr__C": [0.1, 1, 10], "svr__epsilon": [0.01, 0.03]}),
+        "random_forest": (RandomForestRegressor(n_estimators=300, random_state=SEED, n_jobs=-1), FEATURES,
+                          {"max_depth": [3, 6, None], "min_samples_leaf": [3, 10]}),
+        "extra_trees": (ExtraTreesRegressor(n_estimators=300, random_state=SEED, n_jobs=-1), FEATURES,
+                        {"max_depth": [3, 6, None], "min_samples_leaf": [3, 10]}),
+        "gradient_boosting": (GradientBoostingRegressor(random_state=SEED), FEATURES,
+                              {"max_depth": [2, 3], "learning_rate": [0.03, 0.1], "n_estimators": [100, 300],
+                               "subsample": [0.7, 1.0]}),
         "boosted_trees": (HistGradientBoostingRegressor(random_state=SEED), FEATURES,
                           {"max_depth": [2, 3], "learning_rate": [0.03, 0.1], "max_iter": [100, 300],
                            "l2_regularization": [0.0, 1.0], "min_samples_leaf": [10, 20]}),
+        "gaussian_process": (scaled(GaussianProcessRegressor(kernel=RBF(length_scale=3.0) + WhiteKernel(0.01),
+                                                             normalize_y=True, random_state=SEED)), FEATURES, {}),
+        "neural_net": (scaled(MLPRegressor(max_iter=3000, early_stopping=False, random_state=SEED)), FEATURES,
+                       {"mlpregressor__hidden_layer_sizes": [(16,), (32, 16)], "mlpregressor__alpha": [0.001, 0.1]}),
     }
 
 
@@ -152,6 +184,34 @@ def scores(y, p) -> dict:
     ss = float(np.sum((y - y.mean()) ** 2))
     return {"rmse": round(rmse, 4), "mae": round(float(np.mean(np.abs(y - p))), 4),
             "r2": round(1 - float(np.sum((y - p) ** 2)) / ss, 3) if ss else None, "n": int(len(y))}
+
+
+def inner_rmse(model, grid, cols, df) -> tuple[float, object]:
+    """Tune on df, and score the tuning procedure on df's own held-out sites."""
+    from sklearn.model_selection import LeaveOneGroupOut, cross_val_predict
+    from sklearn.base import clone
+    m, params = tune(clone(model), grid, df[cols], df["sm"], df["site"])
+    tuned = clone(model).set_params(**params) if params else clone(model)
+    pred = cross_val_predict(tuned, df[cols], df["sm"], groups=df["site"], cv=LeaveOneGroupOut())
+    return scores(df["sm"], pred)["rmse"], m
+
+
+def nested_selection(df: pd.DataFrame, names=None, on_fold=None) -> dict:
+    """Honest score for 'pick the best algorithm': for each held-out site, the algorithm and its
+    settings are chosen using the other sites only, then scored on the held-out site."""
+    cands = candidates()
+    names = names or [n for n in cands if n not in BASELINES]
+    preds, picks = np.empty(len(df)), []
+    for train, test in site_folds(df):
+        tr, te = df.iloc[train], df.iloc[test]
+        best = min(names, key=lambda n: inner_rmse(cands[n][0], cands[n][2], cands[n][1], tr)[0])
+        model, cols, grid = cands[best]
+        m, _ = tune(model, grid, tr[cols], tr["sm"], tr["site"])
+        preds[test] = m.predict(te[cols])
+        picks.append({"held_out": str(te["site"].iloc[0]), "picked": best})
+        if on_fold:
+            on_fold(set(tr["site"]), te["site"].iloc[0], best)
+    return {**scores(df["sm"], preds), "picks": picks}
 
 
 def evaluate(df: pd.DataFrame) -> dict:
@@ -199,14 +259,19 @@ def main():
     print(f"training rows: {len(df)} from {df['site'].nunique()} sites, {df['date'].min().date()} to {df['date'].max().date()}")
 
     results = evaluate(df)
-    for k, v in results.items():
+    for k, v in sorted(results.items(), key=lambda kv: kv[1]["unseen_sites"]["rmse"]):
         print(f"{k:24s} unseen sites RMSE {v['unseen_sites']['rmse']:.4f} R2 {v['unseen_sites']['r2']}  "
               f"later months RMSE {v['later_months']['rmse']:.4f}")
 
-    best = min(("ridge", "boosted_trees"), key=lambda k: results[k]["unseen_sites"]["rmse"])
-    beats = all(results[best]["unseen_sites"]["rmse"] < results[b]["unseen_sites"]["rmse"]
-                for b in ("baseline_mean", "baseline_power_wetness"))
-    model, cols, grid = candidates()[best]
+    # Honest score for "pick the best algorithm", then compare it with the simple baselines.
+    nested = nested_selection(df)
+    print(f"{'NESTED best-algorithm':24s} unseen sites RMSE {nested['rmse']:.4f} R2 {nested['r2']}  picks {nested['picks']}")
+    beats = all(nested["rmse"] < results[b]["unseen_sites"]["rmse"] for b in BASELINES)
+
+    cands = candidates()
+    algos = [n for n in cands if n not in BASELINES]
+    best = min(algos, key=lambda n: inner_rmse(cands[n][0], cands[n][2], cands[n][1], df)[0])
+    model, cols, grid = cands[best]
     final, params = tune(model, grid, df[cols], df["sm"], df["site"])
 
     estimates = {}
@@ -226,6 +291,8 @@ def main():
                      "target": "SMAP SPL3SMP_E v006 soil_moisture, AM/PM mean, quality 'recommended', 9 km",
                      "inputs": "NASA POWER daily point data (community AG)"},
         "evaluation": results,
+        "nested_selection": nested,
+        "publish_rule": "Shown only if the nested best-algorithm score beats both baselines on unseen sites.",
         "estimates": estimates,
         "label": "Model estimate, not a measurement. Trained on NASA SMAP and NASA POWER.",
     }, indent=2), encoding="utf-8")
