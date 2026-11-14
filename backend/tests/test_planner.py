@@ -76,9 +76,29 @@ def test_priorities_change_ranking():
 def test_income_neutral_without_farmer_numbers():
     result = planner.plan(make_field())
     for p in result["plans"]:
-        cropped = sum(1 for s in p["sequence"] if s["crop_id"] != "fallow")
-        assert p["breakdown"]["income"] == 25.0 * cropped
-    assert any("neutral" in g for g in result["plans"][0]["gaps"])
+        assert p["breakdown"]["income"] is None
+        assert p["breakdown"]["weights"]["income"] == 0
+    assert "not calculated" in result["income_basis"]
+
+
+def test_ineligible_baseline_remains_visible():
+    result = planner.plan(make_field(irrigated=False))
+    existing = next(p for p in result["plans"] if p["is_existing"])
+    assert existing["id"] == "summer_rice>monsoon_rice"
+    assert existing["eligibility"] == "unsuitable"
+    assert existing["score"] is None
+    assert existing["reasons_against"]
+
+
+def test_missing_returns_are_not_assumed_zero():
+    result = planner.plan(make_field(), returns={"summer_rice": 1000})
+    assert "not calculated" in result["income_basis"]
+    assert all(p["breakdown"]["income"] is None for p in result["plans"])
+
+
+def test_core_delta_comparisons_present():
+    result = planner.plan(make_field())
+    assert {"summer_rice>monsoon_rice", "black_gram>monsoon_rice", "green_gram>monsoon_rice"} <= set(ids(result))
 
 
 def test_every_plan_explains_itself():

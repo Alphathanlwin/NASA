@@ -22,12 +22,13 @@ class Finding:
 class Context:
     """Everything the rules know about one field."""
     prev_crop: Crop | None          # crop just harvested (the usual monsoon crop)
-    irrigated: bool
+    irrigated: bool | None
     ph: float | None
     gwetroot: float | None          # POWER root-zone wetness, 0-1
     monsoon_rain_mm: float | None
     dry_rain_mm: float | None
     temps: dict                     # {"monsoon": {"t2m":..,"t2m_max":..}, "winter": {...}, "summer": {...}}
+    drainage: str = "unknown"
 
 
 def same_crop(a: Crop, b: Crop) -> bool:
@@ -47,7 +48,7 @@ def rule_season_fit(crop: Crop, slot: str) -> str | None:
 
 # Rule 5 (hard part) --------------------------------------------- irrigation need
 def rule_irrigation_required(crop: Crop, slot: str, ctx: Context) -> str | None:
-    if slot == "dry" and crop.needs_irrigation_in_dry and not ctx.irrigated:
+    if slot == "dry" and crop.needs_irrigation_in_dry and ctx.irrigated is False:
         return f"{crop.name} needs irrigation through the dry season; this field is marked rain-fed."
     return None
 
@@ -57,11 +58,11 @@ def rule_legume_credit(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
     out = []
     if dry.legume:
         out.append(Finding("Legume nitrogen credit", "soil", 15,
-                           f"{dry.name} is a legume: it fixes nitrogen that the following monsoon crop can use "
-                           "(qualitative credit; no kg/ha figure is claimed)."))
+                           f"{dry.name} is a legume and may contribute nitrogen when residues and nodulation are managed. "
+                           "This qualitative team-rule credit requires local review; no nutrient quantity is predicted."))
     if monsoon.legume:
         out.append(Finding("Legume nitrogen credit", "soil", 10,
-                           f"{monsoon.name} is a legume: it leaves nitrogen for the next dry-season crop."))
+                           f"{monsoon.name} may contribute nitrogen with suitable management; this is a team-rule assumption."))
     return out
 
 
@@ -72,11 +73,11 @@ def rule_paddy_cycle(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
     if dry.flooded and ((prev and prev.flooded) or monsoon.flooded):
         out.append(Finding("Paddy cycle", "soil", -25,
                            "Flooded rice in back-to-back seasons with no legume or fallow between: "
-                           "organic matter declines and rice pests carry over."))
+                           "may increase pest carry-over under some management systems. This penalty is a team assumption."))
     if prev and prev.flooded and dry.id in ("black_gram", "green_gram"):
         out.append(Finding("Paddy cycle", "soil", 8,
-                           f"Rice then {dry.name.lower()} on residual moisture is the rotation most "
-                           "Delta farmers reported in surveys."))
+                           f"Rice then {dry.name.lower()} is a documented Delta rotation option. "
+                           "The score credit is a team assumption, not a measured advantage."))
     if dry.id == "fallow" and prev and prev.flooded and monsoon.flooded:
         out.append(Finding("Paddy cycle", "soil", 6, "A fallow season between two rice crops rests the soil."))
     return out
@@ -95,13 +96,13 @@ def rule_pest_break(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
                                f"{before.name} to {after.name.lower()}: a bare or green-manure season interrupts pest cycles."))
         elif same_crop(before, after):
             out.append(Finding("Pest break", "soil", -20,
-                               f"{before.name} to {after.name.lower()}: same crop twice, so pests and diseases carry over."))
+                               f"{before.name} to {after.name.lower()}: repeated hosts may increase carry-over of some pests; verify locally."))
         elif before.family == after.family:
             out.append(Finding("Pest break", "soil", -12,
                                f"{before.name} to {after.name.lower()}: same family ({before.family}), weak pest break."))
         else:
             out.append(Finding("Pest break", "soil", 8,
-                               f"{before.name} to {after.name.lower()}: different families, breaks the pest cycle."))
+                               f"{before.name} to {after.name.lower()}: different families may interrupt host-specific pests; not all pests are controlled."))
     return out
 
 
@@ -150,7 +151,7 @@ def rule_water_budget(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
     out = []
     if dry.water_class == "low" and dry.legume:
         out.append(Finding("Water budget", "water", 0,
-                           f"{dry.name}: low dry-season water need (pulses use roughly 20% of the water paddy does)."))
+                           f"{dry.name}: lower dry-season water demand category in the team's crop table; no water-volume saving is predicted."))
     elif dry.water_class == "very_high":
         out.append(Finding("Water budget", "water", 0,
                            f"{dry.name}: very high water need in the season when water is scarce."))
@@ -158,15 +159,16 @@ def rule_water_budget(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
         out.append(Finding("Water budget", "water", 0, "A dry-season fallow uses no irrigation water, and earns nothing."))
 
     # Dry season: is there moisture to start a rain-fed crop?
-    if dry.id != "fallow" and not ctx.irrigated and ctx.gwetroot is not None:
+    if dry.id != "fallow" and ctx.irrigated is False and ctx.gwetroot is not None:
         if ctx.gwetroot >= 0.7:
             out.append(Finding("Water budget", "water", 8,
                                f"Root-zone wetness is {ctx.gwetroot} (NASA POWER, modelled, 0-1 scale): "
-                               f"residual moisture is available to establish {dry.name.lower()} now."))
+                               f"a relatively wet regional reference under the team's 0.7 threshold. "
+                               f"Check field moisture before establishing {dry.name.lower()}."))
         elif ctx.gwetroot < 0.5:
             out.append(Finding("Water budget", "water", -12,
                                f"Root-zone wetness is only {ctx.gwetroot} (NASA POWER, modelled, 0-1 scale): "
-                               f"a rain-fed {dry.name.lower()} crop may not establish."))
+                               f"below the team's 0.5 threshold. Check field moisture; this is not a crop-failure prediction."))
     if dry.id != "fallow" and ctx.irrigated and dry.water_class == "very_high":
         out.append(Finding("Water budget", "water", -6,
                            f"{dry.name} draws irrigation water for the whole dry season."))
@@ -228,12 +230,13 @@ def rule_temperature(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
 
 # Field drainage ------------------------------------------------------------------
 def rule_paddy_drainage(dry: Crop, monsoon: Crop, ctx: Context) -> list[Finding]:
-    """A field whose usual monsoon crop is flooded rice is a bunded paddy: it holds water."""
-    if ctx.prev_crop and ctx.prev_crop.flooded and not monsoon.flooded and monsoon.id != "fallow":
-        return [Finding("Field drainage", "adjustment", -12,
-                        f"This field grows flooded rice in the monsoon, so it holds water. {monsoon.name} cannot "
-                        "stand in water and only works here if the field can be drained.")]
-    return []
+    """Drainage comes from the user, never from an inferred crop-history condition."""
+    if ctx.drainage != "poor":
+        return []
+    return [Finding("Field drainage", "adjustment", -12,
+                    f"Drainage is marked poor by the user. {crop.name} may face waterlogging; "
+                    "the 12-point penalty is a team assumption requiring local review.")
+            for crop in (dry, monsoon) if not crop.flooded and crop.id != "fallow"]
 
 
 SCORED_RULES = [rule_legume_credit, rule_paddy_cycle, rule_pest_break, rule_soil_fit,
