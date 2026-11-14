@@ -12,7 +12,7 @@
 
 # 1. Product vision
 
-FieldShift Digital Twin is a map-based agricultural decision-support system that creates a digital environmental profile of a selected farm field. It combines NASA Earth-observation data, local soil and crop information, and farmer priorities to help farmers and advisers explore crop-rotation strategies and seasonal decisions.
+Garvesty Digital Twin is a map-based agricultural decision-support system that creates a digital environmental profile of a selected farm field. It combines NASA Earth-observation data, local soil and crop information, and farmer priorities to help farmers and advisers explore crop-rotation strategies and seasonal decisions.
 
 A farmer selects a field on the map. The system retrieves the available environmental information for that location, presents a field profile, and runs an explainable analysis workflow. Farmers can compare crop plans and explore “what-if” scenarios—such as reduced rainfall, delayed planting, or unavailable irrigation—before making a real-world decision.
 
@@ -35,7 +35,7 @@ That decision depends on several changing factors:
 - Flood exposure and, in coastal areas, possible salinity.
 - Crop characteristics and the farmer's own priorities.
 
-A farmer may not have an accessible way to combine these factors and compare different crop plans. FieldShift aims to make the evidence easier to understand and discuss with local agricultural advisers.
+A farmer may not have an accessible way to combine these factors and compare different crop plans. Garvesty aims to make the evidence easier to understand and discuss with local agricultural advisers.
 
 ## 1.3 Primary users
 
@@ -50,7 +50,7 @@ A farmer may not have an accessible way to combine these factors and compare dif
 
 A digital twin is not merely a map, chatbot, or animated character.
 
-For FieldShift, the digital twin is a **digital representation of a selected field and its available environmental context**. It contains:
+For Garvesty, the digital twin is a **digital representation of a selected field and its available environmental context**. It contains:
 
 - Field geometry and approximate area.
 - Geographic location and nearby reference data.
@@ -816,7 +816,7 @@ A concise demonstration should tell one coherent story:
 
 Suggested explanation:
 
-> “FieldShift creates a digital environmental profile for a selected farm. It combines NASA Earth-observation data with crop information and farmer priorities. Our analysis agent checks the available evidence, compares crop rotations, and lets farmers explore how different conditions could change their options. We show the reasons, risks, and data limitations so the farmer and local adviser can make a more informed decision.”
+> “Garvesty creates a digital environmental profile for a selected farm. It combines NASA Earth-observation data with crop information and farmer priorities. Our analysis agent checks the available evidence, compares crop rotations, and lets farmers explore how different conditions could change their options. We show the reasons, risks, and data limitations so the farmer and local adviser can make a more informed decision.”
 
 ---
 

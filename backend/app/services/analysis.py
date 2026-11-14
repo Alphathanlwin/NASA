@@ -1,4 +1,4 @@
-"""Unified Analysis Service for Garvesty / FieldShift Delta.
+"""Unified Analysis Service for Garvesty.
 
 Provides deterministic rotation analysis for either pre-defined fields or
 user-drawn custom field geometries, with scenario comparisons, traceability,
