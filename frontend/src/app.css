@@ -682,3 +682,124 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
   .side-nav button.active::before { left: 25%; right: 25%; top: 0; bottom: auto; width: auto; height: 4px; }
   .main-head h1 { font-size: 1.6rem; }
 }
+
+/* ======================= motion, elevation, containers ======================= */
+/* Motion tokens. Slow in / slow out for anything that moves between two places;
+   a small overshoot (follow-through) only for things the farmer pressed or selected. */
+:root {
+  --ease-io: cubic-bezier(0.65, 0, 0.35, 1);              /* slow in, slow out */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);             /* arrives and settles */
+  --ease-spring: cubic-bezier(0.34, 1.45, 0.64, 1);       /* follow-through, small overshoot */
+  --t-press: 110ms; --t-move: 240ms; --t-enter: 420ms;
+  /* Elevation: 0 page, 1 panel (hairline), 2 floats above content, 3 sits over the map */
+  --e2: 0 1px 2px rgb(15 59 51 / 0.08), 0 10px 28px -10px rgb(15 59 51 / 0.28);
+  --e3: 0 2px 4px rgb(15 59 51 / 0.12), 0 18px 40px -12px rgb(15 59 51 / 0.45);
+  --glass: rgb(251 250 245 / 0.72);
+}
+
+/* Figures line up in columns and do not jitter while they change. */
+.tile-value, .cond-value, .score, .metric-value, .rec-bar b, .timeline small, .compare-score,
+.clean-row, .prov-grid, .fl-right, .draw-stats, .comp b, .glance-facts b, .slider span b,
+.weight-chip, .step-head time, .tile-sub { font-variant-numeric: tabular-nums; }
+
+/* ---- fewer containers: a panel holds content directly, no boxes inside boxes ---- */
+.fact, .metric, .comp { background: transparent; border: 0; border-radius: 0; padding: 4px 0; }
+.facts, .metrics { gap: 14px 22px; }
+.fact span { display: inline; font-size: inherit; color: inherit; }
+.fact > span { display: block; font-size: 0.8rem; color: var(--muted); }
+.fact .pill { font-size: 0.66rem; }
+.components { gap: 4px 22px; }
+.cond { border: 0; border-left: 1px solid var(--line); border-radius: 0; background: transparent; padding: 2px 0 2px 14px; }
+.conds > .cond:first-child { border-left: 0; padding-left: 0; }
+.source { background: transparent; border: 0; border-top: 1px solid var(--line); border-radius: 0; padding: 14px 0 4px; }
+.source-list { gap: 0; }
+.glance .map-card { border: 0; background: transparent; overflow: visible; position: relative; }
+.glance .map-box { border-radius: 12px; overflow: hidden; }
+.glance .map-foot { display: none; }  /* the map attribution already credits the imagery */
+.card.quick { background: transparent; border: 0; padding: 0; }
+.quick button { background: var(--paper); min-height: 84px; }
+
+/* ---- refraction: controls over the map are frosted, so the field shows through ---- */
+.glance .map-toolbar { position: absolute; top: 10px; right: 10px; z-index: 520; padding: 0; }
+.glance .map-title { display: none; }
+.layer-seg, .map-caption, .draw-panel {
+  background: var(--glass); -webkit-backdrop-filter: blur(12px) saturate(1.5); backdrop-filter: blur(12px) saturate(1.5);
+  box-shadow: var(--e3); border: 1px solid rgb(255 255 255 / 0.5);
+}
+.map-caption { color: var(--ink); }
+.layer-seg button.active { background: var(--river); }
+
+/* ---- elevation: only what floats gets a shadow ---- */
+.tile-select { box-shadow: var(--e2); }
+.btn.primary { box-shadow: 0 1px 0 rgb(255 255 255 / 0.18) inset, 0 6px 14px -6px rgb(59 125 47 / 0.6); }
+
+/* ---- press feedback: squash on press, spring back on release ---- */
+.btn, .choice, .quick button, .field-chip, .side-nav button, .layer-seg button, .lang-toggle button,
+.field-list button, .plan-head {
+  transition: transform var(--t-move) var(--ease-spring), background-color var(--t-move) var(--ease-io),
+    border-color var(--t-move) var(--ease-io), color var(--t-move) var(--ease-io);
+}
+:is(.btn, .choice, .quick button, .field-chip, .layer-seg button, .lang-toggle button, .field-list button):active {
+  transform: scale(0.96); transition-duration: var(--t-press); transition-timing-function: var(--ease-io);
+}
+.side-nav button:active { transform: scale(0.98); }
+.field-chip:hover { transform: none; }
+
+/* ---- spatial continuity: one marker travels to the page you chose ---- */
+.side-nav { position: relative; }
+.side-nav button { position: relative; z-index: 1; }
+.side-nav button.active { background: transparent; }
+.side-nav button.active::before { content: none; }
+.nav-mark {
+  position: absolute; top: 0; left: 0; border-radius: 10px; background: rgb(255 255 255 / 0.1); pointer-events: none;
+  transition: transform 460ms var(--ease-spring), width 460ms var(--ease-io), height 460ms var(--ease-io);
+}
+.nav-mark::before {
+  content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 4px; border-radius: 4px; background: var(--turmeric);
+}
+@media (max-width: 820px) {
+  .nav-mark { background: rgb(255 255 255 / 0.08); }
+  .nav-mark::before { left: 30%; right: 30%; top: 0; bottom: auto; width: auto; height: 4px; }
+  .side { background: rgb(15 59 51 / 0.88); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4); box-shadow: var(--e3); }
+}
+
+/* ---- choreography: one entrance per page, top to bottom, from the direction travelled ---- */
+@keyframes enter { from { opacity: 0; transform: translateY(calc(var(--d, 1) * 14px)); } }
+.page-body[data-dir="-1"], .main-head[data-dir="-1"] { --d: -1; }
+.main-head > div:first-child { animation: enter var(--t-enter) var(--ease-out) both; }
+:is(.tiles, .home-main, .home-side, .page-body > .stack, .fields-map, .fields-page > .stack) > * {
+  animation: enter var(--t-enter) var(--ease-out) both;
+}
+:is(.tiles, .home-main, .home-side, .page-body > .stack, .fields-map, .fields-page > .stack) > :nth-child(2) { animation-delay: 50ms; }
+:is(.tiles, .home-main, .home-side, .page-body > .stack, .fields-map, .fields-page > .stack) > :nth-child(3) { animation-delay: 100ms; }
+:is(.tiles, .home-main, .home-side, .page-body > .stack, .fields-map, .fields-page > .stack) > :nth-child(4) { animation-delay: 150ms; }
+:is(.tiles, .home-main, .home-side, .page-body > .stack, .fields-map, .fields-page > .stack) > :nth-child(n+5) { animation-delay: 200ms; }
+.home-main > :first-child, .home-side > :first-child { animation-delay: 120ms; }
+
+/* scores: bars wind up (anticipation), then fill and settle; the ring closes on the same beat */
+@keyframes fill { 0% { transform: scaleX(0.04); } 15% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+.rec-fill, .score-fill { transform-origin: left center; animation: fill 900ms var(--ease-out) 260ms both; }
+.rec-bar:nth-child(2) .rec-fill { animation-delay: 330ms; }
+.rec-bar:nth-child(3) .rec-fill { animation-delay: 400ms; }
+@keyframes ring { from { stroke-dasharray: 0 999; } }
+.ring-fill { animation: ring 1000ms var(--ease-io) 220ms both; }
+
+/* "Now" on the season band: one squash-and-settle when the calendar appears */
+@keyframes settle { 0% { transform: scale(0.4); } 65% { transform: scale(1.14, 1.06); } 100% { transform: scale(1); } }
+.timeline li.now .dot { animation: settle 560ms var(--ease-out) 520ms both; }
+
+/* ---- staging: while drawing a field, the map is the only thing on stage ---- */
+.fields-page > .stack, .field-strip > * { transition: opacity var(--t-move) var(--ease-io), filter var(--t-move) var(--ease-io); }
+.is-drawing .fields-page > .stack, .is-drawing .field-strip > :not(.add) { opacity: 0.28; filter: saturate(0.4); pointer-events: none; }
+
+/* opening a plan answers the click */
+@keyframes open { from { opacity: 0; transform: translateY(-6px); } }
+.plan-body { animation: open var(--t-move) var(--ease-out) both; }
+
+/* hit areas sized for thumbs */
+.btn, .layer-seg button, .lang-toggle button { min-height: 40px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+@media (max-width: 820px) { .conds > .cond:nth-child(odd) { border-left: 0; padding-left: 0; } .conds { row-gap: 16px; } }

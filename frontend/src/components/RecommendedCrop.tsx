@@ -15,7 +15,7 @@ const CAT_ICON: Record<string, string> = {
   not_workable: '×',
 }
 const CAT_COLOR: Record<string, string> = {
-  worth_investigating: '#2e7d4f',
+  worth_investigating: '#3b7d2f',
   possible_with_caution: '#d99a1b',
   weak_fit: '#d97706',
   not_workable: '#b91c1c',
@@ -27,7 +27,7 @@ function ScoreRing({ score, color }: { score: number; color: string }) {
   return (
     <svg width="70" height="70" viewBox="0 0 64 64" role="img" aria-label={`${Math.round(score)} / 100`}>
       <circle cx="32" cy="32" r={r} fill="none" stroke="#eee8d8" strokeWidth="7" />
-      <circle cx="32" cy="32" r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
+      <circle className="ring-fill" cx="32" cy="32" r={r} fill="none" stroke={color} strokeWidth="7" strokeLinecap="round"
         strokeDasharray={`${(c * Math.max(0, Math.min(100, score))) / 100} ${c}`} transform="rotate(-90 32 32)" />
       <text x="32" y="37" textAnchor="middle" fontSize="16" fontWeight="800" fill="#1d2a22">{Math.round(score)}</text>
     </svg>

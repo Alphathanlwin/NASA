@@ -1,7 +1,9 @@
 // AI-assisted: Claude Code
 // Left navigation (desktop) that becomes a bottom bar on phones.
+import { useLayoutEffect, useRef, useState } from 'react'
 import { t } from '../i18n'
 import type { Key } from '../i18n'
+import { LogoMark } from './Logo'
 
 export type Page = 'home' | 'fields' | 'planner' | 'scenarios' | 'log' | 'quality'
 
@@ -24,21 +26,33 @@ export function Icon({ d, size = 22 }: { d: string; size?: number }) {
 const PAGES: Page[] = ['home', 'fields', 'planner', 'scenarios', 'log', 'quality']
 
 export function Sidebar({ page, onPage, online }: { page: Page; onPage: (p: Page) => void; online: boolean }) {
+  // One marker that travels between items, so the eye follows where you went.
+  const nav = useRef<HTMLElement>(null)
+  const [mark, setMark] = useState<{ x: number; y: number; w: number; h: number } | null>(null)
+  useLayoutEffect(() => {
+    const measure = () => {
+      const b = nav.current?.querySelector<HTMLElement>('button.active')
+      if (b) setMark({ x: b.offsetLeft, y: b.offsetTop, w: b.offsetWidth, h: b.offsetHeight })
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [page])
   return (
     <aside className="side">
       <div className="side-brand">
-        <svg width="42" height="42" viewBox="0 0 48 48" aria-hidden="true">
-          <path d="M24 40C24 26 14 18 6 18c0 12 8 20 18 22z" fill="#7cc36a" />
-          <path d="M24 40c0-16 9-26 19-27 0 15-8 26-19 27z" fill="#a7dc8f" />
-          <path d="M6 42c10-6 26-6 36 0" stroke="#e9c46a" strokeWidth="3" fill="none" strokeLinecap="round" />
-        </svg>
+        <LogoMark size={42} />
         <div>
           <b>{t('app.name')}</b>
           <span>{t('app.tagline')}</span>
         </div>
       </div>
 
-      <nav className="side-nav" aria-label={t('nav.sections')}>
+      <nav className="side-nav" ref={nav} aria-label={t('nav.sections')}>
+        {mark && (
+          <span className="nav-mark" aria-hidden="true"
+            style={{ transform: `translate(${mark.x}px, ${mark.y}px)`, width: mark.w, height: mark.h }} />
+        )}
         {PAGES.map((p) => (
           <button key={p} className={page === p ? 'active' : ''} aria-current={page === p ? 'page' : undefined}
             onClick={() => onPage(p)}>

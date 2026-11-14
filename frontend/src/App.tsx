@@ -16,10 +16,11 @@ import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUs
 import type { LatLng, Readings, UserField } from './userfields'
 import type { Econ, Priorities, Scenario } from './engine/types'
 import { initialLang, setLang, t } from './i18n'
-import type { Lang } from './i18n'
+import type { Key, Lang } from './i18n'
 import './app.css'
 
 
+const PAGE_ORDER: Page[] = ['home', 'fields', 'planner', 'scenarios', 'log', 'quality']
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
 export default function App() {
@@ -36,7 +37,15 @@ export default function App() {
   const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
   const [online, setOnline] = useState(false)
-  const [page, setPage] = useState<Page>('home')
+  const [page, setPageState] = useState<Page>('home')
+  const [dir, setDir] = useState<1 | -1>(1)
+  // Pages enter from the side you are travelling towards (down the menu = from below).
+  const setPage = (p: Page) => {
+    if (p === page) return
+    setDir(PAGE_ORDER.indexOf(p) > PAGE_ORDER.indexOf(page) ? 1 : -1)
+    setPageState(p)
+    window.scrollTo({ top: 0 })
+  }
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [priorities, setPriorities] = useState<Priorities>(DEFAULT_PRIORITIES)
   const [econ, setEcon] = useState<Econ>({})
@@ -133,15 +142,24 @@ export default function App() {
   const addField = () => { setPage('fields'); startDrawing() }
 
   return (
-    <div className="shell">
+    <div className={`shell${drawing ? ' is-drawing' : ''}`}>
       <Sidebar page={page} onPage={setPage} online={online} />
 
       <div className="main">
-        <header className="main-head">
+        <header className="main-head" key={`h-${page}`} data-dir={dir}>
           <div>
-            <p className="hello">မင်္ဂလာပါ! <span>Mingalaba!</span> <span aria-hidden="true">☀</span></p>
-            <h1>{greet}</h1>
-            <p className="lead">{t('home.sub')}</p>
+            {page === 'home' ? (
+              <>
+                <p className="hello">မင်္ဂလာပါ! <span>Mingalaba!</span> <span aria-hidden="true">☀</span></p>
+                <h1>{greet}</h1>
+                <p className="lead">{t('home.sub')}</p>
+              </>
+            ) : (
+              <>
+                <h1>{t(`side.${page}` as Key)}</h1>
+                <p className="lead">{t(`side.${page}Sub` as Key)}</p>
+              </>
+            )}
           </div>
           <div className="head-actions">
             <span className={`mode ${online ? 'mode-online' : 'mode-offline'}`}>
@@ -158,7 +176,7 @@ export default function App() {
         {!snap && !error && <div className="banner">{t('common.loading')}</div>}
 
         {snap && field && (
-          <main className="page-body">
+          <main className="page-body" key={page} data-dir={dir}>
             {page === 'home' && (
               <HomePage snap={snap} field={field} plans={plans} map={mapView} profiles={profiles}
                 userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage} onAdd={addField} />

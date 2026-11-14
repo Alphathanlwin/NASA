@@ -154,7 +154,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             </div>
             <div className="cond-foot">
               <span>{t('cond.note')}</span>
-              <button className="link" onClick={() => onPage('quality')}>{t('cond.more')} →</button>
+              <button className="link" onClick={() => onPage('quality')}>{t('cond.more')}</button>
             </div>
           </section>
         </div>
