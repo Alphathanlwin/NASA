@@ -66,7 +66,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
   userFields: UserField[]
   selectedId: string | null
   onSelect: (id: string) => void
-  onPage: (p: 'fields' | 'planner' | 'scenarios' | 'quality') => void
+  onPage: (p: 'fields' | 'field3d' | 'planner' | 'scenarios' | 'quality') => void
   onAdd: () => void
   readingsMoisture?: string | null
 }) {
@@ -162,6 +162,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
         <div className="home-side">
           {plans && <RecommendedCrop result={plans} onOpen={() => onPage('planner')} />}
           <section className="card quick">
+            <button className="act-3d" onClick={() => onPage('field3d')}><Icon d="M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7" /><b>{t('home.enter3d')}</b><small>{t('home.enter3dSub')}</small></button>
             <button onClick={() => onPage('planner')}><Icon d="M4 20V10M10 20V4M16 20v-7" /><b>{t('act.compare')}</b><small>{t('act.compareSub')}</small></button>
             <button onClick={() => onPage('scenarios')}><Icon d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" /><b>{t('act.scen')}</b><small>{t('act.scenSub')}</small></button>
             <button onClick={() => onPage('fields')}><Icon d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" /><b>{t('act.measure')}</b><small>{t('act.measureSub')}</small></button>

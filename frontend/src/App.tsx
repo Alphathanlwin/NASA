@@ -1,9 +1,10 @@
 // AI-assisted: Claude Code
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AgentLog } from './components/AgentLog'
 import { DataQuality } from './components/DataQuality'
 import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
+import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
 import { HomePage } from './components/HomePage'
@@ -20,7 +21,9 @@ import type { Key, Lang } from './i18n'
 import './app.css'
 
 
-const PAGE_ORDER: Page[] = ['home', 'fields', 'planner', 'scenarios', 'log', 'quality']
+const PAGE_ORDER: Page[] = ['home', 'fields', 'field3d', 'planner', 'scenarios', 'log', 'quality']
+/** The map's agent trace runs 2.2 s before the field view opens. */
+const ENTER_DELAY_MS = 2200
 const DEFAULT_PRIORITIES: Priorities = { income: 40, soil_health: 30, water_saving: 30 }
 
 export default function App() {
@@ -40,8 +43,12 @@ export default function App() {
   const [page, setPageState] = useState<Page>('home')
   const [dir, setDir] = useState<1 | -1>(1)
   // Pages enter from the side you are travelling towards (down the menu = from below).
+  const [backPage, setBackPage] = useState<Page>('home')
+  const enterTimer = useRef<number | null>(null)
   const setPage = (p: Page) => {
     if (p === page) return
+    if (enterTimer.current !== null) { window.clearTimeout(enterTimer.current); enterTimer.current = null }
+    if (p === 'field3d') setBackPage(page)
     setDir(PAGE_ORDER.indexOf(p) > PAGE_ORDER.indexOf(page) ? 1 : -1)
     setPageState(p)
     window.scrollTo({ top: 0 })
@@ -124,10 +131,19 @@ export default function App() {
     setRunId((n) => n + 1)
   }
 
+  // On the home map, clicking a field sends the agent there and then walks into the 3D field view.
+  const enterField = (id: string) => {
+    select(id)
+    if (enterTimer.current !== null) window.clearTimeout(enterTimer.current)
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    enterTimer.current = window.setTimeout(() => { enterTimer.current = null; setPage('field3d') }, reduce ? 0 : ENTER_DELAY_MS)
+  }
+  useEffect(() => () => { if (enterTimer.current !== null) window.clearTimeout(enterTimer.current) }, [])
+
   const calendar = plans?.plans[0]?.calendar ?? null
 
   const mapView = field && snap ? (
-    <MapView snap={snap} selectedId={selectedId} onSelect={select}
+    <MapView snap={snap} selectedId={selectedId} onSelect={page === 'home' && !drawing ? enterField : select}
       initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
       agentRun={field.agent_run ?? null} runId={runId}
       userFields={userFields} drawing={drawing} draft={drawPts}
@@ -207,6 +223,9 @@ export default function App() {
                   onDelete={isUserField ? deleteUserField : undefined}
                   onAnalyse={() => { setPage('planner'); setRunId((n) => n + 1) }} />
               </div>
+            )}
+            {page === 'field3d' && (
+              <FieldView key={field.id} snap={snap} field={field} plans={plans} onMap={() => setPage(backPage === 'field3d' ? 'home' : backPage)} />
             )}
             {page === 'planner' && plans && (
               <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}

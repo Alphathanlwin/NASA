@@ -803,3 +803,141 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (max-width: 820px) { .conds > .cond:nth-child(odd) { border-left: 0; padding-left: 0; } .conds { row-gap: 16px; } }
+
+/* ---------- field view (3D simulation) ---------- */
+.enter-field {
+  border: 1px solid var(--moss); background: var(--moss); color: #fff; font: inherit; font-weight: 700;
+  border-radius: 999px; padding: 9px 16px; cursor: pointer; box-shadow: var(--shadow);
+}
+.enter-field:hover { background: #256a41; }
+
+.field-view { display: flex; flex-direction: column; gap: 12px; padding: 12px 20px 4px; }
+.field-view button {
+  font: inherit; font-size: 0.85rem; border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  border-radius: 10px; padding: 7px 12px; cursor: pointer;
+}
+.field-view button:hover:not(:disabled) { border-color: var(--moss); }
+.field-view button:disabled { opacity: 0.45; cursor: not-allowed; }
+.field-view button.primary { background: var(--moss); border-color: var(--moss); color: #fff; font-weight: 700; }
+.field-view button.link { border: 0; background: none; color: var(--moss); padding: 4px 2px; text-decoration: underline; }
+.field-view :focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+.fv-stage {
+  position: relative; height: min(68vh, 640px); min-height: 460px; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--line); box-shadow: var(--shadow);
+  background: linear-gradient(180deg, #a9cbe3 0%, #d9e8ee 45%, #e8efe0 70%, #cbdcae 100%);
+}
+.fv-canvas, .fv-canvas canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fv-loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--forest); font-weight: 700; }
+.field-2d { width: 100%; height: 100%; }
+
+.fv-top {
+  position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  pointer-events: none;
+}
+.fv-top > * { pointer-events: auto; }
+.field-view .fv-map-btn { background: var(--forest); color: #fff; border-color: var(--forest); font-weight: 700; }
+.fv-title, .sim-status {
+  display: flex; gap: 8px; align-items: baseline; background: rgba(255, 253, 248, 0.92); border: 1px solid var(--line);
+  border-radius: 10px; padding: 6px 10px; font-size: 0.85rem; backdrop-filter: blur(4px);
+}
+.fv-title span { color: var(--muted); }
+.sim-stage { color: var(--moss); font-weight: 700; }
+.fv-badge { margin-left: auto; }
+
+.badge { display: inline-block; font-size: 0.66rem; font-weight: 800; letter-spacing: 0.06em; border-radius: 6px; padding: 2px 6px; }
+.badge-sim { background: #ede7fb; color: #5b3fa8; border: 1px dashed #8d74d1; }
+.badge-nasa { background: var(--blue-soft); color: var(--blue); }
+.badge-demo { background: var(--amber-soft); color: var(--amber); }
+
+.fv-note, .fv-working {
+  position: absolute; left: 12px; bottom: 12px; background: rgba(255, 253, 248, 0.94); border: 1px solid var(--line);
+  border-radius: 10px; padding: 8px 12px; font-size: 0.85rem; font-weight: 600;
+}
+.fv-working { color: var(--amber); }
+
+.fv-side {
+  position: absolute; top: 64px; right: 12px; bottom: 12px; width: min(340px, 42%); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 10px; padding-right: 2px;
+}
+
+.plan-cards { display: flex; flex-direction: column; gap: 10px; }
+.plan-cards-head {
+  background: rgba(22, 53, 42, 0.88); color: #fff; border-radius: 12px; padding: 8px 12px; display: flex; flex-direction: column;
+}
+.plan-cards-head span { font-size: 0.78rem; opacity: 0.85; }
+.plan-card {
+  background: rgba(255, 253, 248, 0.95); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px;
+  box-shadow: 0 10px 26px rgba(22, 53, 42, 0.16); transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s;
+  font-size: 0.84rem;
+}
+.plan-card header { display: flex; gap: 6px; align-items: center; font-size: 0.72rem; font-weight: 700; }
+.plan-card h3 { margin: 4px 0 2px; font-size: 1rem; }
+.pc-rank { background: var(--forest); color: #fff; border-radius: 6px; padding: 1px 6px; }
+.pc-usual { background: var(--amber-soft); color: var(--amber); border-radius: 6px; padding: 1px 6px; }
+.pc-score { margin-left: auto; color: var(--muted); }
+.pc-cat { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+.pc-for b { color: var(--moss); }
+.pc-against b { color: var(--red); }
+.plan-card p { margin: 0 0 4px; }
+.pc-more { margin: 4px 0; padding-left: 18px; }
+.plan-card footer { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.plan-card.cat-worth_investigating { border-left: 4px solid var(--moss); }
+.plan-card.cat-possible_with_caution { border-left: 4px solid var(--amber); }
+.plan-card.cat-weak_fit, .plan-card.cat-not_workable { border-left: 4px solid var(--red); }
+.plan-card.float { animation: card-float 4s ease-in-out infinite; }
+.plan-card:hover, .plan-card:focus-within { transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 34px rgba(22, 53, 42, 0.22); animation-play-state: paused; }
+.plan-card.chosen { outline: 2px solid var(--moss); animation: none; }
+.plan-card.dim { opacity: 0.4; animation: none; }
+@keyframes card-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+
+.sim-params {
+  background: rgba(255, 253, 248, 0.95); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px;
+  box-shadow: 0 10px 26px rgba(22, 53, 42, 0.16);
+}
+.sim-row { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.sim-row:last-of-type { border-bottom: 0; }
+.sim-row-head { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--muted); gap: 6px; }
+.sim-row-body { display: flex; align-items: center; gap: 10px; }
+.sim-row-body b { min-width: 74px; font-size: 1rem; }
+.spark { flex: 1; height: 24px; color: var(--moss); }
+.note.warn { color: var(--amber); }
+
+.fv-summary-wrap { position: absolute; inset: 0; display: grid; place-items: center; background: rgba(22, 53, 42, 0.35); padding: 16px; }
+.sim-summary {
+  background: var(--paper); border-radius: 16px; padding: 16px 18px; max-width: 460px; width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25); animation: pop 0.3s ease-out;
+}
+.sim-summary table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.88rem; }
+.sim-summary th, .sim-summary td { text-align: left; padding: 5px 4px; border-bottom: 1px solid var(--line); }
+.row-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+@keyframes pop { from { transform: scale(0.94); opacity: 0; } to { transform: none; opacity: 1; } }
+
+.fv-bottom { display: flex; flex-direction: column; gap: 8px; }
+.sim-controls { display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-timeline { background: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px 8px; }
+.tl-bar { position: relative; height: 26px; background: #efe9da; border-radius: 8px; margin: 4px 0 8px; }
+.tl-crop { position: absolute; top: 0; bottom: 0; background: rgba(46, 125, 79, 0.18); border-radius: 8px; }
+.tl-now { position: absolute; top: 0; bottom: 0; left: 0; background: rgba(46, 125, 79, 0.35); border-radius: 8px; transition: width 0.3s; }
+.field-view .tl-mark {
+  position: absolute; top: 50%; transform: translate(-50%, -50%); padding: 0; width: 22px; height: 22px; border-radius: 50%;
+  font-size: 0.7rem; line-height: 1; display: grid; place-items: center; background: #fff;
+}
+.field-view .tl-stage { width: 12px; height: 12px; font-size: 0; background: var(--moss); border-color: #fff; }
+.field-view .tl-heat, .field-view .tl-no_irrigation, .field-view .tl-drought { border-color: var(--red); }
+.tl-log { font-size: 0.82rem; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.tl-log b { color: var(--ink); }
+
+@media (max-width: 820px) {
+  .field-view { padding: 10px 12px 4px; }
+  .fv-stage { height: auto; min-height: 0; display: flex; flex-direction: column; }
+  .fv-canvas { position: relative; height: 52vh; }
+  .fv-top { position: static; padding: 10px; }
+  .fv-side { position: static; width: auto; padding: 10px; overflow: visible; }
+  .fv-badge { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plan-card.float, .sim-summary { animation: none; }
+  .plan-card, .tl-now { transition: none; }
+}
