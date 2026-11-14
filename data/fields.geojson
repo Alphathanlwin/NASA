@@ -1,6 +1,12 @@
 {
   "type": "FeatureCollection",
-  "generated_at": "2026-11-14T03:30:34Z",
+  "generated_at": "2026-11-14T04:40:48Z",
+  "retrieved_at": "2026-11-14T04:40:48Z",
+  "agent_base": {
+    "lat": 16.809,
+    "lon": 96.157,
+    "name": "Yangon advisory office (DEMO)"
+  },
   "note": "DEMO field layout. Shapes, names, crop history and irrigation settings are illustrative.",
   "features": [
     {

@@ -47,6 +47,7 @@ def main():
     now = utc_now()
     write_json(DATA / "fields.geojson", {
         "type": "FeatureCollection", "generated_at": now, "retrieved_at": now,
+        "agent_base": {"lat": 16.809, "lon": 96.157, "name": "Yangon advisory office (DEMO)"},
         "note": "DEMO field layout. Shapes, names, crop history and irrigation settings are illustrative.",
         "features": features,
     })

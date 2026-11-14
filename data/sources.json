@@ -1,5 +1,5 @@
 {
-  "retrieved_at": "2026-11-14T04:37:18Z",
+  "retrieved_at": "2026-11-14T05:06:08Z",
   "sources": [
     {
       "id": "power_recent",
@@ -122,19 +122,19 @@
       "used_for": "crop tolerance ranges in the rotation rules"
     },
     {
-      "id": "carto",
-      "name": "CARTO light basemap",
+      "id": "osm",
+      "name": "OpenStreetMap basemap",
       "nasa": false,
-      "product": "CartoDB Positron",
+      "product": "OpenStreetMap standard tiles",
       "version": "live",
       "variables": "base map",
       "spatial_resolution": "tiles",
       "period": "live",
-      "url": "https://basemaps.cartocdn.com/",
+      "url": "https://www.openstreetmap.org/",
       "files": "not stored",
-      "licence": "OpenStreetMap data ODbL; CARTO attribution required",
+      "licence": "OpenStreetMap data ODbL; © OpenStreetMap contributors",
       "retrieved_at": null,
-      "used_for": "base map"
+      "used_for": "base map (CARTO's keyless light tiles were retired in 2026)"
     },
     {
       "id": "fields",
@@ -163,7 +163,7 @@
       "url": "n/a",
       "files": "data/snapshots/fields_snapshot.json, data/reports/cleaning_report.json, data/sources.json, data/SOURCES.md",
       "licence": "project team; source licences still apply",
-      "retrieved_at": "2026-11-14T04:37:18Z",
+      "retrieved_at": "2026-11-14T05:06:08Z",
       "used_for": "served by the API and the static snapshot"
     }
   ]
