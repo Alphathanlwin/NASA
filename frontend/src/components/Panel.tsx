@@ -168,12 +168,12 @@ function PlanCard({ plan, total, index }: { plan: Plan; total: number; index: nu
             ))}
           </div>
         </div>
-        <div className="plan-score"><b>{plan.score.toFixed(0)}</b><small>{t('score')}</small></div>
+        <div className="plan-score"><b>{plan.score != null ? plan.score.toFixed(0) : '–'}</b><small>{t('score')}</small></div>
       </div>
-      <Bar label={t('income')} value={plan.breakdown.income} />
-      <Bar label={t('soilHealth')} value={plan.breakdown.soil} />
-      <Bar label={t('waterSaving')} value={plan.breakdown.water} />
-      {plan.breakdown.adjustment !== 0 && (
+      <Bar label={t('income')} value={plan.breakdown.income ?? 0} />
+      <Bar label={t('soilHealth')} value={plan.breakdown.soil ?? 0} />
+      <Bar label={t('waterSaving')} value={plan.breakdown.water ?? 0} />
+      {plan.breakdown.adjustment != null && plan.breakdown.adjustment !== 0 && (
         <div className="adjust">{t('adjustment')}: {pts(plan.breakdown.adjustment)}</div>
       )}
       <button className="link" onClick={() => setOpen(!open)} aria-expanded={open}>{open ? '▾' : '▸'} {t('why')} / {t('whyNot')}</button>
