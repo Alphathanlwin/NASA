@@ -61,6 +61,7 @@ export function OtherCrops({ snap, field }: Props) {
         ))}
       </ol>
       <p className="note small">{t('other.method')}</p>
+      <p className="note small">{t('other.global')}</p>
       <p className="note small">{t('other.caution')}</p>
     </section>
   )
