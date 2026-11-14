@@ -8,7 +8,8 @@ export const TABLE = {
     "ecocrop": "FAO EcoCrop database (mirror: github.com/OpenCLIM/ecocrop, EcoCrop_DB.csv), extracted 14 Nov 2026",
     "team_notes": "Team research notes citing the Myanmar Pulses Sector Development Strategy (2017) and ACIAR/IRRI guides; not re-checked against the originals",
     "challenge": "NASA Space Apps 2026 challenge brief 'Field Shift: Adapting Farms with NASA Data'",
-    "design": "Design choice by the team; needs expert review"
+    "design": "Design choice by the team; needs expert review",
+    "doa_seed_protocol": "Myanmar Department of Agriculture (MOALI), Seed Division, Myanmar Seed Information Portal: 'Format for Seed Registration Protocol', rate of fertilizer for monsoon variety trials. http://myanmarseedportal.gov.mm/en/protocol/black-gram and /green-gram, read 14 Nov 2026"
   },
   "plans": [
     {
@@ -129,6 +130,12 @@ export const TABLE = {
         "value": "Grows on a wide range of textures; puddled and flooded during the monsoon.",
         "source": "ecocrop",
         "verified": true
+      },
+      "fertiliser": {
+        "value": null,
+        "source": "team_notes",
+        "verified": false,
+        "note": "DAR rice rates are quoted in ACIAR guides, but the originals could not be opened to check them."
       }
     },
     "mung_bean": {
@@ -232,6 +239,36 @@ export const TABLE = {
         "value": "Needs well-drained soil; does not tolerate standing water.",
         "source": "ecocrop",
         "verified": true
+      },
+      "fertiliser": {
+        "value": {
+          "products": [
+            {
+              "product": "urea",
+              "amount": 28,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "tsp",
+              "amount": 84,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "potash",
+              "amount": 65,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "gypsum",
+              "amount": 112,
+              "unit": "lb/acre"
+            }
+          ],
+          "context": "monsoon variety trials"
+        },
+        "source": "doa_seed_protocol",
+        "verified": true,
+        "url": "http://myanmarseedportal.gov.mm/en/protocol/green-gram"
       }
     },
     "black_gram": {
@@ -334,6 +371,36 @@ export const TABLE = {
         "value": "Needs well-drained soil; does not tolerate standing water.",
         "source": "ecocrop",
         "verified": true
+      },
+      "fertiliser": {
+        "value": {
+          "products": [
+            {
+              "product": "urea",
+              "amount": 28,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "tsp",
+              "amount": 84,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "potash",
+              "amount": 56,
+              "unit": "lb/acre"
+            },
+            {
+              "product": "gypsum",
+              "amount": 112,
+              "unit": "lb/acre"
+            }
+          ],
+          "context": "monsoon variety trials"
+        },
+        "source": "doa_seed_protocol",
+        "verified": true,
+        "url": "http://myanmarseedportal.gov.mm/en/protocol/black-gram"
       }
     }
   },

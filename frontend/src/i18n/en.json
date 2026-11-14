@@ -306,5 +306,16 @@
   "cal.now": "Now",
   "cal.note": "Assumed dates for the Delta. Pre-monsoon rain is a 1997–2025 average, not a forecast.",
   "fields.title": "Your fields",
-  "fields.selected": "Selected"
+  "fields.selected": "Selected",
+  "fert.title": "Fertiliser guide for {crop}",
+  "fert.urea": "Urea",
+  "fert.tsp": "T-super (TSP)",
+  "fert.potash": "Potash",
+  "fert.gypsum": "Gypsum",
+  "fert.perAcre": "Per acre. Rate the Department of Agriculture uses in its monsoon variety trials.",
+  "fert.legume": "Pulses fix their own nitrogen from the air, so they need only a little urea. Growing them after rice helps the soil.",
+  "fert.source": "Source:",
+  "fert.sourceLink": "Myanmar Department of Agriculture, Seed Division",
+  "fert.caution": "A general published rate, not a rate worked out for your field. Check with your township extension officer or a soil test.",
+  "fert.unchecked": "No published rate checked yet for this crop. Ask your township extension officer."
 }

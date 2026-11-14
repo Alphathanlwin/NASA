@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import type { Econ, Priorities } from '../engine/types'
 import { t } from '../i18n'
+import { FertiliserGuide } from './FertiliserGuide'
 
 type Result = any
 type Plan = any
@@ -179,6 +180,8 @@ export function PlansPanel({ result, priorities, onPriorities, econ, onEcon }: {
                         </ul>
                       </div>
                     </div>
+
+                    <FertiliserGuide planId={plan.id} />
 
                     <details className="evidence">
                       <summary>{t('plans.evidence')}</summary>

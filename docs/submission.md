@@ -48,6 +48,19 @@
 - The map uses keyless OpenStreetMap tiles because CARTO's keyless light basemap was retired in
   2026. The Satellite view uses Esri World Imagery (not NASA), credited on the map.
 
+- Fertiliser amounts are not predicted. The Fertiliser guide shows the Department of Agriculture's
+  published trial rate for black gram and mung bean with its source; rice shows no rate because the
+  original could not be checked.
+
+## Future work: a fertiliser model
+
+A model that recommends fertiliser for a specific field, to keep the soil healthy over many seasons,
+needs data this prototype does not have: Delta trial plots or farmer fields where the fertiliser
+applied, soil tests before and after, and the harvest are recorded over several seasons, ideally
+collected with township extension officers. With that data a model could be trained on part of the
+fields and judged on fields it has never seen, season by season, before any number is shown to a
+farmer. Until then Field Shift shows published rates with their source and does not calculate one.
+
 ## AI disclosure
 
 Claude Code (Anthropic) was used as a coding assistant for the pipeline, engines, tests, React

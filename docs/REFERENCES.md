@@ -74,6 +74,18 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
 
 13. **React 19**, **Vite 8**, **FastAPI**, **Pydantic**. Standard open-source licences.
 
+14. **Myanmar Department of Agriculture (MOALI), Seed Division** - Myanmar Seed Information Portal,
+    "Format for Seed Registration Protocol": rate of fertilizer used in monsoon variety trials for
+    black gram (<http://myanmarseedportal.gov.mm/en/protocol/black-gram>) and green gram / mung bean
+    (<http://myanmarseedportal.gov.mm/en/protocol/green-gram>). Read 14 Nov 2026. Shown in the
+    Fertiliser guide as published general rates, not field prescriptions. The site's HTTPS
+    certificate did not match its domain at the time, so the pages were read over HTTP.
+    No rice rate is shown: the Department of Agricultural Research rates quoted in ACIAR guides
+    could not be opened to check them.
+
+15. **Atkinson Hyperlegible** (Braille Institute of America). Bundled via `@fontsource/atkinson-hyperlegible`.
+    SIL Open Font License 1.1.
+
 ## Data-status vocabulary
 
 - `LIVE` - retrieved or streamed from the source during the current session.
