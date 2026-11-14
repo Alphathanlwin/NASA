@@ -32,6 +32,8 @@ export interface EngineInputs {
   gwetroot: number | null
   dry_rain_mm: number | null
   field_irrigation: string
+  smap_sm?: number | null
+  imerg_rain_30d?: number | null
   clim: Climatology | null
 }
 

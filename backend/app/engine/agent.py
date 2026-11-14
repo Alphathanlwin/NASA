@@ -47,13 +47,24 @@ def build_run(field: dict, base: dict, steps: int = 30, scenario_label: str | No
     def status(name):
         return (prov.get(name) or {}).get("status")
 
+    imerg = (field.get("values") or {}).get("imerg_rain_30d") or {}
+    if status("imerg") == "CACHED" and imerg.get("value") is not None:
+        imerg_step = (f"GPM IMERG Late run, 0.1° cell nearest {town}: {imerg['value']} mm in the {imerg.get('period')}.",
+                      "GPM_3IMERGDL V07 (Late)", "CACHED")
+    else:
+        imerg_step = ("No GPM IMERG Late-run rainfall for this cell; rain comes from the NASA POWER model.",
+                      "GPM_3IMERGDL V07 (Late)", "UNAVAILABLE")
+    smap = (field.get("values") or {}).get("smap_soil_moisture") or {}
+    smap_note = (f" SMAP surface soil moisture {smap['value']} m3/m3 ({smap.get('period')}, 9 km cell)."
+                 if smap.get("value") is not None else " No recommended-quality SMAP reading for this cell.")
+
     detail = {
         "field_selected": (f"Field {field['id']} selected.", None, "DEMO"),
         "geometry_resolved": (f"Polygon resolved; {field.get('area_acres')} acres. Nearest reference: {town}, {dist} km.",
                               "Demo geometry (DEMO)", "DEMO"),
         "loading_power": (f"NASA POWER point data for the {town} grid cell.", "NASA POWER daily", status("power_recent")),
-        "loading_imerg": ("GPM IMERG Late run is not available in this build.", "GPM_3IMERGDL V07", "UNAVAILABLE"),
-        "checking_quality": ("Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+        "loading_imerg": imerg_step,
+        "checking_quality": ("Fill values (-999/-99), range checks, SMAP quality flags and duplicate dates checked in the cleaning report." + smap_note,
                              "Cleaning report", "CACHED"),
         "building_profile": ("Field profile built from the grid-cell values above; no field measurements are claimed.",
                              "Field profile", "CACHED"),

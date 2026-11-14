@@ -789,10 +789,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -994,10 +990,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -1191,10 +1183,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -2796,17 +2784,17 @@
             "label": "Loading cached IMERG",
             "t_ms": 1350,
             "sim_time": "09:14",
-            "text": "GPM IMERG Late run is not available in this build.",
-            "source": "GPM_3IMERGDL V07",
-            "status": "UNAVAILABLE",
-            "ok": false
+            "text": "GPM IMERG Late run, 0.1° cell nearest Myaungmya: 85.6 mm in the 30 days to 2026-11-12 (30 days with data).",
+            "source": "GPM_3IMERGDL V07 (Late)",
+            "status": "CACHED",
+            "ok": true
           },
           {
             "key": "checking_quality",
             "label": "Checking data quality",
             "t_ms": 1800,
             "sim_time": "09:15",
-            "text": "Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+            "text": "Fill values (-999/-99), range checks, SMAP quality flags and duplicate dates checked in the cleaning report. SMAP surface soil moisture 0.153 m3/m3 (2026-11-10, 9 km cell).",
             "source": "Cleaning report",
             "status": "CACHED",
             "ok": true
@@ -3398,10 +3386,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -3615,10 +3599,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -3812,10 +3792,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -5409,17 +5385,17 @@
             "label": "Loading cached IMERG",
             "t_ms": 1350,
             "sim_time": "09:14",
-            "text": "GPM IMERG Late run is not available in this build.",
-            "source": "GPM_3IMERGDL V07",
-            "status": "UNAVAILABLE",
-            "ok": false
+            "text": "GPM IMERG Late run, 0.1° cell nearest Pathein: 130.1 mm in the 30 days to 2026-11-12 (30 days with data).",
+            "source": "GPM_3IMERGDL V07 (Late)",
+            "status": "CACHED",
+            "ok": true
           },
           {
             "key": "checking_quality",
             "label": "Checking data quality",
             "t_ms": 1800,
             "sim_time": "09:15",
-            "text": "Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+            "text": "Fill values (-999/-99), range checks, SMAP quality flags and duplicate dates checked in the cleaning report. SMAP surface soil moisture 0.169 m3/m3 (2026-11-10, 9 km cell).",
             "source": "Cleaning report",
             "status": "CACHED",
             "ok": true
@@ -5997,10 +5973,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -6202,10 +6174,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -6399,10 +6367,6 @@
               {
                 "rule": "unknown_salinity",
                 "reason": "Soil salinity is not in these datasets."
-              },
-              {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
               }
             ],
             "local_checks": [
@@ -8014,17 +7978,17 @@
             "label": "Loading cached IMERG",
             "t_ms": 1350,
             "sim_time": "09:14",
-            "text": "GPM IMERG Late run is not available in this build.",
-            "source": "GPM_3IMERGDL V07",
-            "status": "UNAVAILABLE",
-            "ok": false
+            "text": "GPM IMERG Late run, 0.1° cell nearest Bogale: 66.2 mm in the 30 days to 2026-11-12 (30 days with data).",
+            "source": "GPM_3IMERGDL V07 (Late)",
+            "status": "CACHED",
+            "ok": true
           },
           {
             "key": "checking_quality",
             "label": "Checking data quality",
             "t_ms": 1800,
             "sim_time": "09:15",
-            "text": "Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+            "text": "Fill values (-999/-99), range checks, SMAP quality flags and duplicate dates checked in the cleaning report. SMAP surface soil moisture 0.201 m3/m3 (2026-11-10, 9 km cell).",
             "source": "Cleaning report",
             "status": "CACHED",
             "ok": true
@@ -8565,8 +8529,8 @@
                 "reason": "Soil salinity is not in these datasets."
               },
               {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
+                "rule": "unknown_smap",
+                "reason": "No recommended-quality satellite soil moisture (SMAP) for this 9 km cell; soil wetness comes from the NASA POWER model."
               }
             ],
             "local_checks": [
@@ -8770,8 +8734,8 @@
                 "reason": "Soil salinity is not in these datasets."
               },
               {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
+                "rule": "unknown_smap",
+                "reason": "No recommended-quality satellite soil moisture (SMAP) for this 9 km cell; soil wetness comes from the NASA POWER model."
               }
             ],
             "local_checks": [
@@ -8967,8 +8931,8 @@
                 "reason": "Soil salinity is not in these datasets."
               },
               {
-                "rule": "unknown_satellite_moisture",
-                "reason": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale."
+                "rule": "unknown_smap",
+                "reason": "No recommended-quality satellite soil moisture (SMAP) for this 9 km cell; soil wetness comes from the NASA POWER model."
               }
             ],
             "local_checks": [
@@ -10551,17 +10515,17 @@
             "label": "Loading cached IMERG",
             "t_ms": 1350,
             "sim_time": "09:14",
-            "text": "GPM IMERG Late run is not available in this build.",
-            "source": "GPM_3IMERGDL V07",
-            "status": "UNAVAILABLE",
-            "ok": false
+            "text": "GPM IMERG Late run, 0.1° cell nearest Twante: 67.7 mm in the 30 days to 2026-11-12 (30 days with data).",
+            "source": "GPM_3IMERGDL V07 (Late)",
+            "status": "CACHED",
+            "ok": true
           },
           {
             "key": "checking_quality",
             "label": "Checking data quality",
             "t_ms": 1800,
             "sim_time": "09:15",
-            "text": "Fill values (-999/-99), range checks and duplicate dates checked in the cleaning report.",
+            "text": "Fill values (-999/-99), range checks, SMAP quality flags and duplicate dates checked in the cleaning report. No recommended-quality SMAP reading for this cell.",
             "source": "Cleaning report",
             "status": "CACHED",
             "ok": true

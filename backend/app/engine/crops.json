@@ -454,14 +454,15 @@
     "unknown_drainage": "Field drainage is unknown. {crop} needs well-drained soil, so this was not scored.",
     "unknown_income": "Not calculated — enter your price and cost.",
     "unknown_salinity": "Soil salinity is not in these datasets.",
-    "unknown_satellite_moisture": "No satellite soil moisture (SMAP) or satellite rainfall (IMERG) was available; moisture and rain come from the NASA POWER model at grid-cell scale.",
     "local_sowing": "Sowing dates are assumptions for the Delta; confirm them for your township.",
     "local_rain": "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
     "local_general": "Check for salt intrusion, seed availability and the local market before deciding.",
     "local_drainage": "Check how quickly this field drains after the monsoon.",
     "income_relative": "Income is ranked from your own numbers: {net} per acre for {crop} (sales minus cost).",
     "premonsoon_clear": "Sown {sow} and harvested around {harvest}, {crop} finishes before the pre-monsoon heat window that starts on 1 March (mean onset of pre-monsoon rain: {onset}).",
-    "premonsoon_hot": "Sown {sow} and harvested around {harvest}, {crop} overlaps {n} days of the pre-monsoon heat window (1 March to the mean onset {onset}); {hot} of those days average above {limit} C. A later sowing pushes more of the growing period into this window."
+    "premonsoon_hot": "Sown {sow} and harvested around {harvest}, {crop} overlaps {n} days of the pre-monsoon heat window (1 March to the mean onset {onset}); {hot} of those days average above {limit} C. A later sowing pushes more of the growing period into this window.",
+    "unknown_smap": "No recommended-quality satellite soil moisture (SMAP) for this 9 km cell; soil wetness comes from the NASA POWER model.",
+    "unknown_imerg": "No satellite rainfall (GPM IMERG) for this cell; rain comes from the NASA POWER model."
   },
   "categories": {
     "worth_investigating": "Worth investigating",

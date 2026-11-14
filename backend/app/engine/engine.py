@@ -368,7 +368,11 @@ def evaluate(inputs: dict, scenario: dict | None = None, priorities: dict | None
             findings.append(finding("income_relative", "income", 0, {"net": nets[plan["id"]], "crop": crop["name"]}, ["user_input.price", "user_input.cost"]))
         else:
             unknowns.append(unknown("unknown_income"))
-        unknowns += [unknown("unknown_salinity"), unknown("unknown_satellite_moisture")]
+        unknowns.append(unknown("unknown_salinity"))
+        if inputs.get("smap_sm") is None:
+            unknowns.append(unknown("unknown_smap"))
+        if inputs.get("imerg_rain_30d") is None:
+            unknowns.append(unknown("unknown_imerg"))
         weighted = (weights["soil_health"] * soil + weights["water_saving"] * water + weights["income"] * (income or 0)) / 100
         score = round1(clamp(weighted + fit))
         blocked = any(f["rule"] == "irrigated_crop_unavailable" for f in findings)
@@ -441,4 +445,4 @@ def inputs_from_profile(profile: dict, climatology: dict | None) -> dict:
 
     return {"ph": val("soil_ph"), "clay_pct": val("clay_pct"), "sand_pct": val("sand_pct"), "gwetroot": val("gwetroot"),
             "dry_rain_mm": val("dry_season_rain_normal"), "field_irrigation": profile.get("irrigation"),
-            "clim": climatology}
+            "smap_sm": val("smap_soil_moisture"), "imerg_rain_30d": val("imerg_rain_30d"), "clim": climatology}

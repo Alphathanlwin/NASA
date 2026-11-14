@@ -340,7 +340,9 @@ export function evaluate(inputs: EngineInputs, scenario?: Scenario | null, prior
     } else {
       unknowns.push(unknown('unknown_income'))
     }
-    unknowns.push(unknown('unknown_salinity'), unknown('unknown_satellite_moisture'))
+    unknowns.push(unknown('unknown_salinity'))
+    if (inputs.smap_sm == null) unknowns.push(unknown('unknown_smap'))
+    if (inputs.imerg_rain_30d == null) unknowns.push(unknown('unknown_imerg'))
     const weighted = (weights.soil_health * soil + weights.water_saving * water + weights.income * (income ?? 0)) / 100
     const score = round1(clamp(weighted + fit))
     const blocked = findings.some((f) => f.rule === 'irrigated_crop_unavailable')
@@ -413,6 +415,7 @@ export function inputsFromProfile(profile: any, climatology: Climatology | null)
   return {
     ph: val('soil_ph'), clay_pct: val('clay_pct'), sand_pct: val('sand_pct'), gwetroot: val('gwetroot'),
     dry_rain_mm: val('dry_season_rain_normal'), field_irrigation: profile?.irrigation ?? 'unavailable',
+    smap_sm: val('smap_soil_moisture'), imerg_rain_30d: val('imerg_rain_30d'),
     clim: climatology,
   }
 }
