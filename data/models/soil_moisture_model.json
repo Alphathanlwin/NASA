@@ -1,0 +1,105 @@
+{
+  "model": "boosted_trees",
+  "published": false,
+  "params": {
+    "l2_regularization": 1.0,
+    "learning_rate": 0.03,
+    "max_depth": 2,
+    "max_iter": 100,
+    "min_samples_leaf": 10
+  },
+  "features": [
+    "rain_1d",
+    "rain_3d",
+    "rain_7d",
+    "rain_14d",
+    "rain_30d",
+    "T2M_MAX",
+    "T2M_MIN",
+    "RH2M",
+    "ALLSKY_SFC_SW_DWN",
+    "WS2M",
+    "GWETTOP",
+    "GWETROOT",
+    "doy_sin",
+    "doy_cos"
+  ],
+  "trained_at": "2026-11-14T14:10:16Z",
+  "seed": 7,
+  "training": {
+    "rows": 111,
+    "sites": [
+      "myaungmya",
+      "pathein",
+      "pyapon"
+    ],
+    "from": "2025-10-30",
+    "to": "2026-11-09",
+    "target": "SMAP SPL3SMP_E v006 soil_moisture, AM/PM mean, quality 'recommended', 9 km",
+    "inputs": "NASA POWER daily point data (community AG)"
+  },
+  "evaluation": {
+    "baseline_mean": {
+      "unseen_sites": {
+        "rmse": 0.1199,
+        "mae": 0.1021,
+        "r2": -0.12,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1123,
+        "mae": 0.0965,
+        "r2": -0.025,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "baseline_power_wetness": {
+      "unseen_sites": {
+        "rmse": 0.0985,
+        "mae": 0.0787,
+        "r2": 0.243,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.117,
+        "mae": 0.0988,
+        "r2": -0.111,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "ridge": {
+      "unseen_sites": {
+        "rmse": 0.1014,
+        "mae": 0.082,
+        "r2": 0.198,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1051,
+        "mae": 0.0794,
+        "r2": 0.104,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    },
+    "boosted_trees": {
+      "unseen_sites": {
+        "rmse": 0.1005,
+        "mae": 0.0795,
+        "r2": 0.212,
+        "n": 111
+      },
+      "later_months": {
+        "rmse": 0.1103,
+        "mae": 0.0817,
+        "r2": 0.013,
+        "n": 28,
+        "from": "2026-08-16"
+      }
+    }
+  },
+  "estimates": {},
+  "label": "Model estimate, not a measurement. Trained on NASA SMAP and NASA POWER."
+}

@@ -52,6 +52,18 @@
   published trial rate for black gram and mung bean with its source; rice shows no rate because the
   original could not be checked.
 
+## Soil-moisture model (trained, not shipped)
+
+`backend/app/ml/soil_moisture.py` trains a model that estimates NASA SMAP topsoil moisture from NASA
+POWER daily weather, to fill days and places SMAP misses. It is judged on sites it never saw
+(leave-one-site-out, with tuning inside each fold) and on later months, against two baselines.
+
+Result on 14 Nov 2026: only 111 SMAP readings from 3 of 13 Delta sites passed the 'recommended'
+quality flag. Tuned ridge regression and boosted trees reached RMSE 0.101 and 0.100 m3/m3 on unseen
+sites; simply rescaling POWER's own soil wetness reached 0.098. Because the model did not beat the
+simple baseline, the app does not show its estimates. Full numbers: `data/models/soil_moisture_model.json`.
+More years of SMAP history (2015 onwards) are the obvious next step.
+
 ## Future work: a fertiliser model
 
 A model that recommends fertiliser for a specific field, to keep the soil healthy over many seasons,
