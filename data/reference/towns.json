@@ -1,0 +1,16 @@
+{
+  "note": "Reference points for NASA POWER point requests. Coordinates are approximate town locations, not surveyed. Each point is snapped to the POWER 0.5 x 0.625 degree grid before the request.",
+  "towns": [
+    {"id": "myaungmya", "name": "Myaungmya", "lat": 16.60, "lon": 94.93},
+    {"id": "pathein", "name": "Pathein", "lat": 16.78, "lon": 94.73},
+    {"id": "bogale", "name": "Bogale", "lat": 16.29, "lon": 95.40},
+    {"id": "twante", "name": "Twante", "lat": 16.71, "lon": 95.96,
+     "note": "Point placed about 3 km east of the town centre so that it falls in a different POWER grid cell from Bogale."}
+  ],
+  "demo_fields": [
+    {"id": "F-01", "name": "Myaungmya demo field", "town": "myaungmya", "lat": 16.62, "lon": 94.96, "width_m": 460, "height_m": 340, "rotation_deg": 12, "irrigation": "unavailable"},
+    {"id": "F-02", "name": "Pathein demo field", "town": "pathein", "lat": 16.80, "lon": 94.78, "width_m": 520, "height_m": 300, "rotation_deg": -8, "irrigation": "available"},
+    {"id": "F-03", "name": "Bogale demo field", "town": "bogale", "lat": 16.31, "lon": 95.42, "width_m": 420, "height_m": 380, "rotation_deg": 25, "irrigation": "sometimes"},
+    {"id": "F-04", "name": "Twante demo field", "town": "twante", "lat": 16.7352, "lon": 95.9548, "width_m": 480, "height_m": 320, "rotation_deg": 4, "irrigation": "unavailable"}
+  ]
+}

@@ -1,7 +1,8 @@
+# AI-assisted: Claude Code
 """Fetch MODIS MOD13Q1 (NDVI / EVI, 250 m, 16-day) for each demo field from the
 NASA ORNL DAAC subset service. No login needed. One 250 m pixel at the field centre.
 
-    python pipeline/fetch_modis_ornl.py
+    python backend/app/data_sources/fetch_modis_ornl.py
 """
 import time
 from datetime import date, timedelta
@@ -32,7 +33,7 @@ def get(url, params=None):
 def main():
     # Scale factors and fill values come from the service, not from memory.
     bands = {b["band"]: b for b in get(f"{API}/bands")["bands"] if b["band"] in BANDS}
-    write_json(OUT / "bands.json", {"retrieved_utc": utc_now(), "bands": bands})
+    write_json(OUT / "bands.json", {"retrieved_at": utc_now(), "bands": bands})
 
     since = (date.today() - timedelta(days=420)).isoformat()
     for f in load_fields():
@@ -48,7 +49,7 @@ def main():
                 rows += [{"band": s["band"], "calendar_date": s["calendar_date"], "modis_date": s["modis_date"],
                           "value": s["data"][0]} for s in data["subset"]]
                 time.sleep(0.5)
-        write_json(OUT / f"{f['id']}.json", {"retrieved_utc": utc_now(), "latitude": lat, "longitude": lon,
+        write_json(OUT / f"{f['id']}.json", {"retrieved_at": utc_now(), "latitude": lat, "longitude": lon,
                                              "product": "MOD13Q1", "rows": rows})
         print(f"{f['id']}: {len(dates)} composites, {len(rows)} values", flush=True)
 

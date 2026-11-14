@@ -1,308 +1,308 @@
 {
-  "retrieved_utc": "2026-11-14T03:08:56Z",
-  "latitude": 16.7015,
-  "longitude": 95.9402,
+  "retrieved_at": "2026-11-14T03:36:17Z",
+  "latitude": 16.31,
+  "longitude": 95.42,
   "product": "MOD13Q1",
   "rows": [
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2025-09-30",
       "modis_date": "A2025273",
-      "value": 6386
+      "value": 2105
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2025-10-16",
       "modis_date": "A2025289",
-      "value": 7005
+      "value": -3000
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2025-11-01",
       "modis_date": "A2025305",
-      "value": 7719
+      "value": 5198
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2025-11-17",
       "modis_date": "A2025321",
-      "value": 7763
+      "value": 5471
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2025-12-03",
       "modis_date": "A2025337",
-      "value": 7613
-    },
-    {
-      "band": "250m_16_days_NDVI",
-      "calendar_date": "2025-12-19",
-      "modis_date": "A2025353",
-      "value": 6709
-    },
-    {
-      "band": "250m_16_days_NDVI",
-      "calendar_date": "2026-01-01",
-      "modis_date": "A2026001",
-      "value": 6812
-    },
-    {
-      "band": "250m_16_days_NDVI",
-      "calendar_date": "2026-01-17",
-      "modis_date": "A2026017",
-      "value": 6285
-    },
-    {
-      "band": "250m_16_days_NDVI",
-      "calendar_date": "2026-02-02",
-      "modis_date": "A2026033",
       "value": 6577
     },
     {
       "band": "250m_16_days_NDVI",
+      "calendar_date": "2025-12-19",
+      "modis_date": "A2025353",
+      "value": 6639
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-01-01",
+      "modis_date": "A2026001",
+      "value": 7866
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-01-17",
+      "modis_date": "A2026017",
+      "value": -3000
+    },
+    {
+      "band": "250m_16_days_NDVI",
+      "calendar_date": "2026-02-02",
+      "modis_date": "A2026033",
+      "value": 8108
+    },
+    {
+      "band": "250m_16_days_NDVI",
       "calendar_date": "2026-02-18",
       "modis_date": "A2026049",
-      "value": 6054
+      "value": 6202
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-03-06",
       "modis_date": "A2026065",
-      "value": 6271
+      "value": 6840
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-03-22",
       "modis_date": "A2026081",
-      "value": 5674
+      "value": -3000
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-04-07",
       "modis_date": "A2026097",
-      "value": 5559
+      "value": 5429
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-04-23",
       "modis_date": "A2026113",
-      "value": 5681
+      "value": -3000
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-05-09",
       "modis_date": "A2026129",
-      "value": 5245
+      "value": 4295
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-05-25",
       "modis_date": "A2026145",
-      "value": 7092
+      "value": 6907
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-06-10",
       "modis_date": "A2026161",
-      "value": 2708
+      "value": 5254
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-06-26",
       "modis_date": "A2026177",
-      "value": 5046
+      "value": -3000
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-07-12",
       "modis_date": "A2026193",
-      "value": 4614
+      "value": 1599
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-07-28",
       "modis_date": "A2026209",
-      "value": 4331
+      "value": 1598
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-08-13",
       "modis_date": "A2026225",
-      "value": 7416
+      "value": -3000
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-08-29",
       "modis_date": "A2026241",
-      "value": 7019
+      "value": 6428
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-09-14",
       "modis_date": "A2026257",
-      "value": 6142
+      "value": 7627
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-09-30",
       "modis_date": "A2026273",
-      "value": 7017
+      "value": 7718
     },
     {
       "band": "250m_16_days_NDVI",
       "calendar_date": "2026-10-16",
       "modis_date": "A2026289",
-      "value": 7343
+      "value": 2566
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2025-09-30",
       "modis_date": "A2025273",
-      "value": 3211
+      "value": 2077
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2025-10-16",
       "modis_date": "A2025289",
-      "value": 4045
+      "value": -3000
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2025-11-01",
       "modis_date": "A2025305",
-      "value": 4221
-    },
-    {
-      "band": "250m_16_days_EVI",
-      "calendar_date": "2025-11-17",
-      "modis_date": "A2025321",
-      "value": 4705
-    },
-    {
-      "band": "250m_16_days_EVI",
-      "calendar_date": "2025-12-03",
-      "modis_date": "A2025337",
-      "value": 4495
-    },
-    {
-      "band": "250m_16_days_EVI",
-      "calendar_date": "2025-12-19",
-      "modis_date": "A2025353",
-      "value": 3541
-    },
-    {
-      "band": "250m_16_days_EVI",
-      "calendar_date": "2026-01-01",
-      "modis_date": "A2026001",
-      "value": 3736
-    },
-    {
-      "band": "250m_16_days_EVI",
-      "calendar_date": "2026-01-17",
-      "modis_date": "A2026017",
       "value": 3242
     },
     {
       "band": "250m_16_days_EVI",
+      "calendar_date": "2025-11-17",
+      "modis_date": "A2025321",
+      "value": 3127
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-12-03",
+      "modis_date": "A2025337",
+      "value": 4805
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2025-12-19",
+      "modis_date": "A2025353",
+      "value": 3785
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-01-01",
+      "modis_date": "A2026001",
+      "value": 4744
+    },
+    {
+      "band": "250m_16_days_EVI",
+      "calendar_date": "2026-01-17",
+      "modis_date": "A2026017",
+      "value": -3000
+    },
+    {
+      "band": "250m_16_days_EVI",
       "calendar_date": "2026-02-02",
       "modis_date": "A2026033",
-      "value": 3641
+      "value": 4863
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-02-18",
       "modis_date": "A2026049",
-      "value": 3043
+      "value": 3328
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-03-06",
       "modis_date": "A2026065",
-      "value": 3407
+      "value": 5290
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-03-22",
       "modis_date": "A2026081",
-      "value": 4002
+      "value": -3000
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-04-07",
       "modis_date": "A2026097",
-      "value": 3175
+      "value": 3009
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-04-23",
       "modis_date": "A2026113",
-      "value": 3289
+      "value": -3000
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-05-09",
       "modis_date": "A2026129",
-      "value": 3322
+      "value": 2194
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-05-25",
       "modis_date": "A2026145",
-      "value": 6071
+      "value": 4248
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-06-10",
       "modis_date": "A2026161",
-      "value": 1789
+      "value": 3208
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-06-26",
       "modis_date": "A2026177",
-      "value": 2186
+      "value": -3000
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-07-12",
       "modis_date": "A2026193",
-      "value": 2960
+      "value": 817
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-07-28",
       "modis_date": "A2026209",
-      "value": 2731
+      "value": 1292
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-08-13",
       "modis_date": "A2026225",
-      "value": 4580
+      "value": -3000
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-08-29",
       "modis_date": "A2026241",
-      "value": 3976
+      "value": 5650
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-09-14",
       "modis_date": "A2026257",
-      "value": 4011
+      "value": 4598
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-09-30",
       "modis_date": "A2026273",
-      "value": 3860
+      "value": 5492
     },
     {
       "band": "250m_16_days_EVI",
       "calendar_date": "2026-10-16",
       "modis_date": "A2026289",
-      "value": 4857
+      "value": 2473
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -314,13 +314,13 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2025-10-16",
       "modis_date": "A2025289",
-      "value": 0
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2025-11-01",
       "modis_date": "A2025305",
-      "value": 1
+      "value": 0
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -344,13 +344,13 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-01-01",
       "modis_date": "A2026001",
-      "value": 1
+      "value": 0
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-01-17",
       "modis_date": "A2026017",
-      "value": 0
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -362,7 +362,7 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-02-18",
       "modis_date": "A2026049",
-      "value": 1
+      "value": 0
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -374,7 +374,7 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-03-22",
       "modis_date": "A2026081",
-      "value": 0
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -386,19 +386,19 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-04-23",
       "modis_date": "A2026113",
-      "value": 1
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-05-09",
       "modis_date": "A2026129",
-      "value": 3
+      "value": 0
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-05-25",
       "modis_date": "A2026145",
-      "value": 3
+      "value": 0
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -410,13 +410,13 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-06-26",
       "modis_date": "A2026177",
-      "value": 3
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-07-12",
       "modis_date": "A2026193",
-      "value": 1
+      "value": 3
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -428,13 +428,13 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-08-13",
       "modis_date": "A2026225",
-      "value": 1
+      "value": -1
     },
     {
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-08-29",
       "modis_date": "A2026241",
-      "value": 1
+      "value": 3
     },
     {
       "band": "250m_16_days_pixel_reliability",
@@ -452,7 +452,7 @@
       "band": "250m_16_days_pixel_reliability",
       "calendar_date": "2026-10-16",
       "modis_date": "A2026289",
-      "value": 0
+      "value": 3
     }
   ]
 }

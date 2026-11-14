@@ -1,9 +1,10 @@
+# AI-assisted: Claude Code
 """Point-sample MODIS NDVI/EVI and SMAP soil moisture for the demo fields through
 NASA AppEEARS. Needs an Earthdata login in ~/.netrc (machine urs.earthdata.nasa.gov).
 
-    python pipeline/fetch_appeears.py layers    # list the layer names AppEEARS offers
-    python pipeline/fetch_appeears.py submit    # start the task, save its id
-    python pipeline/fetch_appeears.py collect   # poll; download the CSVs when done
+    python backend/app/data_sources/fetch_appeears.py layers    # list the layer names AppEEARS offers
+    python backend/app/data_sources/fetch_appeears.py submit    # start the task, save its id
+    python backend/app/data_sources/fetch_appeears.py collect   # poll; download the CSVs when done
 """
 import netrc
 import sys
@@ -119,7 +120,7 @@ def cmd_collect(wait_minutes=40):
         dl.raise_for_status()
         (OUT / name).write_bytes(dl.content)
         print("downloaded", name)
-    write_json(OUT / "retrieved.json", {"task_id": task_id, "retrieved_utc": utc_now()})
+    write_json(OUT / "retrieved.json", {"task_id": task_id, "retrieved_at": utc_now()})
 
 
 if __name__ == "__main__":

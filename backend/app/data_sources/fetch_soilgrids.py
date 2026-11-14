@@ -1,7 +1,8 @@
+# AI-assisted: Claude Code
 """Fetch ISRIC SoilGrids v2 topsoil properties (0-5 cm mean) per demo field.
 SoilGrids is not a NASA product; it is the soil complement. No login needed.
 
-    python pipeline/fetch_soilgrids.py
+    python backend/app/data_sources/fetch_soilgrids.py
 """
 import time
 
@@ -37,7 +38,7 @@ def main():
         if data is None:
             print(f"{f['id']}: FAILED, no file written")
             continue
-        write_json(RAW / "soilgrids" / f"{f['id']}.json", {"retrieved_utc": utc_now(), "response": data})
+        write_json(RAW / "soilgrids" / f"{f['id']}.json", {"retrieved_at": utc_now(), "response": data})
         print(f"{f['id']}: ok")
         time.sleep(13)  # SoilGrids fair-use limit is about 5 calls per minute
 
