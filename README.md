@@ -1,90 +1,107 @@
-# Field Shift
+# Garvesty
 
-A decision-support tool for NASA Space Apps Challenge 2026, challenge 07
-"Field Shift: Adapting Farms with NASA Data".
+A decision-support and farm twin platform for NASA Space Apps Challenge 2026, Challenge 07:
+**"Field Shift: Adapting Farms with NASA Data"**.
 
-Click a field on the map. An agent travels to it, reads the NASA data for that
-location, and compares crop rotations for the coming dry season and the next
-monsoon. It always shows three alternatives plus the farmer's usual rotation,
-each with the reasons for and against it, the evidence used, the information
-gaps, and what to check locally. Three sliders (income, soil health, water
-saving) re-rank the rotations.
+Draw or select a farm on the interactive map. An animated specialist agent travels to it, assembles NASA Earth observation and soil data, and evaluates multi-season crop rotations for the post-monsoon dry season. It presents three alternative rotations plus the farmer's baseline practice, each with cited agronomic reasons, evidence references, information gaps, and local verification checks. Dynamic priority sliders (Income, Soil Health, Water Saving) re-rank rotations in real time. Farmers and advisers can stress-test decisions in the What-If Scenario Simulator and export an offline-printable Seasonal Decision Report.
 
-It ranks strategies. It does not predict yield and does not replace the
-farmer's judgment or local advice.
+Garvesty scores relative agronomic suitability; it does not promise crop yields or replace local farmer judgment.
 
-## Run it
+---
+
+## 10 Functional Screens
+
+### Farmer Mode (Decision Workflow: F1–F6)
+- **F1 Overview:** Farm selection, recent weather conditions, and quick resumption of saved analyses.
+- **F2 My Farm:** Interactive boundary drawing (polygon placement, vertex editing, planar acreage in Acres/Hectares) and field annotations (crop history, irrigation, drainage).
+- **F3 Environment:** Detailed rainfall, temperature, root-zone wetness, and ISRIC SoilGrids soil profile with satellite footprint disclosures.
+- **F4 Compare:** Multi-season rotation comparison (Rice → Rice, Rice → Mung Bean, Rice → Black Gram). Ineligible baselines (e.g. rainfed dry-season rice) remain visible with disqualification reasons.
+- **F5 Scenarios:** What-If simulator stress-testing rainfall deviations (−20% to +20%), planting delays (0–14 days), irrigation access, and drainage conditions.
+- **F6 Report:** Comprehensive, offline-printable Seasonal Decision Report with checklist and agronomic disclaimers.
+
+### Analyst Mode (Telemetry & Provenance: A1–A4)
+- **A1 Mission Overview:** Regional monitoring coverage, active layer status (`LIVE`, `CACHED`, `DEMO`), and data latency metrics.
+- **A2 Field Intelligence:** Precise geometry inspection, weather time-series charts, and sensor footprint overlays.
+- **A3 Catalogue:** NASA and external product catalogue (POWER, GPM, SMAP, MODIS, SoilGrids, EcoCrop) with DOIs and resolutions.
+- **A4 Quality & Models:** Cleaning pipeline audit (-999.0 sentinels, range checks) and 3 gated ML evaluation tracks (Root-Zone Wetness, Vegetation Anomaly, Yield Feasibility) evaluated with chronological holdouts and fails-closed release gates.
+
+---
+
+## Run It
 
 Needs Python 3.11+ and Node 20+.
 
 ```bash
-# 1. backend
+# 1. Backend setup & run
 python -m venv .venv
 .venv/Scripts/python -m pip install -r backend/requirements.txt    # Windows
 # .venv/bin/python -m pip install -r backend/requirements.txt      # macOS / Linux
 cd backend
 ../.venv/Scripts/python -m uvicorn app.main:app --port 8000
 
-# 2. frontend (second terminal)
+# 2. Frontend setup & run (second terminal)
 cd frontend
 npm install
 npm run dev            # open http://localhost:5173
 ```
 
-For a single-server demo, run `npm run build` in `frontend/`, restart the
-backend and open http://127.0.0.1:8000.
+For a single-server demo, run `npm run build` in `frontend/`, restart the backend and open `http://127.0.0.1:8000`.
 
-Tests: `cd backend && ../.venv/Scripts/python -m pytest`
+**Tests:**
+```bash
+python -m pytest backend/tests
+```
 
-To rehearse with no internet, set `FIELDSHIFT_OFFLINE=1` before starting the
-backend. The app then serves only the cached data in this repo.
+**Offline Mode:**
+To rehearse with no internet connection, set `FIELDSHIFT_OFFLINE=1` before starting the backend. The application serves validated cached snapshots from `data/cache/`.
 
-## What is real and what is demo
+---
+
+## What is Real and What is Demo
 
 | Item | Status | Shown in the UI as |
 |---|---|---|
-| Temperature, rain, humidity, root-zone wetness | Real. NASA POWER, fetched live when online, cached copy otherwise. Modelled values on a 0.5 x 0.625 degree grid, not field measurements | `LIVE` or `CACHED` · NASA POWER |
-| Seasonal rain and temperature averages | Real. NASA POWER climatology 2001-2025, cached | named in each plan's evidence |
-| Topsoil pH and texture | Real. ISRIC SoilGrids v2.0, 250 m, cached. Not a NASA product | `CACHED` · ISRIC SoilGrids |
-| Crop pH, temperature and rainfall tolerances | Real. FAO EcoCrop. Global ranges, not Myanmar-specific | cited in each reason |
-| Satellite soil moisture (SMAP) | Not connected. The fetch script exists; no Earthdata login was available on the build machine | `NOT CONNECTED` |
-| Vegetation index (MODIS NDVI) | Not connected, same reason | `NOT CONNECTED` |
-| Field shapes, names, usual rotation, irrigation flag | Demo. Illustrative blocks at real coordinates | `DEMO` |
-| Rotation scores | Real rules applied to the data above. Point sizes and the wetness thresholds are the team's rule weights, not measurements | score breakdown on every card |
-| Income | Only from numbers the farmer types in. With none entered, every cropped season counts the same | stated under "Information gaps" |
-| Yield | Not predicted | stated in the UI |
+| Temperature, rain, humidity, root-zone wetness | Real. NASA POWER, fetched live when online, cached copy otherwise. Modelled values on a 0.5° × 0.625° grid | `LIVE` or `CACHED` · NASA POWER |
+| Seasonal rain and temperature averages | Real. NASA POWER climatology 2001–2025, cached | cited in evidence |
+| Topsoil pH and texture | Real. ISRIC SoilGrids v2.0, 250 m, cached. Non-NASA supporting product | `CACHED` · ISRIC SoilGrids |
+| Crop pH, temperature and rainfall tolerances | Real. FAO EcoCrop global physiological ranges | cited in each agronomic reason |
+| Custom field drawing & area | Real. Planar shoelace calculation from user-drawn coordinates | `USER-INPUT` |
+| Satellite soil moisture (SMAP) | Pipeline ready (QA filtered). Requires Earthdata token | `NOT CONNECTED` |
+| Vegetation index (MODIS NDVI) | Pipeline ready (pixel reliability QA). Requires Earthdata token | `NOT CONNECTED` |
+| Reference field shapes & names | Demo illustrative blocks at real Twante coordinates | `DEMO` |
+| Rotation scores | Real deterministic agronomic rules applied to data above | score breakdown on every card |
+| Income calculations | Derived solely from user-entered prices; neutral weighting when omitted | stated in information gaps |
+| Machine Learning tracks | Gated / experimental. Strictly excluded from farmer advice until field-validated | `BLOCKED` / `EXPERIMENTAL` |
+| Yield prediction | Not predicted; decision support only | stated across UI and reports |
 
-## How the ranking works
+---
 
-`backend/app/engine/` holds the whole engine as pure functions:
+## How the Ranking Works
 
-- `crops.py`: ten options for the Myanmar Delta and Dry Zone, with season, duration, family and water class.
-- `rules.py`: one function per rule. Season fit and irrigation need reject a rotation outright. Legume credit, paddy cycle, pest break, soil fit, diversity, water budget, temperature fit and field drainage add or remove points, each with the sentence shown to the farmer.
-- `planner.py`: scores every dry-season and monsoon pair from 0 to 100 as a weighted mix of income, soil and water (the sliders), plus climate-fit adjustments. Equal scores share a rank. Same data in, same ranking out.
+`backend/app/engine/` implements deterministic scoring as pure functions:
+- `crops.py`: 10 crop varieties for Myanmar Delta and Dry Zone with seasons, durations, families, and water requirements.
+- `rules.py`: Explicit agronomic rules. Season mismatch and unmet irrigation reject a rotation outright. Legume nitrogen credits, paddy cycles, pest-break rotations, soil fit, crop diversity, water budgets, temperature tolerances, and field drainage add or subtract points, each providing a human-readable explanation.
+- `planner.py`: Scores candidate pairs from 0 to 100 based on weighted priority sliders (income, soil, water). Equal scores share rank. Preserves ineligible baselines so farmers understand why a practice is discouraged.
 
-## Data pipeline
+---
+
+## Data Pipeline
 
 ```bash
-python pipeline/make_fields.py        # demo fields
-python pipeline/fetch_power.py        # NASA POWER daily + climatology
-python pipeline/fetch_soilgrids.py    # SoilGrids
-python pipeline/fetch_appeears.py submit   # MODIS + SMAP, needs ~/.netrc Earthdata login
-python pipeline/fetch_appeears.py collect  # run when the AppEEARS task has finished
-python pipeline/clean_all.py          # clean, build the snapshot and the cleaning report
+python pipeline/make_fields.py             # Generate reference fields
+python pipeline/fetch_power.py             # Fetch NASA POWER daily & climatology
+python pipeline/fetch_soilgrids.py         # Fetch SoilGrids topsoil parameters
+python pipeline/clean_all.py               # Clean datasets and build cleaning report
+python pipeline/evaluate_models.py         # Evaluate 3 ML tracks on chronological holdouts
 ```
 
-`data/reports/cleaning_report.json` lists, per source, the rows read, fill
-values nulled, out-of-range values nulled and rows dropped. See
-`data/SOURCES.md` for where each file came from.
+Cleaning report: `data/reports/cleaning_report.json` logs records read, nullified sentinels, range violations, and dropped rows.
 
-The AppEEARS path has not been run yet, so its cleaning code is untested
-against real files.
+---
 
-## Not built yet
+## Future Roadmap
 
-Scenario simulator, decision report, pre-harvest suggestions, Burmese
-interface and local units, installable offline app, analyst mode.
-
-## AI use
-
-Built with Claude Code (Anthropic) as a coding assistant.
+- Expansion from Twante baseline to Bogale, Hinthada, and Myaungmya.
+- Automated token-refresh Earthdata pipeline for SMAP L4 and MODIS NDVI.
+- In-situ LoRaWAN field sensor integration for ground-truthing satellite moisture.
+- Production field validation for the three gated ML tracks.

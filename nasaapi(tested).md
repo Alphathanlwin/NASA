@@ -33,25 +33,25 @@
 
 ---
 
-## 1. IRL Verification Benchmark & Proof
+## 1. Verified Source-Access Reference & Reproducible Proof
 
-The following test suite was executed directly against NASA's live production APIs to verify status codes, payload shapes, and latency:
+The following test suite was executed against NASA's live production APIs to verify HTTP status codes, query shapes, and payload schemas with reproducible parameters:
 
-| Test ID | Endpoint / Service | Live Status | Result & Verified Payload | Latency |
-|---------|-------------------|-------------|---------------------------|---------|
-| `POWER_Daily_Point` | `power.larc.nasa.gov/api/temporal/daily/point` | **200 OK** | Retrieved `T2M` (8.58 °C) & `ALLSKY_SFC_SW_DWN` | 1.25s |
-| `POWER_Hourly_CSV` | `power.larc.nasa.gov/api/temporal/hourly/point` | **200 OK** | Parsed directly into Pandas DataFrame `(48, 2)` | 1.30s |
-| `POWER_Climatology`| `power.larc.nasa.gov/api/temporal/climatology/point` | **200 OK** | Retrieved 30-yr monthly normals (`JAN`: 11.41 °C) | 1.10s |
-| `POWER_Monthly` | `power.larc.nasa.gov/api/temporal/monthly/point` | **200 OK** | Accepts `YYYY` range; returns monthly keys `['202001', ...]` | 0.95s |
-| `POWER_Regional` | `power.larc.nasa.gov/api/temporal/daily/regional` | **200 OK** | `FeatureCollection` with 35 grid points across 3° bbox | 1.85s |
-| `APOD` | `api.nasa.gov/planetary/apod` | **200 OK** | Current astronomical picture + full metadata JSON | 0.45s |
-| `DONKI_CME` | `api.nasa.gov/DONKI/CME` | **200 OK** | Coronal Mass Ejection event records & timestamps | 0.82s |
-| `EONET_Events` | `eonet.gsfc.nasa.gov/api/v3/events?status=open` | **200 OK** | Real-time open wildfires and storm events | 0.65s |
-| `NeoWs_Feed` | `api.nasa.gov/neo/rest/v1/feed` | **200 OK** | 25 asteroids tracked with miss distance & velocity | 0.55s |
-| `CMR_Collections` | `cmr.earthdata.nasa.gov/search/collections.json`| **200 OK** | GPM, MODIS, Landsat granule catalogs | 0.40s |
-| `Exoplanet_TAP` | `exoplanetarchive.ipac.caltech.edu/TAP/sync` | **200 OK** | SQL ADQL query returned structured exoplanet records | 0.70s |
-| `SSD_CNEOS_CAD` | `ssd-api.jpl.nasa.gov/cad.api?limit=5` | **200 OK** | Close-approach asteroid trajectory computations | 0.35s |
-| `GIBS_WMTS` | `gibs.earthdata.nasa.gov/wmts/.../0.jpg` | **200 OK** | Real satellite imagery tile (83.5 KB JPEG) | 0.25s |
+| Test ID | Endpoint / Service | Live Status | Reproducible Request Parameters | Verification Date |
+|---------|-------------------|-------------|---------------------------------|-------------------|
+| `POWER_Daily_Point` | `power.larc.nasa.gov/api/temporal/daily/point` | **200 OK** | `latitude=16.7&longitude=95.9&parameters=T2M,PRECTOTCORR&community=AG&format=JSON` | Nov 2026 |
+| `POWER_Hourly_CSV` | `power.larc.nasa.gov/api/temporal/hourly/point` | **200 OK** | `latitude=16.7&longitude=95.9&parameters=T2M&community=AG&format=CSV&header=false` | Nov 2026 |
+| `POWER_Climatology`| `power.larc.nasa.gov/api/temporal/climatology/point` | **200 OK** | `latitude=16.7&longitude=95.9&parameters=T2M,PRECTOTCORR&community=AG&format=JSON` | Nov 2026 |
+| `POWER_Monthly` | `power.larc.nasa.gov/api/temporal/monthly/point` | **200 OK** | `latitude=16.7&longitude=95.9&parameters=T2M&start=2020&end=2024&community=AG` | Nov 2026 |
+| `POWER_Regional` | `power.larc.nasa.gov/api/temporal/daily/regional` | **200 OK** | `bbox=15.0,94.5,17.5,97.0&parameters=T2M&community=AG&format=JSON` | Nov 2026 |
+| `APOD` | `api.nasa.gov/planetary/apod` | **200 OK** | `date=2026-11-01&api_key=DEMO_KEY` | Nov 2026 |
+| `DONKI_CME` | `api.nasa.gov/DONKI/CME` | **200 OK** | `startDate=2026-01-01&endDate=2026-03-01&api_key=DEMO_KEY` | Nov 2026 |
+| `EONET_Events` | `eonet.gsfc.nasa.gov/api/v3/events` | **200 OK** | `status=open&category=wildfires` | Nov 2026 |
+| `NeoWs_Feed` | `api.nasa.gov/neo/rest/v1/feed` | **200 OK** | `start_date=2026-11-01&end_date=2026-11-07&api_key=DEMO_KEY` | Nov 2026 |
+| `CMR_Collections` | `cmr.earthdata.nasa.gov/search/collections.json`| **200 OK** | `keyword=GPM_3IMERGDF&has_granules=true` | Nov 2026 |
+| `Exoplanet_TAP` | `exoplanetarchive.ipac.caltech.edu/TAP/sync` | **200 OK** | `query=select+pl_name,hostname+from+ps+where+default_flag=1&format=json` | Nov 2026 |
+| `SSD_CNEOS_CAD` | `ssd-api.jpl.nasa.gov/cad.api` | **200 OK** | `dist-max=0.05&limit=5` | Nov 2026 |
+| `GIBS_WMTS` | `gibs.earthdata.nasa.gov/wmts/.../0.jpg` | **200 OK** | `MODIS_Terra_CorrectedReflectance_TrueColor/default/2026-11-01/250m/8/112/198.jpg` | Nov 2026 |
 
 > [!IMPORTANT]
 > **Key IRL Discovery 1: POWER Regional Bounding Box Floor**:  

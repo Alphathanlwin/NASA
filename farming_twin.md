@@ -1,12 +1,12 @@
-# FieldShift Digital Twin
+# Garvesty Digital Twin
 ## Product Requirements & Technical Build Guide
 
-**Project:** FieldShift Digital Twin (working title)  
+**Project:** Garvesty (NASA Space Apps Challenge 2026)  
 **Challenge:** NASA Space Apps Challenge 2026 — “Field Shift: Adapting Farms with NASA Data”  
-**Geographic focus:** Myanmar's Ayeyarwady Delta, with the Central Dry Zone as a possible later expansion  
-**Document purpose:** A single source of truth for the product concept, MVP scope, architecture, data handling, simulation logic, and implementation priorities.
+**Geographic focus:** Myanmar's Ayeyarwady Delta (Twante baseline verified; Bogale, Hinthada, and Myaungmya planned expansion)  
+**Document purpose:** A single source of truth for the product concept, MVP scope, architecture, data handling, simulation logic, drawing workflow, custom agents, gated ML tracks, and implementation priorities.
 
-> **Important status note:** This document describes the digital-twin product direction. It combines the earlier GIS Farm Twin design with the more recent FieldShift Delta overview. It is a build specification, not evidence that every proposed feature or dataset is already implemented. Features and data sources are explicitly labelled as implemented, planned, or optional.
+> **Important status note:** This document describes the Garvesty digital-twin product specification. Features and data sources are explicitly labelled as verified/active, planned, or optional. Twante is the active validated baseline; other regional townships are planned for phased expansion.
 
 ---
 
@@ -78,119 +78,124 @@ These parts must remain distinct. The agent does not make unsupported claims, an
 
 The application has two modes using the same underlying data.
 
-## 3.1 Farmer Mode
+## 3.1 Farmer Mode (6 Functional Screens)
 
-A simple, Burmese-first experience focused on making a seasonal decision.
+A simple, Burmese-first and bilingual experience focused on making a seasonal decision.
 
-### F1. Farm overview
-
+### F1. Farm Overview
 - Greeting and selected farm profile.
-- Field selector and map.
+- Field selector and interactive Leaflet map.
 - Summary cards for rainfall, soil moisture, and temperature.
-- Source and date beside each environmental value.
-- Main action: **Analyse this field**.
+- Sourced timestamps beside each environmental value (`LIVE` or `CACHED` · NASA POWER).
+- Main actions: **Analyse this field** and resume saved decisions.
 
-### F2. Field intelligence
+### F2. My Farm (Boundary Drawing & Agronomic Annotation)
+- Interactive polygon drawing and vertex editing via Leaflet map tools.
+- Real-time planar shoelace area calculation in local units (Acres / ဧက) and metric (Hectares).
+- Field geometry validation: minimum 3 vertices, bounding box check within supported coverage, self-intersection guard.
+- Agronomic field annotations: field name, crop history, irrigation access (canal, pump, rainfed), and drainage status (good, moderate, poor).
+- Clear attribution: user-drawn boundaries are marked as **user-provided**, not surveyed.
 
-- Selected field boundary and approximate area.
-- Satellite or map view.
-- Environmental indicators and historical trends.
-- Soil information where available.
-- Clear labels for unavailable or coarse-resolution data.
+### F3. Environmental Context & Evidence
+- Rainfall history and seasonal normals from NASA POWER.
+- Root-zone soil wetness profile and surface moisture.
+- ISRIC SoilGrids v2.0 topsoil pH and clay/sand soil texture.
+- Clear disclosures for coarse grid footprints (e.g. 0.5° meteorological grid vs individual field scale).
 
-### F3. Crop comparison
+### F4. Crop Rotation Comparison
+- The core decision comparison screen.
+- Compares at least three alternative crop plans plus the farmer's baseline practice:
+  1. Rice → Rice (baseline; highly vulnerable to dry-season water stress and high pumping costs).
+  2. Rice → Mung bean (Green gram; low water requirement, short duration, soil health bonus).
+  3. Rice → Black gram (*Matpe*; drought-hardy, taproot water scavenging, export cash crop).
+- Ineligible baselines (e.g. rainfed rice in dry season) remain visible with explicit failure reasons.
+- Each option displays:
+  - Suitability category and score breakdown (Soil, Water, Income).
+  - Explicit reasons for and against.
+  - Sourced evidence citations.
+  - Information gaps and what to verify locally (e.g. tidal salinity, canal opening schedules).
+  - Interactive priority sliders (Income, Soil Health, Water Saving) with live re-ranking.
+  - Farmer return inputs (MMK / basket) ensuring financial neutrality when prices are not provided.
 
-The core decision screen.
+### F5. Scenario Simulator (What-If Projection)
+- Allows farmers and advisers to stress-test plans under altered assumptions:
+  - Rainfall deviation: −20% (drought scenario) to +20% (wet spell).
+  - Planting delay: 0 to 14 days (missing residual moisture window).
+  - Irrigation availability: available, limited, or none.
+  - Drainage condition: good, moderate, or poor.
+- Deterministic delta projection recalculates scores and explains changes step-by-step.
+- Clearly states: scenarios are conditional explorations, not deterministic weather forecasts.
 
-Compare at least three crop plans, including the farmer's current or baseline practice. For the initial Delta prototype, the suggested comparison is:
+### F6. Seasonal Decision Report
+- Comprehensive printable and shareable decision dossier.
+- Summarizes:
+  - Farm and field profile with area and location coordinates.
+  - Current NASA and local environmental baseline observations.
+  - Full crop rotation comparison table with breakdown.
+  - Tested what-if scenario assumptions and resilience impact.
+  - Local verification checklist and risk warnings.
+  - Scientific disclaimer: decision-support tool, not a yield guarantee.
+- Supports offline printing via optimized print stylesheets.
 
-1. Rice → Rice (baseline; depends heavily on irrigation).
-2. Rice → Mung bean.
-3. Rice → Black gram.
+## 3.2 Analyst Mode (4 Functional Screens)
 
-Each option should show:
+An evidence, telemetry, and data-quality workspace for agricultural advisers, data analysts, and hackathon evaluators.
 
-- Suitability category or score.
-- Why it may fit.
-- Why it may not fit.
-- Evidence used.
-- Missing information.
-- Risks that need local checking.
+### A1. Mission & Coverage Overview
+- Geographic coverage map and active reference bounding boxes.
+- Data source connection status (`LIVE`, `CACHED`, `DEMO`, `UNAVAILABLE`).
+- Freshness timestamps, observation latencies, and layer availability metrics.
 
-### F4. Scenario simulator
+### A2. Field Intelligence & Footprints
+- High-resolution field geometry, vertex coordinates, and centroid computation.
+- Time-series visualization of precipitation and temperature trends.
+- Sensor spatial footprint overlays illustrating the resolution gap between satellite grid cells and farm polygons.
 
-Allow the farmer to change a small number of understandable assumptions:
+### A3. NASA & External Data Catalogue
+- Comprehensive registry of all satellite products and supporting sources:
+  - NASA POWER (Hourly & Daily meteorology, 0.5° × 0.625°).
+  - NASA GPM IMERG (Satellite precipitation estimation).
+  - NASA SMAP L4 (Soil moisture, 9 km / 36 km).
+  - MODIS / Landsat (NDVI / EVI vegetation indices, 250 m / 30 m).
+  - ISRIC SoilGrids v2.0 (pH, organic carbon, clay content, 250 m).
+  - FAO EcoCrop (Crop climatic tolerance parameters).
+- Detailed metadata: DOI, spatial resolution, temporal resolution, and processing pipeline notes.
 
-- Rainfall decreases (for example, −20%).
-- Planting is delayed by two weeks.
-- Irrigation is available / sometimes available / unavailable.
-- Field drainage is good / unknown / poor.
-
-The system recalculates the crop-plan assessment and explains what changed.
-
-**Important:** A scenario is a conditional exploration, not a forecast. The interface must display the assumptions used.
-
-### F5. Seasonal decision report
-
-A concise, printable or shareable report containing:
-
-- Selected field and date.
-- Environmental conditions and data sources.
-- Compared crop plans.
-- Reasons for and against each option.
-- Scenario results.
-- Risks and local checks.
-- A clear statement that the tool is decision support, not a yield forecast.
-
-## 3.2 Analyst Mode (TERRA)
-
-An evidence and data-quality workspace for advisers, analysts, and judges.
-
-### A1. Mission overview
-
-- Selected region and fields.
-- Data-source status.
-- Latest retrieval dates.
-- Summary of available and missing layers.
-
-### A2. Field intelligence
-
-- Field geometry and location.
-- Environmental indicators.
-- Time-series views.
-- Spatial-resolution warnings.
-
-### A3. NASA and external data catalogue
-
-For each source, show:
-
-- Dataset and product name.
-- Variable(s) used.
-- Spatial and temporal resolution.
-- Date range.
-- Retrieval date.
-- Processing steps.
-- Status: LIVE, CACHED, DEMO, or UNAVAILABLE.
-
-### A4. Data quality and provenance
-
-- Missing-value checks.
-- Range checks.
-- Duplicate checks.
-- Quality/cloud masking where relevant.
-- Unit conversions and scaling.
-- Cleaning summary.
-- Source-to-UI traceability.
+### A4. Data Quality & Gated ML Evaluation
+- Cleaning pipeline audit: missing value nullification (-999.0 sentinels), range validation, duplicate handling.
+- Gated ML evaluation tracks:
+  1. Track 1: Root-Zone Soil Wetness (Nowcasting).
+  2. Track 2: Vegetation Anomaly Detection (NDVI trend deviations).
+  3. Track 3: Yield Feasibility Classification (Multi-factor classification).
+- Evaluation methodology: 28-day window with 5-day availability lag, 7-day targets, and purged chronological train/test splits.
+- Strict release gate: All three tracks are currently marked `experimental` / `blocked` and strictly excluded from farmer recommendations until validated against representative ground truth.
 
 Farmer Mode answers “What should I consider?” Analyst Mode answers “Where did this information come from, and how reliable is it?”
 
 ---
 
-# 4. AI agent: what it actually does
+# 4. AI Agents: The Choreographed Specialist Family
 
-The AI agent is an orchestration and explanation layer over deterministic data and analysis services. It should not invent environmental measurements or independently generate agronomic facts.
+Rather than a generic chatbot or single undifferentiated character, Garvesty utilizes an original visual family with three distinct role variants—**Field Scout**, **Water Analyst**, and **Crop Planner**—using consistent proportions and restrained green/white styling (`#BCEB86`, `#111C15`, `#203023`).
 
-## 4.1 Agent workflow
+## 4.1 Specialist Roles
+
+1. **Field Scout (Geospatial & Boundary Verification):**
+   - Active on field selection and boundary drawing (F1, F2).
+   - Validates geometry, computes planar polygon area, verifies coordinates against regional coverage boundaries, and inspects local topology.
+2. **Water Analyst (Hydrology & Moisture Modeling):**
+   - Active during environmental evidence analysis (F3) and scenario stress-testing (F5).
+   - Reads NASA POWER rainfall, GPM precipitation, and root-zone wetness profiles; models dry-season desaturation curves and drainage penalties.
+3. **Crop Planner (Agronomy & Rotation Synthesis):**
+   - Active during crop rotation ranking (F4) and seasonal report assembly (F6).
+   - Evaluates multi-season crop sequences, applies legume credits, checks pest-break intervals, and balances farmer priorities.
+
+## 4.2 Agent Movement & Choreography
+- **Physical Anchor:** Movement is tied directly to geographic coordinates on the Leaflet canvas; positions remain exact during zoom and pan operations.
+- **Centroid Travel:** The agent travels smoothly from a reference origin to the interior centroid of the target polygon (including concave polygons).
+- **Physics-Informed Motion:** Features anticipation wind-up, travel acceleration, and squash & stretch landing physics.
+- **Decoupled Processing:** Visual animation serves as an intuitive progress indicator but is strictly decoupled from asynchronous backend API execution.
+- **Accessibility & Reduced Motion:** Users can skip travel animations via an instant-completion toggle; CSS `@media (prefers-reduced-motion: reduce)` bypasses spatial travel and presents completed states immediately.
 
 When a user selects a field:
 
@@ -249,8 +254,8 @@ The project must distinguish NASA sources from non-NASA supporting sources. It m
 
 | Source | Variables / purpose | Role | Status in project direction |
 |---|---|---|---|
-| NASA GPM IMERG | Precipitation | Rainfall analysis | Real daily data already collected for four Delta towns in the latest overview |
-| NASA POWER | Temperature and other meteorological / agroclimatology variables | Weather context and time series | Real daily data already collected for four towns in the latest overview |
+| NASA GPM IMERG | Precipitation | Rainfall analysis | Real daily data verified for Twante baseline; Bogale, Hinthada, and Myaungmya planned expansion |
+| NASA POWER | Temperature and other meteorological / agroclimatology variables | Weather context and time series | Real daily data verified for Twante baseline; Bogale, Hinthada, and Myaungmya planned expansion |
 | SRTM | Elevation | Terrain and low-lying-area context | Planned; not yet integrated in the latest overview |
 | NASA SMAP | Soil moisture | Regional soil-water context | Planned; requires data access and processing |
 | MODIS NDVI / EVI | Vegetation condition | Vegetation trend and pre-harvest context | Proposed integration |
@@ -687,7 +692,7 @@ The full vision is too large to implement at once. Build a complete, trustworthy
 - Map of the Ayeyarwady Delta.
 - A small set of clearly labelled demo fields.
 - Field boundary and approximate area.
-- NASA POWER and GPM IMERG data already available for the four reference towns.
+- NASA POWER and GPM IMERG data verified for Twante baseline (Bogale, Hinthada, and Myaungmya planned expansion).
 - Field profile with source, date, resolution, and status.
 - Data provenance panel.
 - Basic responsive layout.
@@ -851,20 +856,18 @@ Until these questions are answered, the application should be presented as a pro
 
 | Component | Status based on the supplied project materials |
 |---|---|
-| NASA POWER daily data for four Delta towns | Available in the latest FieldShift overview |
-| GPM IMERG daily rainfall for four Delta towns | Available in the latest FieldShift overview |
-| Crop fact sheet and sample plan scores | Available in the latest FieldShift overview |
-| Map-first clickable mockup | Available |
-| Complete digital-twin application | Not yet established |
-| Agent orchestration | Proposed |
-| Agent animation and event stream | Proposed in earlier design |
-| Scenario simulator | Proposed |
-| Analyst Mode / TERRA | Proposed |
-| SRTM elevation layer | Not yet integrated in latest overview |
-| SMAP soil-moisture layer | Not yet integrated in latest overview |
-| Data-driven validated crop scoring | Not yet established; current overview describes demo rules |
-| Agronomic expert validation | Still required |
-| Real farm pilot | Not yet established |
+| NASA POWER daily data for Twante baseline | Verified & active (`LIVE` online, `CACHED` offline) |
+| NASA POWER / GPM for Bogale, Hinthada, Myaungmya | Planned expansion |
+| Crop fact sheet and deterministic agronomic scoring | Verified & active (10 crops, 8 rules, pure functions) |
+| Interactive Leaflet map with custom boundary drawing | Verified & active (freehand vertex placement & area calculation) |
+| Complete 10-screen digital-twin application | Verified & active (F1–F6 Farmer, A1–A4 Analyst) |
+| Choreographed 3-variant agent family | Verified & active (Field Scout, Water Analyst, Crop Planner) |
+| Scenario simulator (what-if projections) | Verified & active (rainfall, delay, irrigation, drainage deltas) |
+| Analyst Mode & Data Catalogue | Verified & active (freshness, metadata, cleaning reports) |
+| Gated ML Evaluation Tracks | Verified & active (3 tracks, chronological holdouts, fails closed) |
+| SMAP & MODIS data ingestion | Pipeline ready (QA flags enforced; Earthdata login required) |
+| Agronomic expert validation | Recommended for field deployment |
+| Real farm pilot | Planned post-hackathon field trial |
 
 ---
 

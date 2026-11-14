@@ -1,4 +1,4 @@
-# guideforspaceapp.md — Field Shift: Adapting Farms with NASA Data
+# Garvesty — Guide for Space Apps 2026 (Field Shift: Adapting Farms with NASA Data)
 
 **NASA Space Apps Challenge 2026 — Yangon, 14–15 Nov 2026. Challenge 07 (CH-07), Intermediate/Advanced.**
 **Venue:** University of Information Technology (UIT), Multi-Purpose Hall. (One older poster says MICT Park — UIT is the better-supported venue; confirm on arrival.)
@@ -409,41 +409,23 @@ Click a field → an agent marker animates along a route to the field (route ani
 - **Demo data is badged DEMO** in the UI and the README. Sample values are never presented as agronomic recommendations.
 - **Every number in the UI carries its source** (dataset + product version + retrieval date) via the provenance badge.
 
-## 12. How we stand out — differentiation with deep reasoning
+## 12. Technical Differentiation & Scope Boundaries
 
-**The competitive landscape (verified, 13 Nov 2026):**
-- **Farmyza — Team Solven, Dhaka, Bangladesh** — a 5-person **student hackathon team** (Tahmid Hasan Tasin, Team Leader; AS Ayman, Dev Coordinator; Shahed Rahman, ML & Algorithm Engineer; Khalid Bin Imtiaz Labib, Creative Designer & Videographer; Zunaira Zahin Zara, Agronomy Researcher), built for this year's NASA Space Apps "Field Shift" challenge. **Not a company** — their video calls Farmyza a "SaaS platform", but that is positioning language; there is no evidence of a registered business, funding, or app-store listing. Their demo video was posted **17 Oct 2026**, a month before the event weekend — a pre-event demo/promo. They compete in the **Dhaka** local event, not Yangon, so you do not face them in local judging — the comparison matters at **global** judging, where both projects could land. Their shape: click-a-field map → ML rotation recommendation + plain-language AI agent, POWER API, SMAP L4, Landsat 8/9, ECOSTRESS, GIBS. **UNVERIFIED:** their full feature set beyond the public reel/description — never claim they lack a feature unless it is absent from their public demo; say "not visible in their public demo".
-- **RotaShift (Bangladesh haor basin)** — 22 years of NASA rainfall, growing-window shift, rotation survival test. README is explicit: all figures are **sample values, not agronomic recommendations**.
-- **AgriTwin (Team DevTech)** — live NASA POWER API calls, SMAP L3/L4 + ECOSTRESS plug-in.
+### 12.1 Required Submission Behavior (Active in Submission)
+1. **Interactive Field Drawing & Geometry Validation:** Users can draw polygons directly on the Leaflet map; backend validates non-zero area, vertex bounds, and Twante regional coverage (`/api/analysis`).
+2. **Deterministic Agronomic Rules Engine:** Evaluates multi-season rotations (Rice → Rice, Rice → Mung Bean, Rice → Black Gram) using FAO EcoCrop ranges, legume nitrogen credit, and pest-break rules with score breakdown and citations.
+3. **Preserved Ineligible Baselines:** Unsustainable practices (e.g. rainfed rice in dry season) remain in comparison tables marked `unsuitable` with reasons displayed.
+4. **Original Specialist Agent Family:** 3 animated specialist agents (Field Scout, Water Analyst, Crop Planner) with anticipation, movement choreography, and squash/stretch physics.
+5. **What-If Scenario Stress Testing:** Interactive sliders for rainfall deviations (-20% to +20%), planting delays, irrigation availability, and field drainage.
+6. **10 Functional Screens:** Full coverage across 6 Farmer screens (F1–F6) and 4 Analyst screens (A1–A4).
+7. **Bilingual Burmese / English Interface:** Native localization with agricultural units (Acres / ဧက, Baskets / တင်း, MMK / ကျပ်).
+8. **Offline Resilience & Printable Report:** Pre-cached JSON snapshots (`FIELDSHIFT_OFFLINE=1`) and formatted print report stylesheet for offline consultation.
 
-**The 10 differentiators — each maps to a judging criterion and is hard to copy in a day:**
-
-1. **Myanmar-first, not Myanmar-flavoured (Relevance + Impact).** Real Delta + Dry Zone crops (monsoon rice, black gram, green gram, pigeon pea, sesame, groundnut), real sowing windows, real hazards: monsoon flood timing, May cyclone season, Dry Zone drought, delta salt intrusion. Farmyza and RotaShift are Bangladesh haor — different country, different monsoon, different crops. A judge in Yangon can tell the difference in one glance.
-2. **Burmese-language farmer interface (Impact).** The end user is a Myanmar farmer; an English-only tool excludes them. Ship Burmese field labels, advice summaries and key buttons — plus local units (acres, baskets, viss) instead of hectares/tonnes. No known project for this challenge ships a Burmese farmer-facing UI.
-3. **The data-cleaning pipeline as a Validity moat (Validity).** 9 sources through a validated pipeline (§5: documented scaling, cloud/quality masking, range checks, dedup, `cleaning_report.json` in the repo). Farmyza's public shape is "calls the POWER API" — no cleaning layer visible. A cleaning report is checkable evidence, not a claim.
-4. **Pre-harvest engine — a second engine, not a feature (Creativity + Impact).** Harvest window from NDVI senescence + 10-day rain outlook + ESI stress + SMAP dryness + El Niño context. Farmyza's known shape is rotation recommendation + explanation. This extends the product from "what to plant" to "when to harvest" — full-season coverage.
-5. **Climate futures (Relevance).** NEX-GDDP-CMIP6 projections (2015–2100) via POWER's high-resolution toggle — "what will the season look like". The challenge is about *adapting to changing conditions*; a future-climate view answers the brief's core word ("adapting") more directly than current-data-only tools. Verify the toggle serves NEX-GDDP at build time.
-6. **Space + ground fusion (Validity).** LoRaWAN field sensors (AgroGuard pattern) fused with SMAP satellite moisture. Satellite-only tools cannot validate their moisture numbers; this one can — even one sensor, or a clearly-labelled DEMO sensor feed. Ground truth is the difference between a demo and a system.
-7. **Offline-first for Myanmar's reality (Impact + Validity).** Cleaned snapshots; the demo works with dead venue Wi-Fi. Rural Myanmar connectivity is the reality for the end user — a tool that needs live internet fails where farmers are. A live-API-only shape fails offline.
-8. **Provenance / honesty system (Validity).** Every number carries source + product version + retrieval date; LIVE / CACHED / DEMO badges; the "what is real vs demo" table. In a field where teams demo sample values, verifiable real data is a differentiator.
-9. **The agent as simulation, not chatbot (Creativity).** Farmyza's agent explains; this agent *shows the work happening* (route, sim clock, event log, scan pulse, staggered reveal). And the rotation rules are an auditable rules engine (`.agri` DSL pattern) — an agronomist can read the rules, unlike a black-box ML recommendation. The challenge itself demands "why it was suggested" + evidence; a rules engine answers that natively, while ML needs an explanation layer bolted on.
-10. **Farmer priorities as the control surface (Relevance).** The challenge text names "farmer priorities" as an input — most tools ignore it. Here income / soil-health / water-saving sliders re-rank plans live, and income uses **farmer-entered prices** (their own numbers, never invented data) + water cost (pulses ≈20% of paddy water, verified). Plus a field-calendar view for bare-field periods and pest-break windows — explicitly requested by the challenge text and skipped by most teams.
-
-**Why this combination wins (the deep reasoning):** no single item above is unbeatable on its own — any team can add a Burmese label or a pre-harvest card. The moat is the **stack**: Myanmar specificity + cleaning pipeline + provenance + offline-first + sensor fusion + pre-harvest + climate futures. Each layer is cheap alone; together they mean the project is *verifiably real* (every number sourced), *usable where farmers are* (offline, Burmese, local units), and *complete across the season* (plant + harvest + future). A team copying the shape in a day can copy one layer, not all seven — and the judges can check every layer in the repo (cleaning report, snapshots, provenance badges) in under a minute.
-
-**Judge Q&A prep (rehearse these answers):**
-- *"Isn't this just Farmyza for Myanmar?"* → Same challenge, different product: Myanmar crops/soils/hazards, Burmese UI, pre-harvest engine, cleaning pipeline + provenance, offline-first, sensor fusion. Farmyza is a rotation recommender; this is a full-season farm twin.
-- *"SMAP is 9 km — that's not field-scale. Is your field data fake?"* → Honest labelling: SMAP is district-scale and the UI says so; field-scale comes from Landsat 30 m + ECOSTRESS 70 m. Turning the weakness into a Validity win.
-- *"How do you know the rotation advice is right?"* → Rules-based, each rule cites its source (farmer surveys for rice–pulse rotations, FAO GAEZ suitability, NASA data for timing); every recommendation shows reasons for/against + gaps + risks; and the tool supports, never replaces, farmer judgment — the challenge's own words.
-- *"Why not ML like Farmyza?"* → ML needs Myanmar training data we don't have in a day; rules are explainable and auditable. ML without Myanmar training data would be guessing.
-- *"What if there's no internet?"* → Cleaned snapshots; POWER is the only live call and degrades to cached climatology.
-- *"What about El Niño?"* → Crop Monitor No. 144 + Jun 2026 special report: strong El Niño peaking Nov 2026–Jan 2027, cited in the pre-harvest panel.
-
-**What NOT to claim (honesty guardrails for the pitch):**
-- Never claim field-scale soil moisture from SMAP; never claim yield predictions.
-- Never claim Farmyza lacks a feature you have not verified — say "not visible in their public demo".
-- Never present the Costa Rica 30/20/20/20/10 grid as the global rubric (it is a local grid).
-- Never claim PDFs from the resources tab (there are none).
+### 12.2 Later Expansion (Phased Roadmap)
+1. **Regional Geographic Expansion:** Extending verified coverage from Twante baseline to Bogale, Hinthada, and Myaungmya.
+2. **Automated Earthdata Pipeline:** Production scheduled ingestion for SMAP L4 and MODIS NDVI with authenticated Earthdata tokens.
+3. **In-Situ LoRaWAN Sensor Fusion:** Incorporating real-time soil moisture probes to ground-truth coarse satellite footprints.
+4. **Machine Learning Model Release:** Promoting the 3 gated ML tracks (Root-Zone Wetness Nowcasting, Vegetation Anomaly, Yield Feasibility) from `experimental` to active recommendation only after field-calibrated ground truth validation.
 
 ## 13. The stack — best stack for differentiation (deep reasoning)
 
@@ -558,82 +540,34 @@ Click a field → an agent marker animates along a route to the field (route ani
 | Leaflet tiles | GIBS down | CARTO/OSM fallback, then precached tiles |
 | Rules engine | A rule's data missing | Rule degrades to "insufficient data" with the gap stated — which is itself a challenge requirement (information gaps) |
 
-## 14. Farmyza head-to-head — looks similar, we do better in every way
+## 14. Garvesty Demonstration Walkthrough & Judge Script
 
-**The similarity trap:** to a judge skimming, both projects are "click a field on a map, get a crop rotation plan". That is the danger — if the judge sees the same shape, they score it as the same project. The whole point of this section is to make the difference **unmissable in 30 seconds**. Every row below follows the same pattern: *surface similarity → what Farmyza shows publicly → what we do deeper → the criterion it scores → the evidence in our build.*
+### 14.1 The 3-Minute Walkthrough
+1. **0:00–0:45 (Overview & Selection - F1/F2):** Open Garvesty on the Ayeyarwady Delta map. Switch between English and Burmese. Select a predefined field or activate "Draw Field" to place a custom polygon. Point out real-time planar acre calculations and Twante coverage bounding box validation.
+2. **0:45–1:30 (Specialist Agent & Environmental Context - F3):** Dispatch the specialist agent. Observe the physical anticipation and smooth travel to the field centroid while reading NASA POWER weather and ISRIC SoilGrids data. Show explicit source, product, and spatial resolution badges (`LIVE` / `CACHED`).
+3. **1:30–2:15 (Rotation Comparison - F4):** Open the crop comparison. Show the 3 alternatives plus the preserved baseline practice (Rice → Rice). Demonstrate that an ineligible baseline (rainfed summer rice) remains visible with explicit disqualification reasons. Adjust priority sliders (Income, Soil Health, Water Saving) to demonstrate dynamic re-ranking.
+4. **2:15–2:45 (Scenario Stress-Testing - F5):** Shift to What-If Scenarios. Simulate a −20% rainfall drought and a 2-week planting delay. Review how the delta projection recalculates scores and warns of depleted residual moisture.
+5. **2:45–3:00 (Report Export & Analyst Telemetry - F6 & A1–A4):** Preview the printable Seasonal Decision Report (F6) with local verification checkboxes and scientific disclaimers. Switch to Analyst Mode (A1–A4) to display data pipeline freshness, cleaning audit logs, and gated ML model evaluation tracks.
 
-**Honesty note (read this before the pitch):** this comparison is against what Farmyza shows in their **public demo** (Facebook reel, 17 Oct 2026) and public description. Their full feature set is UNVERIFIED — they may have features we cannot see. Never say "Farmyza doesn't have X" on stage. Say **"what Farmyza shows publicly is X; what we ship is Y — and here is the evidence"**. That phrasing is both true and unanswerable.
+---
 
-### 14.1 The head-to-head table
+## 15. The 10-Screen Interface Architecture
 
-| # | Looks similar… | Farmyza (public demo) | We do better — deeper, with evidence | Criterion | Evidence in our build |
-|---|---|---|---|---|---|
-| 1 | Click a field on a map | Click → ML recommendation appears | Click → **agent runs to the field** (route animation, sim clock, event log narrating each step, scan pulse, staggered plan reveal). The interaction is a field visit, not a form. | Creativity | §8, §13.4 agent workflow, WebSocket event stream |
-| 2 | Rotation recommendation | Custom ML model generates "ideal rotations" | **Rules engine**: ≥3 rotations **plus the farmer's existing rotation**, each with reasons **for and against**, evidence, benefits, information gaps, risks needing local review — the challenge's explicit requirement. ML is a black box; rules are auditable by an agronomist. | Validity, Relevance | §7 (8 rules), §12 moat #9, `.agri` DSL format |
-| 3 | AI agent | Plain-language Q&A agent ("How can I optimize yield for 2025?") | **Simulation agent that shows the work**: the event stream *is* the pipeline executing (dispatched → reading SMAP → NDVI trend → scoring → plan ready). The explanation is the rules themselves, not a chatbot answer. | Creativity | §8, §13 Layer 4 |
-| 4 | NASA data (POWER, SMAP, Landsat, ECOSTRESS) | API calls to POWER, SMAP L4, Landsat 8/9, ECOSTRESS, GIBS | **9 sources through a validated cleaning pipeline** (§5): documented scaling, cloud/quality masking, range checks, dedup, `cleaning_report.json` in the repo. **Plus** GPM IMERG (observed rain, not modelled), SRTM terrain, FAO GAEZ suitability, Sentinel-2 10 m, Crop Monitor El Niño context, NEX-GDDP climate futures. Broader, cleaned, provenanced. | Validity | §5, §4, cleaning report |
-| 5 | Water / irrigation advice | Recommends pulses "to cut irrigation needs" | **Actual irrigation numbers**: SMAP moisture trigger + IMERG observed rain + ECOSTRESS ESI stress flag + POWER ET → *when* to irrigate and *how much*; water budget per rotation; pulses ≈20% of paddy water (verified). | Validity, Impact | §7 rules 5, §4 ECOSTRESS/SMAP rows |
-| 6 | Pre-harvest | Not visible in public demo | **Full pre-harvest engine**: harvest window from NDVI senescence + 10-day rain outlook + ESI stress + SMAP dryness + El Niño context. A second engine, not a feature — "when to harvest", not just "what to plant". | Creativity, Impact | §7 pre-harvest, §12 moat #4 |
-| 7 | Farmer language | English UI + English plain-language agent (per public demo) | **Burmese UI + local units** (acres, baskets, viss) — the actual user is a Myanmar farmer. Flip the UI to Burmese mid-demo; it is the most memorable 5 seconds of the pitch. | Impact | §13 Layer 5, §12 moat #2 |
-| 8 | Works as a product | "SaaS platform" — needs internet | **Local-first PWA**: installable on a cheap Android phone, fully offline after first load (app shell + tiles + snapshots cached). Works in a field with no signal — where farmers are. | Impact, Validity | §13 Layer 1, offline workflow §13.4 |
-| 9 | Ground truth | Satellite-only (per public demo) | **Space + ground fusion**: LoRaWAN field sensors (AgroGuard pattern) fused with SMAP satellite moisture. Satellite-only tools cannot validate their moisture numbers; this one can — even one sensor, or a clearly-labelled DEMO feed. | Validity | §6, §12 moat #6 |
-| 10 | Adapting to change | Current-conditions data (per public demo) | **Climate futures**: NEX-GDDP-CMIP6 projections 2015–2100 via POWER's high-resolution toggle — "what will the season look like". The challenge is about *adapting to changing conditions*; this answers the brief's core word directly. | Relevance | §12 moat #5, §4 |
-| 11 | Data honesty | Unknown — no cleaning report or provenance visible | **Provenance system**: every number carries source + product version + retrieval date; LIVE / CACHED / DEMO badges; "what is real vs demo" table; cleaning report in the repo. In a field where teams demo sample values (RotaShift's README says so explicitly), verifiable real data is a differentiator. | Validity | §5.3, §11, design doc §6.4 |
-| 12 | Farmer priorities | Model "evaluates the field's micro-history" — no priority input visible | **Farmer priorities as the control surface**: income / soil-health / water-saving sliders re-rank plans live; income from **farmer-entered prices** (their own numbers, never invented). The challenge text names farmer priorities as an input — most tools ignore it. | Relevance | §7 rules 7, §12 moat #10 |
-| 13 | Field calendar / pest breaks | Not visible in public demo | **Field-calendar view**: bare-field periods, vulnerable seasons, pest-break windows — explicitly requested by the challenge text and skipped by most teams. | Relevance | §7, §12 moat #10 |
-| 14 | Local context | Bangladesh haor, rice + maize, farmer Rahim Mia | **Myanmar Delta + Dry Zone**: monsoon rice, black gram, green gram, pigeon pea, sesame, groundnut; real sowing windows; Myanmar hazards (May cyclone season, Dry Zone drought, delta salt intrusion). A Yangon judge can tell the difference in one glance. | Relevance, Impact | §7 crop table, §12 moat #1 |
-| 15 | Submission proof | Video demo | **Video/slides + cleaning report + README honesty table + public repo.** The judges can verify the pipeline in under a minute without running anything. | Validity, Presentation | §10, §5.3 |
+Garvesty connects 10 dedicated functional screens sharing a single unified data model (`/api/analysis`), split into two operational modes:
 
-### 14.2 The 30-second differentiation demo (make the difference unmissable)
+### 15.1 Farmer Mode (Decision Workflow: F1–F6)
+- **F1 Farm Overview:** Greeting, selected farm profile, summary weather cards (Rainfall, Moisture, Temp) with source timestamps, and action trigger.
+- **F2 My Farm (Drawing & Boundaries):** Interactive Leaflet canvas with custom polygon drawing, vertex modification, shoelace acreage calculation, and agronomic annotations (drainage, irrigation, crop history).
+- **F3 Environmental Intelligence:** Deep environmental breakdown combining NASA POWER 30-year climatology, surface/root-zone wetness, and ISRIC SoilGrids soil properties with footprint disclosures.
+- **F4 Crop Rotation Comparison:** Side-by-side comparative evaluation of multi-season rotations (Rice → Rice, Rice → Mung Bean, Rice → Black Gram) with score breakdown (Soil, Water, Income), cited agronomic reasons, and return inputs.
+- **F5 Scenario Simulator:** Interactive stress-testing workbench for rainfall deviations (-20% to +20%), planting delays, irrigation availability, and field drainage conditions.
+- **F6 Seasonal Decision Report:** Complete, offline-printable decision dossier with farm specifications, rotation tables, scenario projections, and local risk checks.
 
-If a judge has 30 seconds, show these five moments in order — each one is something Farmyza's public demo does not show:
-1. **(0–5s) Install the PWA** — one tap, "Add to Home Screen". It is a product on a phone, not a website.
-2. **(5–10s) Go offline** — turn Wi-Fi off, reload, click a field. Everything still works. Say: "This works in a field with no signal."
-3. **(10–18s) Click a field, watch the agent run** — the event log narrates each data check live. Say: "You are watching the pipeline work, not a loading spinner."
-4. **(18–25s) Flip to Burmese** — the whole UI switches language mid-demo. Say: "This is for the farmer, not for us."
-5. **(25–30s) Point at a provenance badge** — one number, its source, product version, retrieval date. Say: "Every number shows where it came from."
-
-### 14.3 Why the stack wins (the one-paragraph version for the pitch)
-
-"Farmyza is a rotation recommender. This is a full-season farm twin: it plans what to plant, tells you when to harvest, shows you the future climate, speaks the farmer's language, works with no internet, and proves every number it shows. Same challenge, different product — and you can verify all of it in the repo in under a minute."
-
-## 15. UI design — merging FieldShift (farmer) × TERRA (analyst)
-
-**The two directions (from the screenshots, 13 Nov 2026):**
-- **Friend's picks — FieldShift (4 desktop screens + mobile):** 01 Overview ("Mingalaba, U Aung Myint", Myaungmya Plot 4, rainfall 142 mm / soil moisture 0.31 m³/m³ / temperature 31.4 °C cards, field satellite image), 04 Crop Rotation Comparison ("Which crop should you plant next?", Rice → Rice vs Rice → Mung Bean, environmental-fit bars, planting window, "Why this option does/doesn't work", "Check locally" risks, recommendation banner), 05 Scenario Simulator ("What if conditions change?", rainfall −20%, planting delay 2 weeks, irrigation on/off, "what changed and why"), 06 Decision Report ("Your Seasonal Decision Report", comparison table, reasoning, next steps), plus Mobile 1–4 (Overview / Comparison / Simulator / Decision Card, bottom nav: Home, Compare, Simulate, Report).
-- **Your best picks — TERRA Earth Systems (4 screens):** 01 Mission overview (monitored area 124,860 ha, vegetation index 0.72, soil moisture 24.8%, fields at risk 06, priority fields table, attention queue, data sources table with Connected status), 02 Field intelligence (North 12, IA-012, Story County Iowa, vegetation index 0.54 chart, root-zone soil moisture 16.6%, precipitation 4.2 mm, analyst assessment, observation history with source/NDVI/cloud/quality), 03 NASA data (import a data batch, drop observation files, assign to field, annotation setup with label schema, imported batches table with status), 04 Map intelligence (satellite map, field boundary, NDVI 0.54, selected-field panel, map layer toggles, observation timeline with play + compare dates).
-
-**The deep reasoning — why merging them wins:** neither direction alone is enough. FieldShift alone is a farmer app with no visible data machinery — a judge cannot see *how* the numbers were made, so Validity rests on trust. TERRA alone is an analyst console with no farmer — a judge cannot see *who* it serves, so Impact rests on assertion. **Merged, each direction proves the other:** the farmer flow proves the tool serves a real person; the analyst console proves the numbers are real, cleaned, and traceable. Farmyza has one mode (a SaaS dashboard); this has two, and the analyst mode is where the cleaning pipeline (§5), provenance (§11) and NASA data use become *visible* — which is exactly what scores Validity. The merge is the differentiation, not a compromise.
-
-### 15.1 Two modes, one app
-
-| | Farmer Mode (FieldShift) | Analyst Mode (TERRA) |
-|---|---|---|
-| **Who** | The Myanmar farmer (and the judge role-playing one) | The analyst / judge checking the system |
-| **Language** | Burmese-first, warm greeting ("Mingalaba, U …"), local units (acres, baskets, viss) | English, operations language ("Mission overview", "Field intelligence", "Attention queue") |
-| **Skin** | Deep forest-green sidebar, cream/off-white background, white cards, green accent buttons, rounded corners, big cards, mobile-first | Black sidebar, white background, lime-green accent, black stat cards, dense tables, desktop console |
-| **Job** | Decide what to plant, what to do next | Verify the data, triage fields, audit the pipeline |
-| **Navigation** | Decision workflow: Overview → My Farm → Environmental Intelligence → Crop Comparison → Scenario Simulator → Decision Reports | Operations: Mission overview → Field intelligence → NASA data → Map intelligence |
-| **Mode switch** | One toggle in the sidebar ("Farmer / Analyst") — flipping it mid-demo is a pitch moment | Same toggle; the data underneath is identical, only the presentation changes |
-
-**One design token system, two skins.** Same spacing scale, same radii, same type scale (the premium-UI rule: ratios and geometries are mandatory, no arbitrary pixel values — every measurement traces to the scale tokens). The skins differ only in color tokens and density. Exact hex values: sample them from the screenshots at build time; do not invent them here.
-
-### 15.2 Screen map (merged — 10 screens)
-
-**Farmer Mode — the decision workflow (maps to the challenge's demand):**
-- **F1 Overview** — greeting + farm profile + the three cards (Rainfall / Soil moisture / Temperature, each with source + "vs 30-yr mean" delta) + selected-field satellite image + "Start Crop Analysis" button. *Maps to:* field panel + gauges (§6, design doc §4).
-- **F2 My Farm** — field list, farm profile, field boundaries on the map.
-- **F3 Environmental Intelligence** — the field's full NASA picture: POWER weather, SMAP moisture, MODIS/Landsat NDVI trend, ECOSTRESS stress, SRTM terrain. Every value with source + date.
-- **F4 Crop Comparison** — "Which crop should you plant next?" Two (or more) options side by side: environmental-fit bars (rainfall supply, water need, temperature, soil/drainage), planting window strip, **"Why this option does/doesn't work"** (reasons for/against), **"Check locally"** risks (the challenge's "information gaps and risks needing local review", shown literally on screen), recommendation banner ("Option to investigate: Rice → Mung Bean"). *This screen IS the challenge requirement, rendered as UI.*
-- **F5 Scenario Simulator — NEW feature (from the friend's pick).** "What if conditions change?" Controls: rainfall −20%, planting delay 2 weeks, irrigation on/off, "assume field drains well" toggle. Each option re-scores live with "what changed and why" + "now in drought window" flags. Directly serves the challenge briefing's "understand risk" shape and is **not visible in Farmyza's public demo**. Build it in hour 5–7 (it reuses the rotation engine — same scoring function, different inputs).
-- **F6 Decision Report** — "Your Seasonal Decision Report": the chosen rotation, the comparison table, the reasoning, the next-steps checklist, "Ready to decide?" panel. **This screen generates the submission artifact** — export/print the report (it becomes the 7-slide deck content and the 30-sec video storyboard). Mobile: Decision Card with Compare again / Download buttons.
-- **Mobile M1–M4** — the same workflow as a PWA on a phone: Overview / Comparison / Simulator / Decision Card, bottom nav (Home, Compare, Simulate, Report), "Good morning, U Thant Zin", recent-observations list. *This is the PWA story (§13 Layer 1) with concrete screens.*
-
-**Analyst Mode — the operations workflow (maps to the data pipeline + provenance):**
-- **A1 Mission overview** — portfolio triage: monitored area (hectares), vegetation index, soil moisture, fields at risk (count), priority fields table (field / crop / area / NDVI / moisture / status), attention queue (moisture decline, vegetation stress, cloud cover), data sources table (source / input / use / status: Connected). *Maps to:* the whole system at a glance — the judge's first screen.
-- **A2 Field intelligence** — one field, deep: vegetation index chart (last 12 observations vs seasonal baseline), root-zone soil moisture + 7-day delta, precipitation past 7 days vs seasonal average, **analyst assessment** (plain-language verdict), observation history table (acquired UTC / source / NDVI / cloud cover / quality: Validated). Data confidence badge (e.g. "96.4% / high"). *Maps to:* field panel + provenance (§11).
-- **A3 NASA data — the cleaning pipeline made visible.** "Import a data batch": source selector (Landsat 8/9, MODIS, SMAP…), drop observation files (GeoTIFF, NetCDF, HDF5), assign to field, import. **Annotation setup**: label schema (crop condition: healthy vegetation / vegetation stress / cloud / no data), annotation type (polygon regions), "annotations require review before export". **Imported batches table**: batch / source / field / acquired / status (Ready to annotate / In review). *This screen is §5 in UI form — judges see data being imported, labelled, reviewed. It is the single most convincing Validity screen in the app.*
-- **A4 Map intelligence** — satellite map with field boundary + NDVI overlay, layer toggles (field boundaries / stress annotations / vegetation index / soil moisture), selected-field panel (area, NDVI, soil moisture, latest source), **observation timeline** (play button, compare-dates mode — time-travel through NDVI observations). *Maps to:* the GIS layer (§6) with time travel.
+### 15.2 Analyst Mode (Operations & Telemetry: A1–A4)
+- **A1 Mission Overview:** Regional portfolio triage, monitored acreage, active data layer statuses (`LIVE`, `CACHED`, `DEMO`), and update latencies.
+- **A2 Field Intelligence:** Precise geometry inspection, time-series charts, and sensor footprint overlays contrasting coarse satellite footprints with farm boundaries.
+- **A3 NASA Data Catalogue:** Full product specifications, DOIs, spatial/temporal resolutions, and cleaning steps for NASA POWER, GPM, SMAP, MODIS, and SoilGrids.
+- **A4 Quality & Gated ML Models:** Data cleaning pipeline audit (sentinel nullification, range bounds) and the 3 gated ML evaluation tracks (Root-Zone Wetness, Vegetation Anomaly, Yield Feasibility) evaluated with chronological holdouts and fails-closed release gates.
 
 ### 15.3 How the merge serves the judging criteria
 
