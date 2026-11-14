@@ -1,0 +1,71 @@
+{
+  "generated_utc": "2026-11-14T02:41:18Z",
+  "sources": {
+    "power_daily:16.500_95.625": {
+      "rows_in": 731,
+      "rows_out": 728,
+      "fill_values_nulled": 28,
+      "out_of_range_nulled": 0,
+      "rows_dropped_no_data": 3,
+      "date_range": [
+        "2024-11-13",
+        "2026-11-10"
+      ],
+      "note": "Most recent days can be missing until POWER's near-real-time feed catches up."
+    },
+    "power_daily:16.500_96.250": {
+      "rows_in": 731,
+      "rows_out": 728,
+      "fill_values_nulled": 28,
+      "out_of_range_nulled": 0,
+      "rows_dropped_no_data": 3,
+      "date_range": [
+        "2024-11-13",
+        "2026-11-10"
+      ],
+      "note": "Most recent days can be missing until POWER's near-real-time feed catches up."
+    },
+    "power_climatology:16.500_95.625": {
+      "months": 12,
+      "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+      "months_missing_rain": 0
+    },
+    "power_climatology:16.500_96.250": {
+      "months": 12,
+      "period": "25-year Meteorological and Solar Monthly & Annual Climatologies (January 2001 - December 2025)",
+      "months_missing_rain": 0
+    },
+    "soilgrids:F-01": {
+      "properties": 6,
+      "missing": []
+    },
+    "soilgrids:F-02": {
+      "properties": 6,
+      "missing": []
+    },
+    "soilgrids:F-03": {
+      "properties": 6,
+      "missing": []
+    },
+    "soilgrids:F-04": {
+      "properties": 6,
+      "missing": []
+    },
+    "soilgrids:F-05": {
+      "properties": 6,
+      "missing": []
+    },
+    "soilgrids:F-06": {
+      "properties": 6,
+      "missing": []
+    },
+    "modis_mod13q1": {
+      "status": "NOT_CONNECTED",
+      "note": "No raw files in data/raw/appeears."
+    },
+    "smap_spl3smp_e": {
+      "status": "NOT_CONNECTED",
+      "note": "No raw files in data/raw/appeears."
+    }
+  }
+}
