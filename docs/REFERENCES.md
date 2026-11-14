@@ -99,6 +99,12 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
     because EcoCrop gives it no growing-period length.
 
 
+18. **Soil sampling steps** - Zurweller, B., *Soil Testing for the Farmer*, Publication P3858,
+    Mississippi State University Extension (<https://extension.msstate.edu/publications/soil-testing-for-the-farmer>).
+    Used for the soil pH guide: zigzag pattern, at least 15 cores, skip unusual spots, scrape off
+    residue, 6 inch depth, mix after drying, test every 3 years or once per rotation. Kit amounts
+    and waiting times are left to each kit's own leaflet.
+
 ## Data-status vocabulary
 
 - `LIVE` - retrieved or streamed from the source during the current session.

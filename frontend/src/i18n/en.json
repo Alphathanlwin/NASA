@@ -458,5 +458,22 @@
   "month.9": "September",
   "month.10": "October",
   "month.11": "November",
-  "month.12": "December"
+  "month.12": "December",
+  "phguide.open": "How to test soil pH",
+  "phguide.title": "Test your soil pH",
+  "phguide.step": "Step {n} of {total}",
+  "phguide.zigzag": "Walk across the field in a zigzag. Take soil from at least 15 spots.",
+  "phguide.skip": "Skip odd spots: near trees, on paths, or where fertiliser or lime spilled.",
+  "phguide.dig": "Scrape off plant waste. Dig to 6 inches (15 cm), the same depth each time.",
+  "phguide.mix": "Put all the soil in a clean bucket. Let it dry, then mix it well.",
+  "phguide.water": "Put the mixed soil and water in the kit's tube, as much as the kit says.",
+  "phguide.shake": "Shake it, then wait as long as the kit says.",
+  "phguide.colour": "Match the colour to the kit's chart. Read the number next to it.",
+  "phguide.type": "Type that number into Soil test pH.",
+  "phguide.back": "Back",
+  "phguide.next": "Next",
+  "phguide.done": "Enter my pH",
+  "phguide.close": "Close",
+  "phguide.again": "Test each field every 3 years, or once per crop rotation. Not sure? Ask your township extension officer.",
+  "phguide.source": "Sampling steps: Mississippi State University Extension, Soil Testing for the Farmer."
 }

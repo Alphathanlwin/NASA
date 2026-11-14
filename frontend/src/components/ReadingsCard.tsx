@@ -1,9 +1,11 @@
 // AI-assisted: Claude Code
 // "Your field measurements": what the farmer measured or sees. Each value is USER-INPUT and,
 // where the rules can use it, replaces the grid-cell estimate in the plans.
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
+import type { ReactNode } from 'react'
 import { t } from '../i18n'
 import type { Readings } from '../userfields'
+import { PhGuideButton } from './PhGuide'
 import { StatusPill } from './Provenance'
 
 type Choice<T extends string> = { value: T; key: string }
@@ -25,26 +27,31 @@ function Choices<T extends string>({ label, hint, value, options, onChange }: {
   )
 }
 
-function NumberInput({ label, hint, value, min, max, step, onChange }: {
+function NumberInput({ label, hint, value, min, max, step, onChange, id, help }: {
   label: string; hint?: string; value: number | null | undefined; min: number; max: number; step: number
-  onChange: (v: number | null) => void
+  onChange: (v: number | null) => void; id?: string; help?: ReactNode
 }) {
+  const auto = useId()
+  const inputId = id ?? auto
   const [text, setText] = useState(value == null ? '' : String(value))
   useEffect(() => { setText(value == null ? '' : String(value)) }, [value])
   const n = text === '' ? null : Number(text)
   const bad = n !== null && (Number.isNaN(n) || n < min || n > max)
   return (
-    <label className="reading">
-      <span className="reading-label">{label}</span>
+    <div className="reading">
+      <span className="reading-label-row">
+        <label className="reading-label" htmlFor={inputId}>{label}</label>
+        {help}
+      </span>
       {hint && <small>{hint}</small>}
-      <input inputMode="decimal" value={text} className={bad ? 'invalid' : ''} aria-invalid={bad}
+      <input id={inputId} inputMode="decimal" value={text} className={bad ? 'invalid' : ''} aria-invalid={bad}
         onChange={(e) => {
           setText(e.target.value)
           const v = e.target.value === '' ? null : Number(e.target.value)
           if (v === null || (!Number.isNaN(v) && v >= min && v <= max)) onChange(v === null ? null : Math.round(v / step) * step)
         }} />
       {bad && <small className="invalid-note">{t('readings.range', { min, max })}</small>}
-    </label>
+    </div>
   )
 }
 
@@ -69,6 +76,7 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
 
       <div className="readings-grid">
         <NumberInput label={t('readings.ph')} hint={t('readings.phHint')} value={readings.soil_ph} min={3} max={10} step={0.1}
+          id={inMap ? 'soil-ph-map' : 'soil-ph'} help={<PhGuideButton inputId={inMap ? 'soil-ph-map' : 'soil-ph'} />}
           onChange={(v) => set({ soil_ph: v })} />
         <Choices label={t('readings.moisture')} hint={t('readings.moistureHint')} value={readings.moisture}
           options={[{ value: 'dry', key: 'm.dry' }, { value: 'moist', key: 'm.moist' }, { value: 'wet', key: 'm.wet' }]}

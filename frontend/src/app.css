@@ -1096,3 +1096,36 @@ html:has(.map-surface:modal) { overflow: hidden; }
 .fert-potash rect { fill: #c8574a; }
 .fert-gypsum rect { fill: #e8dfc8; }
 @keyframes rise { from { transform: scaleY(0); } }
+
+/* soil pH guide: round help button + step dialog */
+.reading-label-row { display: flex; align-items: center; gap: 8px; }
+.help-dot {
+  width: 30px; height: 30px; border-radius: 50%; flex: none; display: inline-grid; place-items: center;
+  border: 2px solid var(--turmeric); background: var(--turmeric-soft); color: #8a5d00; font: inherit; font-weight: 800; font-size: 0.95rem;
+  cursor: pointer; position: relative;
+}
+.help-dot::after { content: ""; position: absolute; inset: -7px; }  /* 44 px touch area */
+.help-dot:hover { background: var(--turmeric); color: #fff; }
+.guide-backdrop { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 16px;
+  background: rgb(15 59 51 / 0.38); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); animation: open 200ms var(--ease-out) both; }
+.guide { width: min(460px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--paper); border-radius: 20px;
+  box-shadow: var(--e3); padding: 16px 18px 14px; display: grid; gap: 8px; }
+.guide-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.guide-head h3 { margin: 0; outline: none; }
+.guide-close { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; color: var(--ink); }
+.guide-count { margin: 0; color: var(--muted); font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.guide-stage { display: grid; gap: 8px; animation: slide-step 280ms var(--ease-out) both; }
+.guide-stage[data-dir="-1"] { --d: -1; }
+@keyframes slide-step { from { opacity: 0; transform: translateX(calc(var(--d, 1) * 28px)); } }
+.guide-figure { width: 100%; height: auto; background: #f3f1e8; border-radius: 14px; }
+.guide-text { margin: 0; font-size: 1.05rem; line-height: 1.45; min-height: 3em; }
+.guide-dots { display: flex; gap: 6px; justify-content: center; padding: 4px 0; }
+.guide-dots button { width: 10px; height: 10px; border-radius: 999px; border: 0; padding: 0; background: var(--line); cursor: pointer;
+  transition: width var(--t-move) var(--ease-spring), background-color var(--t-move) var(--ease-io); }
+.guide-dots button.on { width: 26px; background: var(--paddy); }
+.guide-actions { display: flex; justify-content: space-between; gap: 10px; }
+.guide-actions .btn { min-height: 44px; min-width: 110px; font-size: 0.95rem; }
+@media (max-width: 820px) {
+  .guide-backdrop { place-items: end center; padding: 0; }
+  .guide { width: 100%; border-radius: 20px 20px 0 0; max-height: 92vh; padding-bottom: 20px; }
+}
