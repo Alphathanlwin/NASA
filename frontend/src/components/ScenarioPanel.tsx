@@ -39,7 +39,6 @@ export function ScenarioPanel({ draft, onChange, result, fieldIrrigation }: {
     <div className="stack">
       <section className="card">
         <h3>{t('scenario.title')}</h3>
-        <p className="lead">{t('scenario.lead')}</p>
 
         <div className="scenario-grid">
           <Group label={t('scenario.irrigation')}>
