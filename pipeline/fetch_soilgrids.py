@@ -2,7 +2,7 @@
 """Fetch ISRIC SoilGrids v2 topsoil properties (0-5 cm mean) per demo field.
 SoilGrids is not a NASA product; it is the soil complement. No login needed.
 
-    python backend/app/data_sources/fetch_soilgrids.py
+    python pipeline/fetch_soilgrids.py
 """
 import time
 

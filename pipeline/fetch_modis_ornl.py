@@ -2,7 +2,7 @@
 """Fetch MODIS MOD13Q1 (NDVI / EVI, 250 m, 16-day) for each demo field from the
 NASA ORNL DAAC subset service. No login needed. One 250 m pixel at the field centre.
 
-    python backend/app/data_sources/fetch_modis_ornl.py
+    python pipeline/fetch_modis_ornl.py
 """
 import time
 from datetime import date, timedelta

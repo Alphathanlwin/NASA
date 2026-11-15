@@ -8,7 +8,7 @@ IMERG is NASA's satellite rainfall product and is used for rain in the crop suit
 
 Same OPeNDAP access as fetch_imerg.py (Earthdata token, GES DISC agreement accepted).
 
-    python backend/app/data_sources/fetch_imerg_monthly.py
+    python pipeline/fetch_imerg_monthly.py
 """
 import calendar
 import time

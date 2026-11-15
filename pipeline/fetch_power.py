@@ -9,7 +9,7 @@ rejects areas under 2 degrees):
 Requests run one at a time with a 1 s pause. Raw responses are saved untouched
 with their retrieval time.
 
-    python backend/app/data_sources/fetch_power.py [recent|history|all]
+    python pipeline/fetch_power.py [recent|history|all]
 """
 import sys
 import time

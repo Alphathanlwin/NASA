@@ -186,15 +186,15 @@ The backend serves `frontend/dist` at `/NASA/` (the same base path as GitHub Pag
 ### Rebuild the data and the static payload
 
 ```bash
-.venv/Scripts/python backend/app/data_sources/fetch_power.py
-.venv/Scripts/python backend/app/data_sources/fetch_soilgrids.py
-.venv/Scripts/python backend/app/data_sources/fetch_modis_ornl.py
-.venv/Scripts/python backend/app/data_sources/fetch_imerg.py           # Earthdata token
-.venv/Scripts/python backend/app/data_sources/fetch_imerg_monthly.py   # rain normals 2001-2025
-.venv/Scripts/python backend/app/data_sources/fetch_appeears.py submit # then: collect (SMAP)
-.venv/Scripts/python backend/app/data_sources/extract_ecocrop_shortlist.py <EcoCrop_DB.csv>
-.venv/Scripts/python backend/app/data_sources/clean_all.py
-.venv/Scripts/python backend/app/data_sources/make_fields.py
+.venv/Scripts/python pipeline/fetch_power.py
+.venv/Scripts/python pipeline/fetch_soilgrids.py
+.venv/Scripts/python pipeline/fetch_modis_ornl.py
+.venv/Scripts/python pipeline/fetch_imerg.py           # Earthdata token
+.venv/Scripts/python pipeline/fetch_imerg_monthly.py   # rain normals 2001-2025
+.venv/Scripts/python pipeline/fetch_appeears.py submit # then: collect (SMAP)
+.venv/Scripts/python pipeline/extract_ecocrop_shortlist.py <EcoCrop_DB.csv>
+.venv/Scripts/python pipeline/clean_all.py
+.venv/Scripts/python pipeline/make_fields.py
 .venv/Scripts/python scripts/build_snapshot.py
 # 3D models (Blender 5.0), written to frontend/public/models/
 "C:/Program Files/Blender Foundation/Blender 5.0/blender.exe" -b -P scripts/blender/build_field_assets.py
@@ -232,31 +232,41 @@ badge appeared and the scenario controls still recalculated.
 ## 9. Project structure
 
 ```text
-backend/app/
-  api.py                  FastAPI routes
-  main.py                 app, /NASA static mount
-  engine/engine.py        canonical rules engine
-  engine/crops.json       crop table, rules, weights, scenarios
-  engine/agent.py         deterministic nine-step log
-  data_sources/           fetch, clean, field generation
-  services/store.py       snapshot access
-frontend/src/
-  App.tsx                 shell, language, tabs
-  data.ts                 snapshot loading, backend probe
-  engine/engine.ts        TypeScript port (parity-tested)
-  engine/crops.ts         generated from crops.json by sync_crops.py
-  components/             map, overview, plans, scenarios, agent, data quality
-  i18n/en.json, my.json   all UI strings
-frontend/public/
-  snapshot.json           static payload
-  fonts/NotoSansMyanmar.ttf
-scripts/
-  build_snapshot.py       static payload
-  parity_test.mjs         parity assertion
-  sync_crops.py           one crop table for both engines
-data/                     raw -> clean -> snapshot, sources, cleaning report
-docs/REFERENCES.md        dataset and agronomy references
-docs/submission.md        submission notes
+.
+├── frontend/                 React + TypeScript app (the judge build, works without the backend)
+│   ├── src/
+│   │   ├── App.tsx           shell: sidebar, pages, language
+│   │   ├── components/       pages and cards (Home, My Fields, Crop Planner, Scenarios, ...)
+│   │   ├── engine/           TypeScript rules engine (parity-tested), EcoCrop suitability
+│   │   ├── field3d/          3D field scene, models and animation
+│   │   ├── sim/              season simulator
+│   │   └── i18n/             en.json, my.json (every UI string)
+│   └── public/
+│       ├── snapshot.json     static data payload
+│       └── models/           Blender-built .glb models
+├── backend/                  FastAPI server (optional) and the canonical Python engine
+│   ├── app/
+│   │   ├── api.py, main.py   routes, static mount at /NASA
+│   │   ├── engine/           rules engine, crops.json, agent log
+│   │   ├── ml/               soil-moisture model (trained and tested, not shown in the app)
+│   │   └── services/         snapshot access
+│   └── tests/                pytest suite
+├── pipeline/                 data download and cleaning scripts (NASA POWER, IMERG, SMAP, MODIS, SoilGrids, EcoCrop)
+├── scripts/                  build_snapshot.py, crop-table sync, engine parity test, blender/ model builder
+├── data/
+│   ├── raw/                  untouched API responses with retrieval times
+│   ├── clean/                cleaned tables and climatologies
+│   ├── reference/            towns, FAO EcoCrop ranges
+│   ├── snapshots/, reports/  field snapshot, cleaning report
+│   ├── models/               soil-moisture model results
+│   └── SOURCES.md            source catalogue (generated)
+├── docs/
+│   ├── project-brief.md      original project specification
+│   ├── submission.md         submission notes and the five-minute judge path
+│   ├── REFERENCES.md         every dataset, method and image credit
+│   ├── field-3d-simulation-plan.md
+│   └── archive/              early design notes
+└── archive/garvesty/         an earlier team prototype, kept for reference
 ```
 
 ---
