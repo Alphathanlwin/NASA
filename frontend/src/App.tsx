@@ -12,6 +12,7 @@ import { Sidebar } from './components/Sidebar'
 import type { Page } from './components/Sidebar'
 import { ScenarioPanel } from './components/ScenarioPanel'
 import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
+import { setEngineLang } from './engine/engine'
 import type { Snapshot, SnapshotField } from './data'
 import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
 import type { LatLng, Readings, UserField } from './userfields'
@@ -30,11 +31,13 @@ export default function App() {
   const [lang, setLanguageState] = useState<Lang>(() => {
     const l = initialLang()
     setLang(l)
+    setEngineLang(l)
     return l
   })
   // Switch t() first, then re-render, so the new render already uses the chosen language.
   const setLanguage = (l: Lang) => {
     setLang(l)
+    setEngineLang(l)
     setLanguageState(l)
   }
   const [snap, setSnap] = useState<Snapshot | null>(null)
@@ -125,12 +128,12 @@ export default function App() {
   const plans = useMemo(() => {
     if (!snap || !field) return null
     return runPlans(snap, field, priorities, econ)
-  }, [snap, field, priorities, econ])
+  }, [snap, field, priorities, econ, lang])  // lang: reason text is written in the current language
 
   const comparison = useMemo(() => {
     if (!snap || !field || Object.keys(draft).length === 0) return null
     return runCompare(snap, field, draft, priorities, econ)
-  }, [snap, field, draft, priorities, econ])
+  }, [snap, field, draft, priorities, econ, lang])
 
   const select = (id: string) => {
     setSelectedId(id)

@@ -7,6 +7,7 @@
  * Python engine produce identical scores for the snapshot inputs. Keep them in step.
  */
 import { TABLE } from './crops.ts'
+import { MY } from './templates_my.ts'
 import type {
   Climatology, CropTable, Econ, EngineInputs, Findings, Priorities, Scenario, Unknown,
 } from './types'
@@ -15,6 +16,14 @@ export const ENGINE_VERSION = TABLE.engine_version
 const MONTH_DAYS = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 export const SCENARIO_KEYS = ['irrigation', 'planting_delay_days', 'residual_moisture', 'drainage', 'rainfall_change_percent']
+
+// Language of the reason text. English unless the app switches it; the parity test never does.
+let LANG: 'en' | 'my' = 'en'
+export function setEngineLang(lang: 'en' | 'my') { LANG = lang }
+/** A crop name, family, texture list or local risk in the current language. */
+function word(s: string): string {
+  return LANG === 'my' ? s.split(', ').map((w) => MY.words[w] ?? w).join('၊ ') : s
+}
 
 export function fmt(x: unknown): string {
   if (typeof x === 'string') return x
@@ -45,8 +54,8 @@ export function doyLabel(day: number): string {
 }
 
 function render(code: string, params: Record<string, unknown>): string {
-  let text = TABLE.templates[code]
-  for (const [k, v] of Object.entries(params)) text = text.split(`{${k}}`).join(fmt(v))
+  let text = (LANG === 'my' && MY.templates[code]) || TABLE.templates[code]
+  for (const [k, v] of Object.entries(params)) text = text.split(`{${k}}`).join(typeof v === 'string' ? word(v) : fmt(v))
   return text
 }
 
@@ -353,13 +362,13 @@ export function evaluate(inputs: EngineInputs, scenario?: Scenario | null, prior
     else category = 'weak_fit'
     const local = [render('local_sowing', {}), render('local_rain', {})]
     if (crop.waterlogging_tolerance.value === 'low') local.push(render('local_drainage', {}))
-    local.push(...(crop.local_risks.value as string[]), render('local_general', {}))
+    local.push(...(crop.local_risks.value as string[]).map(word), render('local_general', {}))
     const refs: string[] = []
     for (const f of findings) for (const ref of f.evidence_refs) if (!refs.includes(ref)) refs.push(ref)
     return {
       id: plan.id, is_baseline: plan.baseline, rank: 0,
-      sequence: [TABLE.crops[plan.monsoon].name, crop.name], dry_crop: cid,
-      score, category, category_label: TABLE.categories[category],
+      sequence: [word(TABLE.crops[plan.monsoon].name), word(crop.name)], dry_crop: cid,
+      score, category, category_label: (LANG === 'my' && MY.categories[category]) || TABLE.categories[category],
       score_components: { income, soil_health: soil, water_saving: water, season_field_fit: fit },
       weights,
       reasons_for: findings.filter((f) => f.score_delta > 0),
