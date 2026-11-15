@@ -302,7 +302,7 @@ def stilt_house(parent, x, z3, turn):
     mesh("door", "box", (0.04, 0.6, 1.0), (-1.42, 0.4, 1.9), wood, g)
     mesh("window", "box", (0.04, 0.7, 0.45), (-1.42, -0.55, 2.2), mat("shade", "#3a2c1e"), g)
     for side in (1, -1):
-        mesh("roof", "box", (3.7, 1.75, 0.12), (0.1, side * 0.78, 3.15), thatch, g, rot=(side * math.radians(34), 0, 0))
+        mesh("roof", "box", (3.7, 1.75, 0.12), (0.1, side * 0.78, 3.15), thatch, g, rot=(-side * math.radians(34), 0, 0))  # each panel rises to the ridge, eaves drop over the walls
     mesh("ridge", "box", (3.7, 0.18, 0.14), (0.1, 0, 3.66), wood, g)
     mesh("porch", "box", (0.9, 1.2, 0.08), (-2.05, 0.4, 1.3), wood, g)
     for i in range(4):
