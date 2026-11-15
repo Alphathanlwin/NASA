@@ -138,15 +138,24 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   useEffect(() => {
     if (expanded && panel) inspector.current?.focus({ preventScroll: true })
   }, [expanded, panel])
-  const toggleExpanded = () => {
+  const setFull = (full: boolean) => {
     const dialog = surface.current
     if (!dialog) return
     dialog.close()
-    if (expanded) dialog.show()
-    else dialog.showModal()
-    setExpanded(!expanded)
+    if (full) dialog.showModal()
+    else dialog.show()
+    setExpanded(full)
+  }
+  const toggleExpanded = () => {
+    setFull(!expanded)
     expandButton.current?.focus()
   }
+  // "Add my field" opens the map full screen so the corners are easy to tap; it closes again on save or cancel.
+  useEffect(() => {
+    if (!drawing) return
+    setFull(true)
+    return () => setFull(false)
+  }, [drawing])  // eslint-disable-line react-hooks/exhaustive-deps
   const [layer, setLayer] = useState<Layer>(initialLayer)
   // Fields are easiest to trace on imagery, so drawing switches to the satellite view.
   useEffect(() => { if (drawing) setLayer('satellite') }, [drawing])
@@ -169,7 +178,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
       <dialog open ref={surface} className={`map-surface${expanded ? ' is-expanded' : ''}`}
         role={expanded ? 'dialog' : 'group'} aria-label={t('map.title')} onCancel={(event) => {
           event.preventDefault()
-          if (expanded) toggleExpanded()
+          if (expanded && !drawing) toggleExpanded()
         }}>
       <div className="map-toolbar">
         {(!compact || expanded) && (
@@ -178,7 +187,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
             {!expanded && <span>{t('app.region')}</span>}
           </div>
         )}
-        {expanded && (
+        {expanded && !drawing && (
           <select className="map-field-select" aria-label={t('field.choose')} value={selectedId ?? ''}
             onChange={(event) => onSelect(event.target.value)}>
             {fieldOptions.map((field) => <option key={field.id} value={field.id}>{fieldName(field)}</option>)}
@@ -262,7 +271,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           </div>
         )}
       </div>
-      {expanded && panel && (
+      {expanded && panel && !drawing && (
         <section className="map-inspector" aria-label={t(panel === 'details' ? 'glance.open' : 'map.tryScenario')}
           tabIndex={0} id="map-inspector" ref={inspector}>
           {panel === 'details' ? details : (
@@ -277,7 +286,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
         </section>
       )}
       </div>
-      {expanded && (
+      {expanded && !drawing && (
         <section className="map-rotation" aria-label={t('rec.title')}>
           <div className="map-crop-card">
             {rotation.previous && <CropArt crop={rotation.previous} size={42} />}
@@ -307,9 +316,6 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           </div>
         </section>
       )}
-      <div className="map-foot">
-        {layer === 'map' ? t('map.attribution') : t('map.attributionEsri')}
-      </div>
       </dialog>
     </section>
   )
