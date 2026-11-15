@@ -17,7 +17,7 @@ const STAGE_COLOR: Record<string, string> = {
   fill: '#2f6f33', mature: '#d6b04a', harvested: '#d6b04a',
 }
 
-export function WebGLFallback({ sim }: { sim: SimState }) {
+export function WebGLFallback({ sim, showSensors }: { sim: SimState; showSensors: boolean }) {
   const soil = `hsl(30, 40%, ${60 - sim.moisture * 35}%)`
   const r = sim.crop ? 0.08 + 0.2 * Math.min(1, sim.progress / 0.6) : 0
   const fill = STAGE_COLOR[sim.stage] ?? '#4f9a3a'
@@ -25,6 +25,8 @@ export function WebGLFallback({ sim }: { sim: SimState }) {
     <svg className="field-2d" viewBox={`${-PLOT.w / 2 - 1} ${-PLOT.d / 2 - 1} ${PLOT.w + 2} ${PLOT.d + 2}`}
       role="img" aria-label={`${GRID.cols * GRID.rows} plants`}>
       <rect x={-PLOT.w / 2} y={-PLOT.d / 2} width={PLOT.w} height={PLOT.d} fill={soil} stroke="#8a6a3f" strokeWidth="0.3" />
+      {showSensors && <><circle cx="-2" cy="4.7" r="0.25" fill="#1f647b" stroke="white" strokeWidth="0.1" />
+      <circle cx="2" cy="4.7" r="0.25" fill="#1f647b" stroke="white" strokeWidth="0.1" /></>}
       {r > 0 && PLANTS.map((p, i) => <circle key={i} cx={p.x} cy={p.z} r={r * p.s} fill={fill} />)}
     </svg>
   )
