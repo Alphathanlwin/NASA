@@ -87,32 +87,25 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
     SIL Open Font License 1.1.
 
 16. **NASA GPM IMERG monthly, Final run** - `GPM_3IMERGM` V07, 0.1 degree, 2001-2025, read through
-    GES DISC OPeNDAP for each reference town's cell. Used for monthly rainfall averages in the
-    "Other crops and fruits" list, because NASA POWER corrected precipitation at the west Delta
+    GES DISC OPeNDAP for each reference town's cell. Used for the long-term monthly rainfall averages, because NASA POWER corrected precipitation at the west Delta
     cells averages 600-1,100 mm a year at Pathein and Myaungmya, far below observed Delta rainfall.
 
-17. **EcoCrop suitability method** - Hijmans, R.J. et al. (2001) "Computer tools for spatial analysis
-    of plant genetic resources data: 1. DIVA-GIS", *Plant Genetic Resources Newsletter* 127: 15-19;
-    Ramirez-Villegas, J. et al. (2013) "Implications of regional improvement in global climate models
-    for agricultural impact research", *Environmental Research Letters* 8: 024018. Crop ranges for
-    20 Delta crops and fruits from the FAO EcoCrop database (entry 3 above); watermelon is left out
-    because EcoCrop gives it no growing-period length.
 
 
-18. **Soil sampling steps** - Zurweller, B., *Soil Testing for the Farmer*, Publication P3858,
+17. **Soil sampling steps** - Zurweller, B., *Soil Testing for the Farmer*, Publication P3858,
     Mississippi State University Extension (<https://extension.msstate.edu/publications/soil-testing-for-the-farmer>).
     Used for the soil pH guide: zigzag pattern, at least 15 cores, skip unusual spots, scrape off
     residue, 6 inch depth, mix after drying, test every 3 years or once per rotation. Kit amounts
     and waiting times are left to each kit's own leaflet.
 
-19. **Crop photos (Wikimedia Commons)** - cropped to 256 px squares in `frontend/src/assets/`; the
+18. **Crop photos (Wikimedia Commons)** - cropped to 256 px squares in `frontend/src/assets/`; the
     cropped versions are shared under the same licence.
     - Black gram: Sanjay Acharya, "Black gram.jpg", CC BY-SA 3.0, <https://commons.wikimedia.org/wiki/File:Black_gram.jpg>
     - Mung bean: Sanjay Acharya, "Green Mung Beans.jpg", CC BY-SA 4.0, <https://commons.wikimedia.org/wiki/File:Green_Mung_Beans.jpg>
     - Paddy: Undeka 11, "Ripening rice plants in paddy field, Indonesia.jpg", CC BY-SA 4.0,
       <https://commons.wikimedia.org/wiki/File:Ripening_rice_plants_in_paddy_field,_Indonesia.jpg>
 
-20. **Soil reaction (pH) classes** - Soil Science Division Staff (2017), *Soil Survey Manual*, USDA
+19. **Soil reaction (pH) classes** - Soil Science Division Staff (2017), *Soil Survey Manual*, USDA
     Handbook 18, chapter 3. Used only to name the topsoil pH class (for example 6.1-6.5 "slightly acid")
     on My Fields; no suitability verdict is drawn from it.
 

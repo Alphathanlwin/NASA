@@ -1065,18 +1065,6 @@ html:has(.map-surface:modal) { overflow: hidden; }
   .quick button svg { grid-row: span 2; align-self: center; }
 }
 
-/* other crops and fruits: suitability list */
-.other-list { list-style: none; margin: 10px 0; padding: 0; display: grid; grid-template-columns: minmax(120px, max-content) 1fr 3.5em; gap: 4px 12px; align-items: center; }
-.other-list li { display: contents; }
-.other-name { display: flex; gap: 6px; align-items: baseline; padding-top: 6px; }
-.other-name em { font-style: normal; font-size: 0.7rem; font-weight: 700; color: #8a5d00; background: var(--turmeric-soft); padding: 1px 8px; border-radius: 999px; }
-.other-track { height: 12px; background: #eee8d8; border-radius: 6px; overflow: hidden; margin-top: 6px; }
-.other-fill { display: block; height: 100%; border-radius: 6px; background: var(--paddy); transform-origin: left center; animation: fill 900ms var(--ease-out) 150ms both; }
-.other-list li.fair .other-fill { background: var(--turmeric); }
-.other-list li.poor .other-fill { background: #c0603f; }
-.other-score { text-align: right; padding-top: 6px; font-variant-numeric: tabular-nums; }
-.other-why { grid-column: 1 / -1; color: var(--muted); font-size: 0.78rem; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
-@media (max-width: 820px) { .other-list { grid-template-columns: minmax(96px, max-content) 1fr 3em; } }
 @media (max-width: 820px) { .side-nav { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); } .side-nav button b { font-size: 0.6rem; } }
 /* the crop photo needs a real slot, unlike the 24 px line icons */
 .tile .tile-icon:has(.crop-photo) { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex: none; }

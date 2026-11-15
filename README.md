@@ -36,8 +36,7 @@ The app has six pages in the sidebar (a bottom bar on phones):
 4. **Crop Planner** - three rotations scored with published rules: rice to rice (always the
    baseline), rice to mung bean, rice to black gram, with reasons for and against, evidence,
    missing information and local checks. Each plan shows a **fertiliser guide** (Myanmar Department
-   of Agriculture rates as a chart, cited). Below, **Other crops and fruits** ranks 20 Delta crops and
-   fruits for the field's location by FAO EcoCrop climate and soil suitability.
+   of Agriculture rates as a chart, cited).
 5. **Scenarios** - change irrigation, planting delay, residual moisture, drainage or dry-season
    rainfall. The same three rotations are recalculated and the screen shows what moved and why.
 6. **Analysis log** - a deterministic nine-step log of the analysis, labelled as a visualisation
@@ -58,7 +57,7 @@ text is set in a self-hosted Noto Sans Myanmar font, not a font CDN.
 | Item | Status shown | Reality |
 |---|---|---|
 | Temperature, humidity, recent rainfall, root-zone wetness | `CACHED` | NASA POWER daily point data, community AG, MERRA-2 / GEOS modelled values on a 0.5 x 0.625 degree grid (about 55 x 67 km). Grid-cell value, not a field measurement. |
-| Long-term rainfall averages | `CACHED` | NASA GPM IMERG monthly, Final run (GPM_3IMERGM V07), 2001-2025, 0.1° cell per town, each month spread evenly over its days. Used for planting windows, dry-season and monsoon totals, the simulator and the crop and fruit list. POWER rainfall is not used here: at the west Delta cells it averages 600-1,100 mm a year, far below observed Delta totals of about 2,500-3,000 mm. |
+| Long-term rainfall averages | `CACHED` | NASA GPM IMERG monthly, Final run (GPM_3IMERGM V07), 2001-2025, 0.1° cell per town, each month spread evenly over its days. Used for planting windows, dry-season and monsoon totals and the simulator. POWER rainfall is not used here: at the west Delta cells it averages 600-1,100 mm a year, far below observed Delta totals of about 2,500-3,000 mm. |
 | Day-of-year climatology | `CACHED` | Temperature and humidity: NASA POWER daily history 1996-2025; rainfall: IMERG monthly 2001-2025 (row above). Historical average, not a forecast. |
 | MODIS NDVI | `CACHED` | MOD13Q1 v061, one 250 m pixel at each field centre via the ORNL DAAC subset service. Cloudy composites removed. |
 | Topsoil pH and texture | `CACHED` | ISRIC SoilGrids v2.0, 250 m, 0-5 cm mean. Predicted map value, not a soil test. Not a NASA product. |
@@ -192,7 +191,6 @@ The backend serves `frontend/dist` at `/NASA/` (the same base path as GitHub Pag
 .venv/Scripts/python pipeline/fetch_imerg.py           # Earthdata token
 .venv/Scripts/python pipeline/fetch_imerg_monthly.py   # rain normals 2001-2025
 .venv/Scripts/python pipeline/fetch_appeears.py submit # then: collect (SMAP)
-.venv/Scripts/python pipeline/extract_ecocrop_shortlist.py <EcoCrop_DB.csv>
 .venv/Scripts/python pipeline/clean_all.py
 .venv/Scripts/python pipeline/make_fields.py
 .venv/Scripts/python scripts/build_snapshot.py
@@ -237,7 +235,7 @@ badge appeared and the scenario controls still recalculated.
 │   ├── src/
 │   │   ├── App.tsx           shell: sidebar, pages, language
 │   │   ├── components/       pages and cards (Home, My Fields, Crop Planner, Scenarios, ...)
-│   │   ├── engine/           TypeScript rules engine (parity-tested), EcoCrop suitability
+│   │   ├── engine/           TypeScript rules engine (parity-tested)
 │   │   ├── field3d/          3D field scene, models and animation
 │   │   ├── sim/              season simulator
 │   │   └── i18n/             en.json, my.json (every UI string)
