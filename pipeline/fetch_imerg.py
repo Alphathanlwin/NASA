@@ -8,7 +8,7 @@ https://urs.earthdata.nasa.gov/approve_app?client_id=e2WVk8Pw6weeLUKZYOxvTQ
 
 The Late run is used because the Final run lags by months. Every row records its run.
 
-    python backend/app/data_sources/fetch_imerg.py [days]
+    python pipeline/fetch_imerg.py [days]
 """
 import os
 import sys

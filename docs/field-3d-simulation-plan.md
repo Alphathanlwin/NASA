@@ -65,7 +65,7 @@ On 14 Nov, Myaungmya reads 0.19 mm rain and 34.0 °C max.
 
 **Rainfall is low in absolute terms.** The annual totals are Twante 2,773 mm, Bogale 1,377,
 Myaungmya 934 and Pathein 810 mm. Delta stations usually report about 2,500–3,000 mm. The pipeline
-already says so in the `power_clim` provenance note (`backend/app/data_sources/clean_all.py:253`), and
+already says so in the `power_clim` provenance note (`pipeline/clean_all.py:253`), and
 it excludes 11 of 30 years as inhomogeneous. In the sim:
 
 - Use rainfall for **timing and relative change** (dry season versus monsoon, wet or dry spells),

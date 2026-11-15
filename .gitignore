@@ -9,6 +9,5 @@ frontend/dist/
 .netrc
 _netrc
 .playwright-mcp/
- frontend/package-lock.json
 # raw SMAP history for the soil-moisture model (large; the cleaned table in data/models is committed)
 data/raw/appeears/ml_history/*.csv

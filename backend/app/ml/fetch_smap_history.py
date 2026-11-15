@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import requests
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "data_sources"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "pipeline"))
 from fetch_appeears import API, HEADERS, SMAP, smap_layers, token  # noqa: E402
 
 from app.ml.soil_moisture import ROOT, SMAP_FILES  # noqa: E402

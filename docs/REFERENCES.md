@@ -29,13 +29,13 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
 
 5. **NASA GPM IMERG Late Run V07 (`GPM_3IMERGDL`).**
    Daily precipitation for the 0.1 degree cell nearest each reference town, 15 Sep - 12 Nov 2026,
-   read through NASA OPeNDAP with an Earthdata token by `backend/app/data_sources/fetch_imerg.py`,
+   read through NASA OPeNDAP with an Earthdata token by `pipeline/fetch_imerg.py`,
    which records the run (`Late`) on every row. https://disc.gsfc.nasa.gov/datasets/GPM_3IMERGDL_07/summary
    Status: `CACHED`.
 
 6. **NASA SMAP SPL3SMP_E v006 soil moisture.**
    AM and PM surface soil moisture with retrieval quality flags, last 120 days, 9 km grid cell, point
-   samples requested through NASA AppEEARS by `backend/app/data_sources/fetch_appeears.py`.
+   samples requested through NASA AppEEARS by `pipeline/fetch_appeears.py`.
    Only retrievals flagged "recommended quality" are kept (44 of 944).
    https://appeears.earthdatacloud.nasa.gov/
    Status: `CACHED` for Myaungmya, Pathein and Bogale; `UNAVAILABLE` for Twante (no recommended-quality
@@ -52,7 +52,7 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
    Crop cycle length, pH optimum and absolute range, temperature maximum, texture classes and
    drainage tolerance for rice, mung bean (green gram) and black gram (matpe). Accessed through the
    OpenCLIM mirror: https://github.com/OpenCLIM/ecocrop
-   Values extracted by `backend/app/data_sources/extract_ecocrop.py` into
+   Values extracted by `pipeline/extract_ecocrop.py` into
    `backend/app/engine/crops.json`, each tagged `source: "ecocrop"` and `verified: true`.
    These are global ranges, not Myanmar-specific recommendations.
 

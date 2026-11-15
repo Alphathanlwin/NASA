@@ -1,7 +1,7 @@
 # AI-assisted: Claude Code
 """Extract FAO EcoCrop ranges for the 'other crops and fruits' list (Delta shortlist).
 
-    python backend/app/data_sources/extract_ecocrop_shortlist.py <path to EcoCrop_DB.csv>
+    python pipeline/extract_ecocrop_shortlist.py <path to EcoCrop_DB.csv>
 
 Source: FAO EcoCrop database as mirrored at https://github.com/OpenCLIM/ecocrop (EcoCrop_DB.csv).
 Output: data/reference/ecocrop_shortlist.json and a copy the frontend imports.

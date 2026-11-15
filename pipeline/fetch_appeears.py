@@ -2,9 +2,9 @@
 """Point-sample MODIS NDVI/EVI and SMAP soil moisture for the demo fields through
 NASA AppEEARS. Needs an Earthdata login in ~/.netrc (machine urs.earthdata.nasa.gov).
 
-    python backend/app/data_sources/fetch_appeears.py layers    # list the layer names AppEEARS offers
-    python backend/app/data_sources/fetch_appeears.py submit    # start the task, save its id
-    python backend/app/data_sources/fetch_appeears.py collect   # poll; download the CSVs when done
+    python pipeline/fetch_appeears.py layers    # list the layer names AppEEARS offers
+    python pipeline/fetch_appeears.py submit    # start the task, save its id
+    python pipeline/fetch_appeears.py collect   # poll; download the CSVs when done
 """
 import netrc
 import sys

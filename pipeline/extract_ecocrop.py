@@ -1,7 +1,7 @@
 # AI-assisted: Claude Code
 """Extract FAO EcoCrop tolerance ranges for the crops in the rotation engine.
 
-    python backend/app/data_sources/extract_ecocrop.py <path to EcoCrop_DB.csv>
+    python pipeline/extract_ecocrop.py <path to EcoCrop_DB.csv>
 
 The CSV is the FAO EcoCrop database as mirrored at
 https://github.com/OpenCLIM/ecocrop (EcoCrop_DB.csv).

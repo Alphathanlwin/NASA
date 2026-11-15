@@ -2,14 +2,14 @@
 """Shared helpers for the fetch and cleaning scripts.
 
 Every script here can be re-run from scratch:
-    python backend/app/data_sources/<script>.py
+    python pipeline/<script>.py
 """
 import json
 import math
 from datetime import datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 RAW = DATA / "raw"
 CLEAN = DATA / "clean"
