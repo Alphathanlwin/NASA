@@ -44,7 +44,6 @@ export function PlansPanel({ result, priorities, onPriorities, econ, onEcon }: {
         <div className="split-head">
           <div>
             <h3>{t('priorities.title')}</h3>
-            <p className="note">{t('priorities.lead')}</p>
           </div>
           <div className="weight-chip">{t('plans.weightLine', {
             i: result.weights.income, s: result.weights.soil_health, w: result.weights.water_saving,
