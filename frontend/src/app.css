@@ -1241,3 +1241,5 @@ html:has(.map-surface:modal) { overflow: hidden; }
 .env-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 1500px) { .fields-page .env-grid { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); } }
 @media (max-width: 820px) { .env-grid { grid-template-columns: 1fr 1fr; } .env-value > b { font-size: 1.5rem; } }
+/* the footers now hold only the link: keep it on the right */
+.cond-foot, .env-foot { justify-content: flex-end; }
