@@ -47,7 +47,8 @@ function save(key: string, value: unknown) {
   }
 }
 
-export const loadUserFields = () => load<UserField[]>(FIELDS_KEY, [])
+// fields saved before corners were put in order are untwisted on load
+export const loadUserFields = () => load<UserField[]>(FIELDS_KEY, []).map((f) => ({ ...f, points: outline(f.points) }))
 export const saveUserFields = (f: UserField[]) => save(FIELDS_KEY, f)
 export const loadReadings = () => load<Record<string, Readings>>(READINGS_KEY, {})
 export const saveReadings = (r: Record<string, Readings>) => save(READINGS_KEY, r)
@@ -87,7 +88,29 @@ export function outline(points: LatLng[]): LatLng[] {
   const [cLat, cLon] = centroid(points)
   const k = Math.cos((cLat * Math.PI) / 180) // degrees of longitude are shorter away from the equator
   const ang = ([la, lo]: LatLng) => Math.atan2(la - cLat, (lo - cLon) * k)
-  return [...points].sort((a, b) => ang(a) - ang(b))
+  return untangle([...points].sort((a, b) => ang(a) - ang(b)))
+}
+
+/** Where two edges still cross (possible with 5+ corners in an odd shape), reverse the corners
+ *  between them. Each swap shortens the outline, so this always ends with no crossing. */
+function untangle(poly: LatLng[]): LatLng[] {
+  const n = poly.length
+  const side = (a: LatLng, b: LatLng, c: LatLng) => Math.sign((b[1] - a[1]) * (c[0] - a[0]) - (b[0] - a[0]) * (c[1] - a[1]))
+  const cross = (a: LatLng, b: LatLng, c: LatLng, d: LatLng) =>
+    side(a, b, c) * side(a, b, d) < 0 && side(c, d, a) * side(c, d, b) < 0
+  for (let pass = 0, changed = true; changed && pass < 100; pass++) {
+    changed = false
+    for (let i = 0; i < n - 2; i++) {
+      for (let j = i + 2; j < n; j++) {
+        if (i === 0 && j === n - 1) continue
+        if (cross(poly[i], poly[i + 1], poly[j], poly[(j + 1) % n])) {
+          poly = [...poly.slice(0, i + 1), ...poly.slice(i + 1, j + 1).reverse(), ...poly.slice(j + 1)]
+          changed = true
+        }
+      }
+    }
+  }
+  return poly
 }
 
 // --------------------------------------------------------------------------- profiles
