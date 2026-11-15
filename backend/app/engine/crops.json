@@ -522,7 +522,7 @@
     "unknown_income": "Not calculated — enter your price and cost.",
     "unknown_salinity": "Soil salinity is not in these datasets.",
     "local_sowing": "Sowing dates are assumptions for the Delta; confirm them for your township.",
-    "local_rain": "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+    "local_rain": "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
     "local_general": "Check for salt intrusion, seed availability and the local market before deciding.",
     "local_drainage": "Check how quickly this field drains after the monsoon.",
     "income_relative": "Income is ranked from your own numbers: {net} per acre for {crop} (sales minus cost).",
