@@ -74,7 +74,6 @@ export function ScenarioPanel({ draft, onChange, result, fieldIrrigation }: {
         <div className="scenario-actions">
           <button className="btn ghost small" onClick={() => onChange({})}>{t('scenario.reset')}</button>
         </div>
-        <p className="note small">{t('scenario.rainNote')}</p>
       </section>
 
       {changed.length === 0 && <section className="card empty-card">{t('scenario.noChange')}</section>}

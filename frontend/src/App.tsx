@@ -193,7 +193,7 @@ export default function App() {
             ) : (
               <>
                 <h1>{t(`side.${page}` as Key)}</h1>
-                {page !== 'fields' && <p className="lead">{t(`side.${page}Sub` as Key)}</p>}
+                {!['fields', 'scenarios', 'log'].includes(page) && <p className="lead">{t(`side.${page}Sub` as Key)}</p>}
               </>
             )}
           </div>
