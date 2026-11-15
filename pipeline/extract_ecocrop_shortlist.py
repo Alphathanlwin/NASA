@@ -4,15 +4,14 @@
     python pipeline/extract_ecocrop_shortlist.py <path to EcoCrop_DB.csv>
 
 Source: FAO EcoCrop database as mirrored at https://github.com/OpenCLIM/ecocrop (EcoCrop_DB.csv).
-Output: data/reference/ecocrop_shortlist.json and a copy the frontend imports.
+Output: data/reference/ecocrop_shortlist.json (the frontend imports this file directly).
 Crops without temperature, rainfall or growing-period values in EcoCrop are skipped and listed,
 never filled in by hand.
 """
 import csv
-import json
 import sys
 
-from common import DATA, ROOT, utc_now, write_json
+from common import DATA, utc_now, write_json
 
 # key -> exact EcoCrop ScientificName
 SHORTLIST = {
@@ -84,8 +83,6 @@ def main(path):
         "skipped": skipped,
     }
     write_json(DATA / "reference" / "ecocrop_shortlist.json", out)
-    (ROOT / "frontend" / "src" / "engine" / "ecocrop_shortlist.json").write_text(
-        json.dumps(out, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(len(crops), "crops;", "skipped:", skipped)
 
 

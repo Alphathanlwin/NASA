@@ -4,7 +4,7 @@
 // 2001-2025 (POWER rain is far too low in the west Delta); pH: SoilGrids or the farmer's soil test.
 // A suitability score, not a probability, not a yield, not a market judgement.
 import { useMemo } from 'react'
-import shortlist from '../engine/ecocrop_shortlist.json'
+import shortlist from '../../../data/reference/ecocrop_shortlist.json'  // single copy, written by pipeline/extract_ecocrop_shortlist.py
 import { monthlyClimate, rankCrops } from '../engine/suitability'
 import type { EcoCrop } from '../engine/suitability'
 import { t, townName } from '../i18n'
