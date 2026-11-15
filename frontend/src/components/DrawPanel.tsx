@@ -4,11 +4,25 @@ import { useState } from 'react'
 import { t } from '../i18n'
 import { areaAcres, outline } from '../userfields'
 import type { LatLng, UserField } from '../userfields'
+import type { FieldCheck, Ground } from '../landcover'
 
 type Irrigation = UserField['irrigation']
 
-export function DrawPanel({ draft, onUndo, onCancel, onSave }: {
+/** Shown instead of advice where nothing can be planted: river, forest hills, town, wetland. */
+export function NotPlantable({ ground, year, compact = false }: { ground: Ground; year?: string; compact?: boolean }) {
+  return (
+    <div className={`not-plantable${compact ? ' compact' : ''}`} role="alert">
+      <b>{t('land.title')}</b>
+      <p>{t(`land.${ground}` as never)}</p>
+      {year && <small>{t('land.source', { y: year })}</small>}
+    </div>
+  )
+}
+
+export function DrawPanel({ draft, check, landYear, onUndo, onCancel, onSave }: {
   draft: LatLng[]
+  check: FieldCheck
+  landYear?: string
   onUndo: () => void
   onCancel: () => void
   onSave: (name: string, irrigation: Irrigation) => void
@@ -17,7 +31,7 @@ export function DrawPanel({ draft, onUndo, onCancel, onSave }: {
   const [name, setName] = useState('')
   const [irrigation, setIrrigation] = useState<Irrigation | null>(null)
   const acres = Math.round(areaAcres(outline(draft)) * 10) / 10
-  const canFinish = draft.length >= 3
+  const canFinish = draft.length >= 3 && check.plantable
 
   return (
     <div className="draw-panel" role="dialog" aria-label={t('draw.title')}>
@@ -27,8 +41,10 @@ export function DrawPanel({ draft, onUndo, onCancel, onSave }: {
           <p>{t('draw.help')}</p>
           <div className="draw-stats">
             <span>{t('draw.corners', { n: draft.length })}</span>
-            {canFinish && <b>{t('field.acres', { a: acres })}</b>}
+            {draft.length >= 3 && check.plantable && <b>{t('field.acres', { a: acres })}</b>}
           </div>
+          {draft.length > 0 && !check.plantable && <NotPlantable ground={check.ground} year={landYear} compact />}
+          {draft.length > 0 && check.plantable && <p className="plantable-ok" role="status">✓ {t('land.ok')}</p>}
           <div className="draw-actions">
             <button className="btn ghost" onClick={onUndo} disabled={draft.length === 0}>{t('draw.undo')}</button>
             <button className="btn ghost" onClick={onCancel}>{t('draw.cancel')}</button>

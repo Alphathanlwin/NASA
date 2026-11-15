@@ -112,7 +112,7 @@ function AgentTrace({ waypoints, runId }: { waypoints: [number, number][]; runId
 }
 
 export function MapView({ snap, selectedId, onSelect, agentRun, runId, userFields = [], drawing = false,
-  draft = [], onDraftPoint, overlay, initialLayer = 'map', compact = false, rotation, fieldOptions, details, scenario }: {
+  draft = [], badCorners = [], onDraftPoint, overlay, initialLayer = 'map', compact = false, rotation, fieldOptions, details, scenario }: {
   snap: Snapshot
   selectedId: string | null
   onSelect: (id: string) => void
@@ -121,6 +121,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   userFields?: UserField[]
   drawing?: boolean
   draft?: LatLng[]
+  badCorners?: number[]
   onDraftPoint?: (p: LatLng) => void
   overlay?: ReactNode
   initialLayer?: Layer
@@ -254,7 +255,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           {drawing && draft.length === 2 && <Polyline positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.map((p, i) => (
             <CircleMarker key={i} center={p} radius={6} interactive={false}
-              pathOptions={{ color: '#fff', weight: 2, fillColor: '#facc15', fillOpacity: 1 }} />
+              pathOptions={{ color: '#fff', weight: 2, fillColor: badCorners.includes(i) ? '#dc2626' : '#facc15', fillOpacity: 1 }} />
           ))}
           {!drawing && agentRun && <AgentTrace waypoints={agentRun.waypoints} runId={runId} />}
           <CircleMarker center={[snap.geojson.agent_base.lat, snap.geojson.agent_base.lon]} radius={4}

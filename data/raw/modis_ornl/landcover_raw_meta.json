@@ -1,0 +1,10 @@
+{
+  "retrieved_at": "2026-11-15T04:28:01Z",
+  "product": "MCD12Q1",
+  "band": "LC_Type1",
+  "year": "2025",
+  "source": "NASA MODIS MCD12Q1 v061 via ORNL DAAC MODIS web service",
+  "resolution_m": 500,
+  "grid": "MODIS sinusoidal, sphere radius 6371007.181 m; rows run north to south",
+  "encoding": "one character per pixel: chr(65 + IGBP class); 17 = water, 12/14 = cropland, 13 = urban"
+}

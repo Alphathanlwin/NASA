@@ -238,9 +238,6 @@
 .fp-alts li > div { flex: 1; min-width: 0; }
 .fp-alts li > div > span { display: block; font-size: 0.86rem; color: var(--muted); line-height: 1.4; }
 .fp-alts small { color: var(--muted); }
-.fp-details { font-size: 15px; padding-top: 10px; }
-.fp-prices { margin-top: 14px; border: 1px solid var(--fp-line); border-radius: 12px; padding: 10px 14px; }
-.fp-prices summary { cursor: pointer; font-weight: 700; min-height: 36px; display: flex; align-items: center; }
 
 /* "Did you plant it?": the open loop that brings the farmer back */
 .fp-follow { margin-top: 16px; padding: 16px; border: 1.5px dashed var(--fp-line-2); border-radius: 16px; }
@@ -259,4 +256,13 @@
   .fp-crop-name { font-size: 1.6rem; }
   .fp-trail-row { flex-direction: column; gap: 4px; }
   .fp-trail-row .fp-src { min-width: 0; }
+}
+
+/* The answer uses the page width: crop and timing on the left, sources and details on the right.
+   Measured on the card's own width (the sidebar takes part of the screen), one column when narrow. */
+.fp.fp-wide { width: 100%; max-width: none; container-type: inline-size; }
+@container (min-width: 760px) {
+  .fp-answer { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 0 32px; align-items: start; padding: 28px; }
+  .fp-answer-side > .fp-trail { margin-top: 0; }
+  .fp-answer-side { position: sticky; top: 16px; }
 }

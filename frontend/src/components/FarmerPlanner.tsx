@@ -3,12 +3,12 @@
 // once confirmed, the field goes straight to the detailed plan (children).
 //   1 priority (+ trade-off)  2 weather  3 prices  4 what you have  5 field shown back  6 confirm
 // then the detailed plan. The farmer's answers map onto the engine's existing inputs (weights + scenario);
-// the engine itself is untouched. The old analyst view lives in DetailsDrawer, under the answer.
+// the engine itself is untouched. The full analyst view is the detailed plan below the answer.
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { runPlans } from '../data'
 import type { Snapshot, SnapshotField } from '../data'
 import type { Econ, Priorities } from '../engine/types'
-import { t } from '../i18n'
+import { getLang, t } from '../i18n'
 import { crossChecks, EMPTY, factsOf, prioritiesFor, scenarioFor, STEPS } from '../planner/flow'
 import type { Answers } from '../planner/flow'
 import '../planner/planner.css'
@@ -23,11 +23,10 @@ const KEY = 'fieldshift.planner.v1'
 const loadAll = (): Record<string, Saved> => { try { return JSON.parse(localStorage.getItem(KEY) ?? '{}') } catch { return {} } }
 const store = (id: string, v: Saved) => { try { localStorage.setItem(KEY, JSON.stringify({ ...loadAll(), [id]: v })) } catch { /* blocked storage */ } }
 
-export function FarmerPlanner({ snap, field, econ, onEcon, onPriorities, children }: {
+export function FarmerPlanner({ snap, field, econ, onPriorities, children }: {
   snap: Snapshot
   field: SnapshotField
   econ: Econ
-  onEcon: (e: Econ) => void
   onPriorities: (p: Priorities) => void
   children: (result: ReturnType<typeof runPlans>) => React.ReactNode
 }) {
@@ -43,7 +42,9 @@ export function FarmerPlanner({ snap, field, econ, onEcon, onPriorities, childre
   // A field answered on an earlier visit ranks with its saved priority.
   useEffect(() => { if (done) onPriorities(priorities) }, [done, priorities, onPriorities])
     // Local engine run: instant, no spinner (Doherty threshold).
-  const result = useMemo(() => runPlans(snap, field, priorities, econ, scenarioFor(a)), [snap, field, priorities, econ, a])
+  // lang: the engine writes reasons, missing information and local checks in the current language
+  const lang = getLang()
+  const result = useMemo(() => runPlans(snap, field, priorities, econ, scenarioFor(a)), [snap, field, priorities, econ, a, lang])  // eslint-disable-line react-hooks/exhaustive-deps
   const facts = useMemo(() => factsOf(field), [field])
   const checks = useMemo(() => crossChecks(a, facts, result.income_enabled), [a, facts, result.income_enabled])
 
@@ -59,9 +60,8 @@ export function FarmerPlanner({ snap, field, econ, onEcon, onPriorities, childre
   if (done) {
     return (
       <>
-        <div className="fp">
-          <AnswerCard result={result} a={a} field={field} facts={facts} scenario={scenarioFor(a)}
-            econ={econ} onEcon={onEcon} onRestart={restart} />
+        <div className="fp fp-wide">
+          <AnswerCard result={result} a={a} field={field} facts={facts} onRestart={restart} />
         </div>
         {children(result) /* the farmer's flood, drainage and water answers shape this plan */}
       </>

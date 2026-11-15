@@ -923,12 +923,6 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
 
 /* fertiliser guide: published rates as bars, source underneath */
 .fert { border-top: 1px solid var(--line); padding-top: 12px; display: grid; gap: 6px; }
-.fert-bars { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: max-content 1fr auto auto; gap: 8px 12px; align-items: center; font-size: 0.88rem; }
-.fert-bars li { display: contents; }
-.fert-track { height: 12px; background: #eee8d8; border-radius: 6px; overflow: hidden; }
-.fert-fill { display: block; height: 100%; background: var(--paddy); border-radius: 6px; transform-origin: left center; animation: fill 900ms var(--ease-out) 120ms both; }
-.fert-bars b { text-align: right; font-variant-numeric: tabular-nums; }
-.fert-bars small { color: var(--muted); font-variant-numeric: tabular-nums; min-width: 3.5em; }
 .fert-legume { background: var(--paddy-soft); border-radius: 10px; padding: 8px 12px; margin: 2px 0; font-size: 0.86rem; }
 
 /* Shared surfaces across the six pages. Keep elevation for controls above the map. */
@@ -1067,20 +1061,6 @@ html:has(.map-surface:modal) { overflow: hidden; }
 .tile .tile-icon:has(.crop-photo) { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; flex: none; }
 .tile .tile-icon .crop-photo { width: 40px; height: 40px; display: block; }
 
-/* fertiliser guide as a column chart; colours follow how each product looks in the bag */
-.fert-chart { width: 100%; max-width: 520px; height: auto; display: block; margin: 4px 0 2px; overflow: visible; }
-.fert-chart .grid { stroke: var(--line); stroke-width: 1; }
-.fert-chart .axis { stroke: var(--muted); stroke-width: 1.2; }
-.fert-chart .tick { font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
-.fert-chart .val { font-size: 12px; font-weight: 700; fill: var(--ink); font-variant-numeric: tabular-nums; }
-.fert-chart .kg { font-size: 10px; fill: var(--muted); font-variant-numeric: tabular-nums; }
-.fert-chart .name { font-size: 11px; fill: var(--ink); }
-.fert-col rect { stroke: rgb(0 0 0 / 0.18); stroke-width: 1; transform-box: fill-box; transform-origin: bottom; animation: rise 800ms var(--ease-out) both; animation-delay: inherit; }
-.fert-urea rect { fill: #cfe0ea; }
-.fert-tsp rect { fill: #8a8a85; }
-.fert-potash rect { fill: #c8574a; }
-.fert-gypsum rect { fill: #e8dfc8; }
-@keyframes rise { from { transform: scaleY(0); } }
 
 /* soil pH guide: round help button + step dialog */
 .reading-label-row { display: flex; align-items: center; gap: 8px; }
@@ -1257,3 +1237,33 @@ html:has(.map-surface:modal) { overflow: hidden; }
 @media (max-width: 1100px) { .pd-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 820px) { .pd-grid { grid-template-columns: 1fr; } }
 .pd-tile, .pd-box { border-radius: 14px; }  /* the family's card radius (--radius) */
+
+/* where nothing can be planted (river, forest hills, town): a clear stop, not advice */
+.not-plantable { display: grid; gap: 4px; padding: 16px 18px; border-radius: 14px; background: #fdecea; border: 1.5px solid #e8a39b; color: #7f1d1d; }
+.not-plantable b { font-size: 1.05rem; }
+.not-plantable p { margin: 0; }
+.not-plantable small { color: #9a3b33; font-size: 0.78rem; }
+.not-plantable.compact { padding: 10px 12px; border-radius: 10px; }
+.not-plantable.compact b { font-size: 0.95rem; }
+.draw-panel .plantable-ok { margin: 0; padding: 8px 12px; border-radius: 10px; background: #e6f2e1; color: #1f5a2a; font-weight: 700; font-size: 0.9rem; }
+.draw-actions .btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+/* fertiliser guide: published rate per acre as horizontal bars, one hue, values at the row end */
+.fert-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 2px 12px; }
+.fert-head h4 { margin: 0; min-width: 0; }
+.fert-unit { font-size: 0.78rem; color: var(--muted); font-weight: 600; letter-spacing: 0.02em; white-space: nowrap; margin-left: auto; }
+.fert-rows { list-style: none; margin: 6px 0 4px; padding: 0; display: grid;
+  grid-template-columns: minmax(120px, max-content) minmax(0, 1fr) 5.5em; column-gap: 16px; }
+.fert-row { display: contents; }
+.fert-row > * { padding: 8px 0; }
+.fert-name { display: grid; line-height: 1.25; }
+.fert-name b { font-size: 0.92rem; color: var(--ink); }
+.fert-name small { font-size: 0.76rem; color: var(--muted); }
+.fert-track { align-self: center; height: 10px; border-radius: 4px; background: #efeadb; padding: 0; overflow: hidden; }
+.fert-fill { display: block; height: 100%; border-radius: 4px; background: var(--paddy);
+  transform-origin: left center; animation: fill 900ms var(--ease-out) both; }
+.fert-val { display: grid; justify-items: end; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.fert-val b { font-size: 0.95rem; color: var(--ink); }
+.fert-val small { font-size: 0.76rem; color: var(--muted); }
+.fert-row:hover .fert-fill { filter: brightness(1.12); }
+@media (max-width: 520px) { .fert-rows { grid-template-columns: minmax(96px, max-content) minmax(0, 1fr) 4.8em; column-gap: 10px; } }

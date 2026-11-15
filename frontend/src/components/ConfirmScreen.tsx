@@ -7,7 +7,7 @@ import type { Key } from '../i18n'
 import { LIMIT_KEYS, PRICE_KEYS } from '../planner/flow'
 import type { Answers, Check, FieldFacts } from '../planner/flow'
 import { CheckList } from './FieldCheck'
-import { Hint, Icon, StepHead, StepNav } from './PlannerUI'
+import { Icon, StepHead, StepNav } from './PlannerUI'
 
 export const join = (xs: string[]) => xs.join(getLang() === 'my' ? '၊ ' : ', ')
 
@@ -83,7 +83,6 @@ export function ConfirmScreen({ a, field, facts, checks, onGoto, onConfirm, onBa
         </>
       )}
       <StepNav onBack={onBack} onNext={onConfirm} nextLabel={t('fp.confirm')} nextIcon="check" />
-      <Hint>{t('fp.confirmHint')}</Hint>
     </section>
   )
 }

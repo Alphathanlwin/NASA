@@ -1,7 +1,7 @@
 // AI-assisted: Claude Code
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AgentLog } from './components/AgentLog'
-import { DrawPanel } from './components/DrawPanel'
+import { DrawPanel, NotPlantable } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
@@ -16,6 +16,9 @@ import { setEngineLang } from './engine/engine'
 import type { Snapshot, SnapshotField } from './data'
 import { loadReadings, loadUserFields, outline, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
 import type { LatLng, Readings, UserField } from './userfields'
+import { checkField, loadLand, samplePoints } from './landcover'
+import type { Land } from './landcover'
+import { waterAt } from './water'
 import type { Econ, Priorities, Scenario } from './engine/types'
 import { initialLang, setLang, t, townName, fieldName } from './i18n'
 import type { Key, Lang } from './i18n'
@@ -68,6 +71,12 @@ export default function App() {
   const [draft, setDraft] = useState<Scenario>({})
   const [runId, setRunId] = useState(0)
   const [userFields, setUserFields] = useState<UserField[]>(() => loadUserFields())
+  // NASA MODIS land cover: says when a spot is river, forest hills or town, where nothing can be planted
+  const [land, setLand] = useState<Land | null>(null)
+  useEffect(() => { loadLand().then(setLand) }, [])
+  // 18 m surface-water answers per point (rivers too narrow for the 500 m land cover), filled in as they arrive
+  const [water, setWater] = useState<Record<string, boolean | null>>({})
+  const ptKey = (p: LatLng) => `${p[0].toFixed(6)},${p[1].toFixed(6)}`
   const [readings, setReadings] = useState<Record<string, Readings>>(() => loadReadings())
   const [drawing, setDrawing] = useState(false)
   const [drawPts, setDrawPts] = useState<LatLng[]>([])
@@ -162,16 +171,29 @@ export default function App() {
       fieldIrrigation={field.irrigation} />
   )
 
+  const userSelectedField = userFields.find((u) => u.id === selectedId)
+  useEffect(() => {
+    const shapes = [drawPts, userSelectedField?.points ?? []].filter((s) => s.length > 0)
+    for (const p of shapes.flatMap(samplePoints)) {
+      const k = ptKey(p)
+      if (k in water) continue
+      setWater((w) => ({ ...w, [k]: null }))
+      waterAt(p).then((v) => setWater((w) => ({ ...w, [k]: v })))
+    }
+  }, [drawPts, userSelectedField])  // eslint-disable-line react-hooks/exhaustive-deps
+  const waterFn = (p: LatLng) => water[ptKey(p)]
+  const drawCheck = useMemo(() => checkField(land, drawPts, waterFn), [land, drawPts, water])  // eslint-disable-line react-hooks/exhaustive-deps
+  const fieldLand = useMemo(() => checkField(land, userSelectedField?.points ?? [], waterFn), [land, userSelectedField, water])  // eslint-disable-line react-hooks/exhaustive-deps
   const mapView = field && snap ? (
     <MapView snap={snap} selectedId={selectedId} onSelect={page === 'home' && !drawing ? enterField : select}
       rotation={{ fieldName: fieldName(field), previous: isUserField ? undefined : field.crop_history.at(-1), next: nextCrops }}
       fieldOptions={Object.values(profiles)} details={fieldOverview(true)} scenario={scenarioPanel}
       initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
       agentRun={field.agent_run ?? null} runId={runId}
-      userFields={userFields} drawing={drawing} draft={drawPts}
+      userFields={userFields} drawing={drawing} draft={drawPts} badCorners={drawCheck.badCorners}
       onDraftPoint={(pt) => setDrawPts((d) => [...d, pt])}
       overlay={drawing ? (
-        <DrawPanel draft={drawPts} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
+        <DrawPanel draft={drawPts} check={drawCheck} landYear={land?.year} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
           onCancel={() => { setDrawing(false); setDrawPts([]) }} onSave={saveDrawn} />
       ) : null} />
   ) : null
@@ -193,7 +215,6 @@ export default function App() {
             ) : (
               <>
                 <h1>{t(`side.${page}` as Key)}</h1>
-                {!['fields', 'scenarios', 'log'].includes(page) && <p className="lead">{t(`side.${page}Sub` as Key)}</p>}
               </>
             )}
           </div>
@@ -245,9 +266,12 @@ export default function App() {
             {page === 'field3d' && (
               <FieldView key={field.id} snap={snap} field={field} plans={plans} onMap={() => setPage(backPage === 'field3d' ? 'home' : backPage)} />
             )}
-            {page === 'planner' && plans && (
+            {page === 'planner' && plans && !fieldLand.plantable && (
+              <NotPlantable ground={fieldLand.ground} year={land?.year} />
+            )}
+            {page === 'planner' && plans && fieldLand.plantable && (
               <div className="stack">
-                <FarmerPlanner key={field.id} snap={snap} field={field} econ={econ} onEcon={setEcon} onPriorities={setPriorities}>
+                <FarmerPlanner key={field.id} snap={snap} field={field} econ={econ} onPriorities={setPriorities}>
                   {(farmerPlans) => <PlansPanel result={farmerPlans} field={field} priorities={priorities} onPriorities={setPriorities}
                   econ={econ} onEcon={setEcon} />}
                 </FarmerPlanner>
