@@ -246,7 +246,7 @@ export default function App() {
             )}
             {page === 'planner' && plans && (
               <div className="stack">
-                <PlansPanel result={plans} priorities={priorities} onPriorities={setPriorities}
+                <PlansPanel result={plans} field={field} priorities={priorities} onPriorities={setPriorities}
                   econ={econ} onEcon={setEcon} />
                 <OtherCrops snap={snap} field={field} />
               </div>
