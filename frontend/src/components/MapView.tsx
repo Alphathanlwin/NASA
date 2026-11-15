@@ -112,7 +112,7 @@ function AgentTrace({ waypoints, runId }: { waypoints: [number, number][]; runId
 }
 
 export function MapView({ snap, selectedId, onSelect, agentRun, runId, userFields = [], drawing = false,
-  draft = [], badCorners = [], onDraftPoint, overlay, initialLayer = 'map', compact = false, rotation, fieldOptions, details, scenario }: {
+  draft = [], badCorners = [], houses = [], onDraftPoint, overlay, initialLayer = 'map', compact = false, rotation, fieldOptions, details, scenario }: {
   snap: Snapshot
   selectedId: string | null
   onSelect: (id: string) => void
@@ -122,6 +122,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
   drawing?: boolean
   draft?: LatLng[]
   badCorners?: number[]
+  houses?: LatLng[][]
   onDraftPoint?: (p: LatLng) => void
   overlay?: ReactNode
   initialLayer?: Layer
@@ -236,8 +237,6 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
               >
                 <Tooltip sticky>
                   <b>{f.properties.name}</b>
-                  <br />
-                  {t('field.acres', { a: f.properties.area_acres })}
                 </Tooltip>
               </Polygon>
             )
@@ -252,6 +251,10 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           {drawing && onDraftPoint && <DrawClicks onPoint={onDraftPoint} />}
           {drawing && <DrawFocus center={center} />}
           {drawing && draft.length >= 3 && <Polygon positions={outline(draft)}pathOptions={DRAFT_STYLE} interactive={false} />}
+          {drawing && houses.map((h, i) => (
+            <CircleMarker key={`house-${i}`} center={h[0]} radius={4} interactive={false}
+              pathOptions={{ color: '#fff', weight: 1.5, fillColor: '#dc2626', fillOpacity: 1 }} />
+          ))}
           {drawing && draft.length === 2 && <Polyline positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.map((p, i) => (
             <CircleMarker key={i} center={p} radius={6} interactive={false}

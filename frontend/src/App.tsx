@@ -19,6 +19,8 @@ import type { LatLng, Readings, UserField } from './userfields'
 import { checkField, loadLand, samplePoints } from './landcover'
 import type { Land } from './landcover'
 import { waterAt } from './water'
+import { buildingsInside, builtNear, loadBuildings } from './buildings'
+import type { BuildingsFile } from './buildings'
 import type { Econ, Priorities, Scenario } from './engine/types'
 import { initialLang, setLang, t, townName, fieldName } from './i18n'
 import type { Key, Lang } from './i18n'
@@ -182,15 +184,21 @@ export default function App() {
     }
   }, [drawPts, userSelectedField])  // eslint-disable-line react-hooks/exhaustive-deps
   const waterFn = (p: LatLng) => water[ptKey(p)]
-  const drawCheck = useMemo(() => checkField(land, drawPts, waterFn), [land, drawPts, water])  // eslint-disable-line react-hooks/exhaustive-deps
-  const fieldLand = useMemo(() => checkField(land, userSelectedField?.points ?? [], waterFn), [land, userSelectedField, water])  // eslint-disable-line react-hooks/exhaustive-deps
+  // houses and village areas (OpenStreetMap) inside the shape being drawn and the selected own field
+  const [buildingsFile, setBuildingsFile] = useState<BuildingsFile | null>(null)
+  useEffect(() => { loadBuildings().then(setBuildingsFile) }, [])
+  const drawBuilt = useMemo(() => (drawPts.length >= 3 ? builtNear(buildingsFile, drawPts) : null), [buildingsFile, drawPts])
+  const fieldBuilt = useMemo(() => builtNear(buildingsFile, userSelectedField?.points ?? []), [buildingsFile, userSelectedField])
+  const housesInDraw = useMemo(() => (drawBuilt ? buildingsInside(drawPts, drawBuilt.buildings) : []), [drawBuilt, drawPts])
+  const drawCheck = useMemo(() => checkField(land, drawPts, waterFn, drawBuilt), [land, drawPts, water, drawBuilt])  // eslint-disable-line react-hooks/exhaustive-deps
+  const fieldLand = useMemo(() => checkField(land, userSelectedField?.points ?? [], waterFn, fieldBuilt), [land, userSelectedField, water, fieldBuilt])  // eslint-disable-line react-hooks/exhaustive-deps
   const mapView = field && snap ? (
     <MapView snap={snap} selectedId={selectedId} onSelect={page === 'home' && !drawing ? enterField : select}
       rotation={{ fieldName: fieldName(field), previous: isUserField ? undefined : field.crop_history.at(-1), next: nextCrops }}
       fieldOptions={Object.values(profiles)} details={fieldOverview(true)} scenario={scenarioPanel}
       initialLayer={page === 'home' ? 'satellite' : 'map'} compact={page === 'home'} key={page}
       agentRun={field.agent_run ?? null} runId={runId}
-      userFields={userFields} drawing={drawing} draft={drawPts} badCorners={drawCheck.badCorners}
+      userFields={userFields} drawing={drawing} draft={drawPts} badCorners={drawCheck.badCorners} houses={housesInDraw}
       onDraftPoint={(pt) => setDrawPts((d) => [...d, pt])}
       overlay={drawing ? (
         <DrawPanel draft={drawPts} check={drawCheck} landYear={land?.year} onUndo={() => setDrawPts((d) => d.slice(0, -1))}
@@ -244,7 +252,7 @@ export default function App() {
                       <button key={f.id} role="tab" aria-selected={f.id === selectedId}
                         className={`field-chip ${f.id === selectedId ? 'active' : ''}`} onClick={() => select(f.id)}>
                         <b>{f.id}</b> {townName(f.town_id, f.town_name)}
-                        <small>{t('mine.example')} · {t('field.acres', { a: f.area_acres })}</small>
+                        <small>{t('mine.example')}</small>
                       </button>
                     ))}
                     {userFields.map((u) => (

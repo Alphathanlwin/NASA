@@ -1,9 +1,11 @@
 # Submission notes
 
+<img src="garvesty-logo.png" alt="Garvesty" width="320">
+
 **Event:** NASA Space Apps Challenge 2026, Yangon
 **Challenge:** 07 - Field Shift: Adapting Farms with NASA Data
-**Project:** Field Shift - seasonal crop-rotation decision support for the Ayeyarwady Delta
-**Team:** Field Shift
+**Project:** Garvesty - seasonal crop-rotation decision support for the Ayeyarwady Delta
+**Team:** Garvesty
 **Public demo (no login):** https://alphathanlwin.github.io/NASA/
 **Source:** https://github.com/Alphathanlwin/NASA
 
@@ -75,7 +77,7 @@ needs data this prototype does not have: Delta trial plots or farmer fields wher
 applied, soil tests before and after, and the harvest are recorded over several seasons, ideally
 collected with township extension officers. With that data a model could be trained on part of the
 fields and judged on fields it has never seen, season by season, before any number is shown to a
-farmer. Until then Field Shift shows published rates with their source and does not calculate one.
+farmer. Until then Garvesty shows published rates with their source and does not calculate one.
 
 ## AI disclosure
 

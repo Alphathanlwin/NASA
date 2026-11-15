@@ -2772,7 +2772,7 @@
             "label": "Geometry resolved",
             "t_ms": 450,
             "sim_time": "09:13",
-            "text": "Polygon resolved; 38.6 acres. Nearest reference: Myaungmya, 3.9 km.",
+            "text": "Example polygon resolved (illustrative shape, not a measured area). Nearest reference: Myaungmya, 3.9 km.",
             "source": "Demo geometry (DEMO)",
             "status": "DEMO",
             "ok": true
@@ -5381,7 +5381,7 @@
             "label": "Geometry resolved",
             "t_ms": 450,
             "sim_time": "09:13",
-            "text": "Polygon resolved; 38.5 acres. Nearest reference: Pathein, 5.8 km.",
+            "text": "Example polygon resolved (illustrative shape, not a measured area). Nearest reference: Pathein, 5.8 km.",
             "source": "Demo geometry (DEMO)",
             "status": "DEMO",
             "ok": true
@@ -7982,7 +7982,7 @@
             "label": "Geometry resolved",
             "t_ms": 450,
             "sim_time": "09:13",
-            "text": "Polygon resolved; 39.4 acres. Nearest reference: Bogale, 3.1 km.",
+            "text": "Example polygon resolved (illustrative shape, not a measured area). Nearest reference: Bogale, 3.1 km.",
             "source": "Demo geometry (DEMO)",
             "status": "DEMO",
             "ok": true
@@ -10527,7 +10527,7 @@
             "label": "Geometry resolved",
             "t_ms": 450,
             "sim_time": "09:13",
-            "text": "Polygon resolved; 38.0 acres. Nearest reference: Twante, 2.9 km.",
+            "text": "Example polygon resolved (illustrative shape, not a measured area). Nearest reference: Twante, 2.9 km.",
             "source": "Demo geometry (DEMO)",
             "status": "DEMO",
             "ok": true

@@ -25,7 +25,6 @@ const PATHS: Record<string, ReactNode> = {
   check: <path d="M4 12.5l5 5L20 6.5" />,
   arrow: <path d="M4 12h15M13 6l6 6-6 6" />,
   chev: <path d="M6 9l6 6 6-6" />,
-  speaker: <><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z" /><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" /></>,
   question: <><circle cx="12" cy="12" r="9" /><path d="M9.5 9.3A2.6 2.6 0 1 1 12 12.4V14" /><path d="M12 17h.01" /></>,
   list: <path d="M4 7h16M4 12h16M4 17h10" />,
   bars: <path d="M5 20V10M12 20V4M19 20v-8" />,

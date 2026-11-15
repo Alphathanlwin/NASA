@@ -1,13 +1,15 @@
-# Field Shift
+# Garvesty
+
+<img src="docs/garvesty-logo.png" alt="Garvesty" width="360">
 
 **Seasonal crop-rotation decision support for the Ayeyarwady Delta, built on NASA Earth data.**
 
 NASA Space Apps Challenge 2026 - challenge 07, *Field Shift: Adapting Farms with NASA Data*.
-Team Field Shift, Yangon.
+Team Garvesty, Yangon.
 
 Public demo (no login): **https://alphathanlwin.github.io/NASA/**
 
-Field Shift builds a traceable environmental profile for a demo field, compares exactly three
+Garvesty builds a traceable environmental profile for a demo field, compares exactly three
 dry-season rotations against the farmer's current rice-to-rice practice, and lets the farmer
 explore how changed assumptions move the result. Every environmental value shows its dataset,
 product, variable, unit, spatial resolution, period, retrieval date and status.

@@ -60,7 +60,7 @@ def build_run(field: dict, base: dict, steps: int = 30, scenario_label: str | No
 
     detail = {
         "field_selected": (f"Field {field['id']} selected.", None, "DEMO"),
-        "geometry_resolved": (f"Polygon resolved; {field.get('area_acres')} acres. Nearest reference: {town}, {dist} km.",
+        "geometry_resolved": (f"Example polygon resolved (illustrative shape, not a measured area). Nearest reference: {town}, {dist} km.",
                               "Demo geometry (DEMO)", "DEMO"),
         "loading_power": (f"NASA POWER point data for the {town} grid cell.", "NASA POWER daily", status("power_recent")),
         "loading_imerg": imerg_step,
