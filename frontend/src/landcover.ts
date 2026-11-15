@@ -4,10 +4,12 @@
 // planted on a river, forested hills, a town or wetland. A 500 m square is coarse: a field mostly on
 // cropland with one corner on a bank is still accepted.
 import type { LatLng } from './userfields'
+import { buildingsInside, inside } from './geo'
+import type { Built } from './buildings'
 
 export type LandTile = { xllcorner: number; yllcorner: number; cellsize: number; nrows: number; ncols: number; classes: string }
 export type Land = { year: string; tiles: LandTile[] }
-export type Ground = 'farmland' | 'water' | 'forest' | 'town' | 'wetland' | 'other' | 'outside'
+export type Ground = 'farmland' | 'water' | 'forest' | 'town' | 'wetland' | 'other' | 'outside' | 'buildings'
 export type FieldCheck = { plantable: boolean; ground: Ground; badCorners: number[] }
 
 const R = 6371007.181 // MODIS sinusoidal sphere radius, m
@@ -44,15 +46,6 @@ export function groundOf(cls: number | null): Ground {
 const centroid = (pts: LatLng[]): LatLng =>
   [pts.reduce((s, p) => s + p[0], 0) / pts.length, pts.reduce((s, p) => s + p[1], 0) / pts.length]
 
-function inside([la, lo]: LatLng, poly: LatLng[]): boolean {
-  let ok = false
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const [ai, oi] = poly[i], [aj, oj] = poly[j]
-    if ((oi > lo) !== (oj > lo) && la < ((aj - ai) * (lo - oi)) / (oj - oi) + ai) ok = !ok
-  }
-  return ok
-}
-
 /** Corners, the centre and a grid of points inside the shape, so a river through the middle is seen
  *  even when every corner sits on a bank. */
 export function samplePoints(points: LatLng[]): LatLng[] {
@@ -70,10 +63,17 @@ export function samplePoints(points: LatLng[]): LatLng[] {
 }
 
 /** A field can be planted unless most of it (corners, centre and inside) is not farmland. */
-export function checkField(land: Land | null, points: LatLng[], water?: (p: LatLng) => boolean | null | undefined): FieldCheck {
-  if ((!land && !water) || points.length === 0) return { plantable: true, ground: 'farmland', badCorners: [] }
+export function checkField(land: Land | null, points: LatLng[], water?: (p: LatLng) => boolean | null | undefined,
+  built?: Built | null): FieldCheck {
+  if ((!land && !water && !built) || points.length === 0) return { plantable: true, ground: 'farmland', badCorners: [] }
+  // a house or building inside the field: not farmland, whatever the satellites say around it
+  if (built && buildingsInside(points, built.buildings).length > 0) {
+    return { plantable: false, ground: 'buildings', badCorners: [] }
+  }
+  const village = (p: LatLng) => !!built?.villages.some((v) => inside(p, v))
   // the 18 m surface-water map catches rivers too narrow for the 500 m land cover
-  const at = (p: LatLng): Ground => (water?.(p) === true ? 'water' : land ? groundOf(igbpAt(land, p)) : 'farmland')
+  const at = (p: LatLng): Ground => (water?.(p) === true ? 'water' : village(p) ? 'town'
+    : land ? groundOf(igbpAt(land, p)) : 'farmland')
   const corners = points.map(at)
   const centre = at(centroid(points))
   const badCorners = corners.flatMap((g, i) => (g === 'farmland' ? [] : [i]))

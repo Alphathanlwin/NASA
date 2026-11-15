@@ -1,10 +1,12 @@
 # Submission notes
 
+<img src="garvesty-logo.png" alt="Garvesty" width="320">
+
 **Event:** NASA Space Apps Challenge 2026, Yangon
 **Challenge:** 07 - Field Shift: Adapting Farms with NASA Data
-**Project:** Field Shift - seasonal crop-rotation decision support for the Ayeyarwady Delta
-**Team:** Field Shift
-**Public demo (no login):** https://alphathanlwin.github.io/NASA/
+**Project:** Garvesty - seasonal crop-rotation decision support for the Ayeyarwady Delta
+**Team:** Garvesty
+**Public demo (no login):** https://velluz-dev.github.io/NASA/
 **Source:** https://github.com/Alphathanlwin/NASA
 
 ## What the judges can do in five minutes
@@ -13,10 +15,15 @@
 2. **Home**: pick a field. Note the key conditions, each with its NASA source and status, and the
    recommended dry-season crop.
 3. **My Fields**: expand any value to see dataset, product, variable, unit, resolution, period,
-   retrieval time and status. Tap **(?)** next to soil pH for the picture guide.
+   retrieval time and status. Tap **(?)** next to soil pH for the picture guide. Press **Add my
+   field** and tap corners on the river beside Pathein: the field is refused ("Crops and fruits
+   can't be planted here: this is a river"). Draw over houses and they show as red dots; draw on
+   paddy and it is accepted.
 4. **Field view**: press **Plant this** on a rotation. The harvester cuts the rice, the farmer sows
    the next crop, and the season runs on NASA normals to a summary against rice-to-rice.
-5. **Crop Planner**: three rotations with reasons; the fertiliser chart for each.
+5. **Crop Planner**: answer six short questions; the answer card names one crop with the reason
+   built from those answers, the sowing window and where each fact came from (you, your field,
+   satellite). Below: three rotations with reasons and the fertiliser chart.
 6. **Scenarios**: choose a 14-day planting delay. Rice-to-rice falls from 14.7 to 11.2 while the
    legumes hold.
 7. Switch to Burmese with the toggle or `?lang=my`.
@@ -32,7 +39,11 @@
 - A deterministic rules engine with a Python canonical implementation and a parity-tested
   TypeScript port.
 - Twelve hero scenarios and a what-if comparison screen.
-- A deterministic nine-step agent log with a clearly labelled visual metaphor.
+- A six-step farmer planner that maps the farmer's answers onto the engine's weights and scenario.
+- A drawing check that refuses fields on water, forested hills, towns or houses: NASA MODIS MCD12Q1
+  land cover (500 m, bundled), JRC Global Surface Water from Landsat (30 m, read online) and
+  OpenStreetMap buildings around the four towns (bundled).
+- A deterministic nine-step agent log with a clearly labelled visual metaphor, in both languages.
 - English and Burmese UI strings, self-hosted Myanmar font, acres only.
 - A static snapshot build that works with the backend stopped.
 
@@ -42,7 +53,11 @@
 - SMAP has no recommended-quality reading for the Twante cell in the last 120 days; that field shows
   `UNAVAILABLE` and lists it as missing information.
 - Salinity is not in these datasets.
-- Field geometry, crop history and irrigation flags are `DEMO`.
+- Field geometry, crop history and irrigation flags are `DEMO`; example fields show no acreage
+  because their shapes are illustrative. Fields the farmer draws show an area measured from the
+  corners.
+- The river check needs internet (offline only the 500 m land cover is used); houses are checked
+  only within about 13 km of the four towns and only where volunteers have mapped them.
 - Crop rules have not been reviewed by a local agronomist; the `verified` flag separates FAO
   EcoCrop ranges from team assumptions.
 - The Burmese dictionary is a first draft and has not been reviewed by a native speaker.
@@ -75,7 +90,7 @@ needs data this prototype does not have: Delta trial plots or farmer fields wher
 applied, soil tests before and after, and the harvest are recorded over several seasons, ideally
 collected with township extension officers. With that data a model could be trained on part of the
 fields and judged on fields it has never seen, season by season, before any number is shown to a
-farmer. Until then Field Shift shows published rates with their source and does not calculate one.
+farmer. Until then Garvesty shows published rates with their source and does not calculate one.
 
 ## AI disclosure
 

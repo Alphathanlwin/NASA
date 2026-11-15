@@ -1,10 +1,11 @@
 // AI-assisted: Claude Code
 import { useEffect, useRef, useState } from 'react'
-import type { AgentRun } from '../data'
+import type { AgentRun, SnapshotField } from '../data'
+import { stepText } from '../agentText'
 import { t } from '../i18n'
 import { StatusPill } from './Provenance'
 
-export function AgentLog({ run, onReplay }: { run: AgentRun; onReplay: () => void }) {
+export function AgentLog({ run, field, onReplay }: { run: AgentRun; field: SnapshotField; onReplay: () => void }) {
   const [visible, setVisible] = useState(run.events.length)
   const [playing, setPlaying] = useState(false)
   const timers = useRef<number[]>([])
@@ -45,22 +46,22 @@ export function AgentLog({ run, onReplay }: { run: AgentRun; onReplay: () => voi
         </div>
 
         <ol className="agent-list">
-          {run.events.map((ev, i) => (
+          {run.events.map((ev, i) => { const s = stepText(ev, field); return (
             <li key={ev.key} className={`${i < visible ? 'shown' : 'hidden-step'} ${ev.ok ? '' : 'skipped'}`}>
               <div className="step-dot" aria-hidden="true">{i + 1}</div>
               <div className="step-body">
                 <div className="step-head">
-                  <b>{ev.label}</b>
+                  <b>{s.label}</b>
                   <time>{ev.sim_time}</time>
                 </div>
-                <p>{ev.text}</p>
+                <p>{s.text}</p>
                 <div className="step-meta">
-                  {ev.source && <span>{ev.source}</span>}
+                  {s.source && <span>{s.source}</span>}
                   {ev.status && <StatusPill status={ev.status} />}
                 </div>
               </div>
             </li>
-          ))}
+          ) })}
         </ol>
         <p className="note small">{t('agent.simNote')}</p>
       </section>

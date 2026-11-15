@@ -1,4 +1,4 @@
-# Field Shift - frontend
+# Garvesty - frontend
 
 React 19 + TypeScript + Vite. The app, data, and how to run and test it are described in the
 [project README](../README.md).
