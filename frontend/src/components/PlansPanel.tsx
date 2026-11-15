@@ -81,7 +81,7 @@ function PlanDetail({ plan, total, field }: { plan: Plan; total: number; field?:
   if (crop.water_category?.value) rows.push([t('pd.waterNeed'), t(`pd.water.${crop.water_category.value}` as Key)])
   if (cal?.sow) rows.push([t('pd.sow'), cal.sow])
   if (cal?.harvest) rows.push([t('pd.harvest'), t('pd.around', { d: cal.harvest })])
-  if (cal?.sow_day != null && cal?.harvest_day != null) rows.push([t('pd.days'), `~${cal.harvest_day - cal.sow_day}`])
+  if (cal?.sow_day != null && cal?.harvest_day != null) rows.push([t('pd.days'), t('pd.daysValue', { n: cal.harvest_day - cal.sow_day })])
   if (cal?.onset_doy != null) {
     rows.push([t('pd.onset'), doyLabel(cal.onset_doy)])
     rows.push([t('pd.heatStart'), doyLabel(61)])  // engine window day 60 = 1 March in a common year; its reason text says 1 March
@@ -136,11 +136,11 @@ function PlanDetail({ plan, total, field }: { plan: Plan; total: number; field?:
         <div className="pd-col">
           <section className="pd-box">
             <h4>{t('plans.unknowns')}</h4>
-            <ul className="pd-bullets">{plan.unknowns.map((u: any, i: number) => <li key={i}>{u.reason}</li>)}</ul>
+            {plan.unknowns.length === 0 ? <p className="muted">{t('common.none')}</p> : <ul className="pd-bullets">{plan.unknowns.map((u: any, i: number) => <li key={i}>{u.reason}</li>)}</ul>}
           </section>
           <section className="pd-box">
             <h4>{t('plans.local')}</h4>
-            <ul className="pd-bullets">{plan.local_checks.map((c: string, i: number) => <li key={i}>{c}</li>)}</ul>
+            {plan.local_checks.length === 0 ? <p className="muted">{t('common.none')}</p> : <ul className="pd-bullets">{plan.local_checks.map((c: string, i: number) => <li key={i}>{c}</li>)}</ul>}
           </section>
         </div>
       </div>

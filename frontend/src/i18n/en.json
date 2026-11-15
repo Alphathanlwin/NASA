@@ -543,5 +543,6 @@
   "pd.around": "Around {d}",
   "pd.days": "Days to harvest",
   "pd.onset": "Mean onset of pre-monsoon rain",
-  "pd.heatStart": "Pre-monsoon heat window starts"
+  "pd.heatStart": "Pre-monsoon heat window starts",
+  "pd.daysValue": "~{n} days"
 }
