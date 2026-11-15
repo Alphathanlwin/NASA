@@ -5,7 +5,7 @@ import { t } from '../i18n'
 import type { Key } from '../i18n'
 import { PRIORITY_IDS } from '../planner/flow'
 import type { Answers, PriorityId } from '../planner/flow'
-import { ChoiceCard, Hint, StepHead, StepNav } from './PlannerUI'
+import { ChoiceCard, StepHead, StepNav } from './PlannerUI'
 
 export function PriorityInterview({ a, onChange, onNext }: {
   a: Answers; onChange: (a: Answers) => void; onNext: () => void
@@ -37,7 +37,6 @@ export function PriorityInterview({ a, onChange, onNext }: {
       )}
 
       <StepNav onNext={onNext} disabled={!a.priority || !a.tradeoff} />
-      <Hint>{t('fp.hintSteps')}</Hint>
     </section>
   )
 }

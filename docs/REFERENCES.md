@@ -108,6 +108,15 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
 19. **Soil reaction (pH) classes** - Soil Science Division Staff (2017), *Soil Survey Manual*, USDA
     Handbook 18, chapter 3. Used only to name the topsoil pH class (for example 6.1-6.5 "slightly acid")
     on My Fields; no suitability verdict is drawn from it.
+20. **NASA MODIS land cover** - MCD12Q1 v061, `LC_Type1` (IGBP classes), 500 m, latest year (2025),
+    read through the NASA ORNL DAAC MODIS web service (no login) by `pipeline/fetch_landcover.py`.
+    Used to say that no crop or fruit can be planted where a drawn field falls on water, forest
+    (the hills), a town or wetland.
+21. **Global Surface Water** - Pekel, J.-F., Cottam, A., Gorelick, N., Belward, A. S. (2016),
+    High-resolution mapping of global surface water and its long-term changes, *Nature* 540,
+    418-422. EC Joint Research Centre, from Landsat 1984-2021, CC BY 4.0; occurrence tiles read in
+    the browser at about 18 m. Only water seen in most years counts, so paddies flooded in the
+    monsoon stay plantable. Catches rivers too narrow for the 500 m land cover.
 
 ## Data-status vocabulary
 

@@ -114,7 +114,3 @@ export function StepNav({ onBack, onNext, nextLabel, disabled, nextIcon = 'arrow
     </div>
   )
 }
-
-export function Hint({ children }: { children: ReactNode }) {
-  return <p className="fp-hint">{children}</p>
-}

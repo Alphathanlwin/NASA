@@ -76,7 +76,7 @@ export function FieldCheck({ field, facts, checks, onNext, onBack }: {
 }) {
   return (
     <section className="fp-screen">
-      <StepHead title={t('fp.q5')} sub={t('fp.q5sub')} />
+      <StepHead title={t('fp.q5')} />
       <div className="fp-fieldcard">
         <Icon name="pin" />
         <div>

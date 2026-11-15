@@ -83,6 +83,15 @@ def main():
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)}: {len(fields)} fields, {len(payload['sources'])} sources")
 
+    # NASA MODIS land cover for the "can't be planted here" check; loaded by the app only when needed
+    land = DATA / "clean" / "landcover.json"
+    if land.exists():
+        lc = read(land)
+        out = OUT.parent / "landcover.json"
+        out.write_text(json.dumps({"year": lc["year"], "source": lc["source"], "tiles": lc["tiles"]},
+                                  separators=(",", ":")), encoding="utf-8")
+        print(f"wrote {out.relative_to(ROOT)}: {len(lc['tiles'])} tiles, year {lc['year']}")
+
 
 if __name__ == "__main__":
     main()

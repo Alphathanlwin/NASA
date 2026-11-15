@@ -1,17 +1,15 @@
 // AI-assisted: Claude Code
 // The answer: one recommended crop, a reason sentence built from the farmer's own answers,
 // a Listen button, the sow -> harvest strip, the validation trail (you / your field / satellite),
-// three disclosure layers and the "did you plant it?" follow-up. Ends on the action, not a score.
+// disclosure layers and the "did you plant it?" follow-up. Ends on the action, not a score.
 import { useEffect, useState } from 'react'
 import type { runPlans, SnapshotField } from '../data'
-import type { Econ, Scenario } from '../engine/types'
 import { getLang, t } from '../i18n'
 import type { Key } from '../i18n'
 import { cautionKeys, FARMER_RULES, loadFollowUp, notScored, reasonKeys, saveFollowUp, topPlan, topReasons } from '../planner/flow'
 import type { Answers, FieldFacts, Planted } from '../planner/flow'
 import { join, pressureLine, priorityLine } from './ConfirmScreen'
 import { CropArt } from './CropArt'
-import { DetailsDrawer } from './DetailsDrawer'
 import { Icon } from './PlannerUI'
 import { SeasonStrip } from './SeasonStrip'
 
@@ -65,7 +63,6 @@ function Listen({ text }: { text: string }) {
         <span>{playing ? t('fp.stop') : t('fp.listen')}</span>
         <span className="fp-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>
       </button>
-      <p className="fp-hint left">{t('fp.voiceNote')}</p>
     </div>
   )
 }
@@ -82,14 +79,13 @@ function FollowUp({ fieldId, date }: { fieldId: string; date: string }) {
           <button type="button" key={p} aria-pressed={saved?.answer === p} onClick={() => pick(p)}>{t(`fp.f2.${p}` as Key)}</button>
         ))}
       </div>
-      <p className="fp-hint left">{saved ? `${t('fp.f2.saved')} ` : ''}{t('fp.f2.lead')}</p>
+      {saved && <p className="fp-hint left">{t('fp.f2.saved')}</p>}
     </div>
   )
 }
 
-export function AnswerCard({ result, a, field, facts, scenario, econ, onEcon, onRestart }: {
-  result: Result; a: Answers; field: SnapshotField; facts: FieldFacts; scenario: Scenario
-  econ: Econ; onEcon: (e: Econ) => void; onRestart: () => void
+export function AnswerCard({ result, a, field, facts, onRestart }: {
+  result: Result; a: Answers; field: SnapshotField; facts: FieldFacts; onRestart: () => void
 }) {
   const [layer, setLayer] = useState<string | null>(null)
   const toggle = (id: string) => setLayer((cur) => (cur === id ? null : id))
@@ -112,6 +108,7 @@ export function AnswerCard({ result, a, field, facts, scenario, econ, onEcon, on
 
   return (
     <section className="fp-screen fp-answer" aria-live="polite">
+      <div className="fp-answer-main">
       <span className="fp-tag"><Icon name="check" size={15} />{t('fp.a.tag')}</span>
 
       <div className="fp-crop">
@@ -132,7 +129,9 @@ export function AnswerCard({ result, a, field, facts, scenario, econ, onEcon, on
 
       <SeasonStrip sowDay={best.calendar.sow_day} harvestDay={best.calendar.harvest_day}
         sow={best.calendar.sow} harvest={best.calendar.harvest} delay={delay} />
+      </div>
 
+      <div className="fp-answer-side">
       <div className="fp-trail">
         <div className="fp-trail-title">{t('fp.t.title')}</div>
         <div className="fp-trail-row">
@@ -187,14 +186,12 @@ export function AnswerCard({ result, a, field, facts, scenario, econ, onEcon, on
           )}
           <ul className="check-list">{best.local_checks.slice(0, 3).map((c, i) => <li key={i}>{c}</li>)}</ul>
         </Layer>
-        <Layer id="details" icon="bars" title={t('fp.l.details')} open={layer === 'details'} onToggle={toggle}>
-          <DetailsDrawer result={result} scenario={scenario} econ={econ} onEcon={onEcon} />
-        </Layer>
       </div>
 
       <FollowUp fieldId={field.id} date={best.calendar.sow} />
 
       <div className="fp-restart"><button type="button" className="fp-link" onClick={onRestart}>{t('fp.restart')}</button></div>
+      </div>
     </section>
   )
 }
