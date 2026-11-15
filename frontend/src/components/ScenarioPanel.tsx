@@ -76,7 +76,6 @@ export function ScenarioPanel({ draft, onChange, result, fieldIrrigation }: {
         </div>
       </section>
 
-      {changed.length === 0 && <section className="card empty-card">{t('scenario.noChange')}</section>}
 
       {changed.length > 0 && result && (
         <>
