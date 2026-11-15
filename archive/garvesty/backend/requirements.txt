@@ -1,8 +1,0 @@
-﻿fastapi
-uvicorn[standard]
-pydantic
-requests
-pandas
-pyarrow
-pytest
-httpx
