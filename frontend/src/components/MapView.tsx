@@ -5,6 +5,7 @@ import { CircleMarker, MapContainer, Polygon, Polyline, TileLayer, Tooltip, useM
 import 'leaflet/dist/leaflet.css'
 import type { Snapshot, SnapshotField } from '../data'
 import type { runPlans } from '../data'
+import { outline } from '../userfields'
 import type { LatLng, UserField } from '../userfields'
 import { t, fieldName } from '../i18n'
 import type { Key } from '../i18n'
@@ -240,7 +241,7 @@ export function MapView({ snap, selectedId, onSelect, agentRun, runId, userField
           ))}
           {drawing && onDraftPoint && <DrawClicks onPoint={onDraftPoint} />}
           {drawing && <DrawFocus center={center} />}
-          {drawing && draft.length >= 3 && <Polygon positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
+          {drawing && draft.length >= 3 && <Polygon positions={outline(draft)}pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.length === 2 && <Polyline positions={draft} pathOptions={DRAFT_STYLE} interactive={false} />}
           {drawing && draft.map((p, i) => (
             <CircleMarker key={i} center={p} radius={6} interactive={false}
