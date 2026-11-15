@@ -69,16 +69,15 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
       <div className="split-head">
         <div>
           <h3 id={inMap ? undefined : 'field-measurements'} tabIndex={-1}>{t('readings.title')}</h3>
-          <p className="note">{t('readings.lead')}</p>
         </div>
         <StatusPill status="USER-INPUT" />
       </div>
 
       <div className="readings-grid">
-        <NumberInput label={t('readings.ph')} hint={t('readings.phHint')} value={readings.soil_ph} min={3} max={10} step={0.1}
+        <NumberInput label={t('readings.ph')} value={readings.soil_ph} min={3} max={10} step={0.1}
           id={inMap ? 'soil-ph-map' : 'soil-ph'} help={<PhGuideButton inputId={inMap ? 'soil-ph-map' : 'soil-ph'} />}
           onChange={(v) => set({ soil_ph: v })} />
-        <Choices label={t('readings.moisture')} hint={t('readings.moistureHint')} value={readings.moisture}
+        <Choices label={t('readings.moisture')} value={readings.moisture}
           options={[{ value: 'dry', key: 'm.dry' }, { value: 'moist', key: 'm.moist' }, { value: 'wet', key: 'm.wet' }]}
           onChange={(v) => set({ moisture: v })} />
         <Choices label={t('readings.water')} value={readings.standing_water}
@@ -87,7 +86,7 @@ export function ReadingsCard({ readings, onChange, inMap }: { readings: Readings
         <Choices label={t('readings.irrigation')} value={readings.irrigation}
           options={[{ value: 'available', key: 'irr.available' }, { value: 'sometimes', key: 'irr.sometimes' }, { value: 'unavailable', key: 'irr.unavailable' }]}
           onChange={(v) => set({ irrigation: v })} />
-        <NumberInput label={t('readings.rain')} hint={t('readings.rainHint')} value={readings.rain_gauge_mm} min={0} max={2000} step={1}
+        <NumberInput label={t('readings.rain')} value={readings.rain_gauge_mm} min={0} max={2000} step={1}
           onChange={(v) => set({ rain_gauge_mm: v })} />
         <label className="reading">
           <span className="reading-label">{t('readings.date')}</span>

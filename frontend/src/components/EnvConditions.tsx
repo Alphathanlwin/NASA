@@ -131,7 +131,6 @@ export function EnvConditions({ snap, field }: { snap: Snapshot; field: Snapshot
       </Group>
 
       <div className="env-foot">
-        <span className="env-foot-note"><Icon d={I.bulb} size={22} /><span><b>{t('env.noteLabel')}</b> {t('cond.note')}</span></span>
         <a className="cond-more" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">
           {t('cond.more')}<Icon d={I.chev} size={18} />
         </a>

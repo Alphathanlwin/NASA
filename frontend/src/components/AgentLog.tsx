@@ -38,7 +38,6 @@ export function AgentLog({ run, onReplay }: { run: AgentRun; onReplay: () => voi
         <div className="split-head">
           <div>
             <h3 title={t('agent.metaphor')}>{t('agent.title')}</h3>
-            <p className="note">{t('agent.lead')}</p>
           </div>
           <button className="btn primary small" onClick={play}>
             {playing ? '…' : visible < run.events.length ? t('agent.play') : t('agent.replay')}

@@ -11,7 +11,7 @@ import { HomePage } from './components/HomePage'
 import { Sidebar } from './components/Sidebar'
 import type { Page } from './components/Sidebar'
 import { ScenarioPanel } from './components/ScenarioPanel'
-import { backendOnline, loadSnapshot, runCompare, runPlans } from './data'
+import { loadSnapshot, runCompare, runPlans } from './data'
 import { setEngineLang } from './engine/engine'
 import type { Snapshot, SnapshotField } from './data'
 import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
@@ -42,7 +42,6 @@ export default function App() {
   }
   const [snap, setSnap] = useState<Snapshot | null>(null)
   const [error, setError] = useState(false)
-  const [online, setOnline] = useState(false)
   const [page, setPageState] = useState<Page>('home')
   const [dir, setDir] = useState<1 | -1>(1)
   const [focusMeasurements, setFocusMeasurements] = useState(false)
@@ -80,7 +79,6 @@ export default function App() {
         setSelectedId(Object.keys(s.fields)[0] ?? null)
       })
       .catch(() => setError(true))
-    backendOnline().then(setOnline)
   }, [])
 
   // Every field the farmer can pick: the demo examples, then their own drawn fields.
@@ -183,7 +181,7 @@ export default function App() {
 
   return (
     <div className={`shell${drawing ? ' is-drawing' : ''}`}>
-      <Sidebar page={page} onPage={setPage} online={online} />
+      <Sidebar page={page} onPage={setPage} />
       <div className="main">
         <header className="main-head" key={`h-${page}`} data-dir={dir}>
           <div>
@@ -195,7 +193,7 @@ export default function App() {
             ) : (
               <>
                 <h1>{t(`side.${page}` as Key)}</h1>
-                <p className="lead">{t(`side.${page}Sub` as Key)}</p>
+                {!['fields', 'scenarios', 'log'].includes(page) && <p className="lead">{t(`side.${page}Sub` as Key)}</p>}
               </>
             )}
           </div>
@@ -215,7 +213,7 @@ export default function App() {
             {page === 'home' && (
               <HomePage snap={snap} field={field} plans={plans} map={mapView} profiles={profiles}
                 userFields={userFields} selectedId={selectedId} onSelect={select} onPage={setPage}
-                onMeasurements={() => { setFocusMeasurements(true); setPage('fields') }} onAdd={addField} />
+                onAdd={addField} />
             )}
             {page === 'fields' && (
               <div className="fields-page">
@@ -261,23 +259,6 @@ export default function App() {
           </main>
         )}
 
-        <footer className="foot">
-          <p className="disclaimer">{t('footer.disclaimer')}</p>
-          <p>{t('footer.data')} · {t('footer.built')}</p>
-          <p className="small">
-            {t('footer.photos')}{' '}
-            <a href="https://commons.wikimedia.org/wiki/File:Black_gram.jpg" target="_blank" rel="noreferrer">Sanjay Acharya</a>{' '}
-            (<a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noreferrer">CC BY-SA 3.0</a>),{' '}
-            <a href="https://commons.wikimedia.org/wiki/File:Green_Mung_Beans.jpg" target="_blank" rel="noreferrer">Sanjay Acharya</a>{' '}
-            (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>),{' '}
-            <a href="https://commons.wikimedia.org/wiki/File:Ripening_rice_plants_in_paddy_field,_Indonesia.jpg" target="_blank" rel="noreferrer">Undeka 11</a>{' '}
-            (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noreferrer">CC BY-SA 4.0</a>), {t('footer.photosNote')}
-          </p>
-          <p className="small">
-            Snapshot {snap?.generated_at?.slice(0, 10) ?? '—'} · Engine {snap?.engine_version ?? '—'} ·
-            Retrieval {snap?.retrieved_at?.slice(0, 10) ?? '—'}
-          </p>
-        </footer>
       </div>
     </div>
   )

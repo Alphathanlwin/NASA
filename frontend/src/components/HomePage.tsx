@@ -67,11 +67,10 @@ const ICON = {
   clock: 'M12 7v5l3 2M12 21a9 9 0 1 1 0-18 9 9 0 0 1 0 18z',
   pin: 'M12 21s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12zM12 11a2 2 0 1 0 0-4 2 2 0 0 0 0 4z',
   area: 'M4 20L12 4l8 16zM8 14h8',
-  sprout: 'M12 21V11M12 11c0-4 3-6 7-6 0 4-3 6-7 6zM12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5zM5 21h14',
   db: 'M4 6c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3zM4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6',
 }
 
-export function HomePage({ snap, field, plans, map, profiles, userFields, selectedId, onSelect, onPage, onMeasurements, onAdd, readingsMoisture }: {
+export function HomePage({ snap, field, plans, map, profiles, userFields, selectedId, onSelect, onPage, onAdd, readingsMoisture }: {
   snap: Snapshot
   field: SnapshotField
   plans: ReturnType<typeof runPlans> | null
@@ -81,7 +80,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
   selectedId: string | null
   onSelect: (id: string) => void
   onPage: (p: 'fields' | 'field3d' | 'planner' | 'scenarios') => void
-  onMeasurements: () => void
   onAdd: () => void
   readingsMoisture?: string | null
 }) {
@@ -122,8 +120,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             <span className="tile-sub">{t('field.acres', { a: field.area_acres })} · {t(field.status === 'USER-INPUT' ? 'mine.badge' : 'mine.example')}</span>
           </div>
         </div>
-        <Tile icon={<Icon d={ICON.sprout} />} label={t('tile.next')}
-          value={best ? t(`crop.${best.dry_crop}` as Key) : '—'} sub={t('rec.after')} />
         <Tile icon={<Icon d={ICON.cal} />} label={t('tile.sow')} value={cal?.sow ?? '—'} sub={t('tile.assumed')} tone="amber" />
         <Tile icon={<Icon d={ICON.clock} />} label={t('tile.harvest')} value={cal?.harvest ?? '—'}
           sub={daysToHarvest !== null ? t('tile.inDays', { n: daysToHarvest }) : undefined} tone="rose" />
@@ -168,27 +164,15 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
                 status={field.status === 'DEMO' ? 'DEMO' : 'USER-INPUT'} />
             </div>
             <div className="cond-foot">
-              <span className="cond-note"><Icon d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v6M12 7.5v.01" size={22} />{t('cond.note')}</span>
               <a className="cond-more" href="https://github.com/Alphathanlwin/NASA/blob/main/data/SOURCES.md" target="_blank" rel="noreferrer">
                 {t('cond.more')}<Icon d="M9 6l6 6-6 6" size={18} />
               </a>
-            </div>
-            <div className="field-nutrients">
-              <h4>{t('overview.nutrients')}</h4>
-              <p className="note">{t('overview.nutrientsNote')}</p>
             </div>
           </section>
         </div>
 
         <div className="home-side">
           {plans && <RecommendedCrop result={plans} onOpen={() => onPage('planner')} />}
-          <section className="card quick">
-            <button className="act-3d" onClick={() => onPage('field3d')}><Icon d="M12 2l9 5v10l-9 5-9-5V7zM12 12l9-5M12 12v10M12 12L3 7" /><b>{t('home.enter3d')}</b><small>{t('home.enter3dSub')}</small></button>
-            <button onClick={() => onPage('planner')}><Icon d="M4 20V10M10 20V4M16 20v-7" /><b>{t('act.compare')}</b><small>{t('act.compareSub')}</small></button>
-            <button onClick={() => onPage('scenarios')}><Icon d="M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" /><b>{t('act.scen')}</b><small>{t('act.scenSub')}</small></button>
-            <button onClick={onMeasurements}><Icon d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" /><b>{t('act.measure')}</b><small>{t('act.measureSub')}</small></button>
-          </section>
-
           {cal && (
             <section className="card">
               <h3>{t('cal.title')} <small className="muted-inline">{t('cal.sub')}</small></h3>
@@ -204,7 +188,6 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
                   )
                 })}
               </ol>
-              <p className="note small">{t('cal.note')}</p>
             </section>
           )}
 
