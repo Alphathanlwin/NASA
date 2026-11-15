@@ -864,11 +864,9 @@ h4, .eyebrow, .rec-kicker, .fact span, .metric-label, .comp span, .compare-head,
 .plan-card.cat-worth_investigating { border-left: 4px solid var(--moss); }
 .plan-card.cat-possible_with_caution { border-left: 4px solid var(--amber); }
 .plan-card.cat-weak_fit, .plan-card.cat-not_workable { border-left: 4px solid var(--red); }
-.plan-card.float { animation: card-float 4s ease-in-out infinite; }
 .plan-card:hover, .plan-card:focus-within { transform: translateY(-4px) scale(1.01); box-shadow: 0 16px 34px rgba(22, 53, 42, 0.22); animation-play-state: paused; }
 .plan-card.chosen { outline: 2px solid var(--moss); animation: none; }
 .plan-card.dim { opacity: 0.4; animation: none; }
-@keyframes card-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
 
 .sim-params {
   background: rgba(255, 253, 248, 0.95); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px;

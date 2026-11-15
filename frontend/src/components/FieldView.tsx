@@ -3,6 +3,7 @@
 import { Suspense, lazy, useEffect, useMemo, useState } from 'react'
 import { climatologyOf } from '../data'
 import type { Snapshot, SnapshotField, runPlans } from '../data'
+import type { Scenario } from '../engine/types'
 import type { Action } from '../field3d/layout'
 import { t, townName, fieldName } from '../i18n'
 import { contextFor } from '../sim/presets'
@@ -15,14 +16,18 @@ import { IoTDemo } from './IoTDemo'
 
 const FieldScene = lazy(() => import('../field3d/FieldScene'))
 
-export function FieldView({ snap, field, plans, onMap }: {
+export function FieldView({ snap, field, plans, usesFarmerAnswers, scenario, onMap }: {
   snap: Snapshot
   field: SnapshotField
   plans: ReturnType<typeof runPlans> | null
+  usesFarmerAnswers?: boolean
+  scenario?: Scenario
   onMap: () => void
 }) {
   const clim = climatologyOf(snap, field)
-  const ctx = useMemo(() => contextFor(field, clim), [field, clim])
+  // the farmer's saved irrigation answer, when there is one, overrides the field's demo setting
+  const irrigation = scenario?.irrigation
+  const ctx = useMemo(() => contextFor(irrigation ? { ...field, irrigation } : field, clim), [field, clim, irrigation])
   const list = plans?.plans ?? []
   const api = useSim(field, ctx, list)
   const [webgl] = useState(hasWebGL)
@@ -89,7 +94,7 @@ export function FieldView({ snap, field, plans, onMap }: {
         {api.phase !== 'harvesting' && api.phase !== 'sowing' && <div className="fv-side">
           {plans && list.length > 0 ? (
             api.phase === 'choose' ? (
-              <PlanCards result={plans} chosenId={api.planId} disabled={api.phase !== 'choose'} onChoose={(plan) => { setShowSensors(true); api.choose(plan) }} />
+              <PlanCards result={plans} usesFarmerAnswers={usesFarmerAnswers} chosenId={api.planId} disabled={api.phase !== 'choose'} onChoose={(plan) => { setShowSensors(true); api.choose(plan) }} />
             ) : (
               <SimParams sim={api.sim} noClim={!clim} />
             )

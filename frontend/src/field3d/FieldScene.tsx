@@ -199,7 +199,7 @@ export default function FieldScene({ sim, action, sweepMode, showSensors }: {
 }) {
   const flooded = sim.crop === 'rice' && sim.moisture >= 0.88 && sim.stage !== 'harvested'
   return (
-    <Canvas dpr={[1, 1.5]} shadows flat camera={{ position: CAM_POS, fov: 42 }} gl={{ antialias: true }}
+    <Canvas dpr={[1, 1.5]} shadows="percentage" flat camera={{ position: CAM_POS, fov: 42 }} gl={{ antialias: true }}
       aria-label="3D field view">
       {/* bright, clear sky; flat (no tone mapping) keeps the cartoon colours saturated */}
       <color attach="background" args={['#9fdcff']} />

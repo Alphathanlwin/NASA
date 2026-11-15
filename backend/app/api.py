@@ -5,6 +5,7 @@ The same engine is ported to TypeScript so the static GitHub Pages build can run
 no backend. scripts/parity_test.mjs keeps the two in step.
 """
 import copy
+from typing import Literal
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
@@ -22,18 +23,26 @@ class Priorities(BaseModel):
 
 
 class Econ(BaseModel):
-    price: float | None = None
-    cost: float | None = None
+    price: float | None = Field(None, allow_inf_nan=False, ge=0, le=1e12)
+    cost: float | None = Field(None, allow_inf_nan=False, ge=0, le=1e12)
+
+
+class Scenario(BaseModel):
+    irrigation: Literal['available', 'sometimes', 'unavailable'] | None = None
+    planting_delay_days: int | None = Field(None, ge=0, le=365)
+    residual_moisture: Literal['normal', 'low', 'unknown'] | None = None
+    drainage: Literal['good', 'poor', 'unknown'] | None = None
+    rainfall_change_percent: float | None = Field(None, ge=-100, le=1000, allow_inf_nan=False)
 
 
 class PlanRequest(BaseModel):
     priorities: Priorities = Priorities()
     econ: dict[str, Econ] | None = None
-    scenario: dict | None = None
+    scenario: Scenario | None = None
 
 
 class ScenarioRequest(BaseModel):
-    assumptions: dict = Field(default_factory=dict)
+    assumptions: Scenario = Field(default_factory=Scenario)
     priorities: Priorities = Priorities()
     econ: dict[str, Econ] | None = None
 
@@ -85,13 +94,13 @@ def field_detail(field_id: str):
 @router.post("/fields/{field_id}/plans")
 def plans(field_id: str, body: PlanRequest):
     rec = field_or_404(field_id)
-    return engine.evaluate(engine_inputs(rec), body.scenario, body.priorities.model_dump(), econ_dict(body.econ))
+    return engine.evaluate(engine_inputs(rec), body.scenario.model_dump(exclude_none=True) if body.scenario else None, body.priorities.model_dump(), econ_dict(body.econ))
 
 
 @router.post("/fields/{field_id}/scenarios")
 def scenarios_run(field_id: str, body: ScenarioRequest):
     rec = field_or_404(field_id)
-    return engine.compare(engine_inputs(rec), body.assumptions, body.priorities.model_dump(), econ_dict(body.econ))
+    return engine.compare(engine_inputs(rec), body.assumptions.model_dump(exclude_none=True), body.priorities.model_dump(), econ_dict(body.econ))
 
 
 @router.get("/fields/{field_id}/agent-run")

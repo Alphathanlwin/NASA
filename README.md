@@ -7,7 +7,7 @@
 NASA Space Apps Challenge 2026 - challenge 07, *Field Shift: Adapting Farms with NASA Data*.
 Team Garvesty, Yangon.
 
-Public demo (no login): **https://alphathanlwin.github.io/NASA/**
+Public demo (no login): **https://velluz-dev.github.io/NASA/**
 
 Garvesty builds a traceable environmental profile for a demo field, compares exactly three
 dry-season rotations against the farmer's current rice-to-rice practice, and lets the farmer
@@ -28,14 +28,18 @@ The app has six pages in the sidebar (a bottom bar on phones):
    dates, a satellite map of the field, key conditions (7-day POWER rain, 30-day IMERG rain, SMAP
    soil moisture, irrigation), the recommended dry-season crop and a crop calendar.
 2. **My Fields** - the field's map and facts. **Add my field** lets a farmer tap the corners of
-   their own field on the satellite map. **Your field measurements** takes their own soil-test pH,
+   their own field on the satellite map; the map opens full screen, and a field drawn on a river,
+   forested hills, a town or over houses is refused with the reason (NASA MODIS land cover, JRC
+   Global Surface Water from Landsat, OpenStreetMap buildings). **Your field measurements** takes their own soil-test pH,
    soil feel, standing water, irrigation and rain gauge; the round **(?)** next to pH opens an
    eight-step picture guide to testing soil pH with a kit.
 3. **Field view** - a 3D field built in Blender (`scripts/blender/build_field_assets.py`) with
    Myaungmya-style surroundings. Pick a rotation: a crawler rice harvester, driven by the farmer,
    cuts the rice, then the farmer sows the next crop, and the season plays forward on NASA normals
    to a summary against the usual rice-to-rice rotation. Labelled `SIMULATED`.
-4. **Crop Planner** - three rotations scored with published rules: rice to rice (always the
+4. **Crop Planner** - six short questions first (what matters most, weather worries, prices, what
+   the farmer has, the field shown back, confirm), then one recommended crop with its reason and
+   sowing window. Below it, three rotations scored with published rules: rice to rice (always the
    baseline), rice to mung bean, rice to black gram, with reasons for and against, evidence,
    missing information and local checks. Each plan shows a **fertiliser guide** (Myanmar Department
    of Agriculture rates as a chart, cited).

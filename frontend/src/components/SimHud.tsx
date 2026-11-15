@@ -112,28 +112,46 @@ const MARK: Partial<Record<SimEvent['kind'], string>> = {
   late_sowing: '⏱', stage: '•', season_end: '★', data_gap: '?',
 }
 
+// When several events share a day, the marker shows the one that matters most to the farmer.
+const RANK: SimEvent['kind'][] = ['harvest', 'sow', 'season_end', 'no_irrigation', 'drought', 'heat', 'waterlog',
+  'late_sowing', 'rain', 'land_prep', 'data_gap', 'stage', 'start']
+
 export function SimTimeline({ sim }: { sim: SimState }) {
-  const [picked, setPicked] = useState<SimEvent | null>(null)
+  const [picked, setPicked] = useState<number | null>(null)  // the first day of a marker's group
   const sch = sim.schedule
   const total = sch ? sch.sowDay + sch.cycleDays + 2 : 30
   const pos = (d: number) => `${Math.min(100, (d / total) * 100)}%`
+  // markers are 22 px wide and centred on their day: keep them inside the bar at both ends
+  const markPos = (d: number) => `calc(11px + (100% - 22px) * ${Math.min(1, d / total)})`
   const events = sim.events.filter((e) => e.kind !== 'data_gap' || sim.events.indexOf(e) === sim.events.findIndex((x) => x.kind === 'data_gap'))
+  // events closer than ~6% of the bar share one marker, so no marker hides another
+  const gap = Math.max(1, Math.round(total * 0.06))
+  const groups: { day: number; list: SimEvent[] }[] = []
+  for (const e of [...events].sort((a, b) => a.day - b.day)) {
+    const last = groups[groups.length - 1]
+    if (last && e.day - last.day <= gap) last.list.push(e)
+    else groups.push({ day: e.day, list: [e] })
+  }
+  const marks = groups.map((g) => ({ ...g, top: [...g.list].sort((a, b) => RANK.indexOf(a.kind) - RANK.indexOf(b.kind))[0] }))
   const latest = sim.events.slice(-3).reverse()
+  const pickedGroup = picked !== null ? groups.find((g) => g.day === picked) : undefined
+  const shown = pickedGroup ? pickedGroup.list : latest
   return (
     <section className="sim-timeline" aria-label={t('sim.timeline')}>
       <div className="tl-bar">
         {sch && <div className="tl-crop" style={{ left: pos(sch.sowDay), width: pos(sch.cycleDays) }} />}
         <div className="tl-now" style={{ width: pos(sim.day) }} />
-        {events.map((e, i) => (
-          <button key={i} className={`tl-mark tl-${e.kind}`} style={{ left: pos(e.day) }}
-            title={eventText(e)} aria-label={`${t('sim.day', { n: e.day })}: ${eventText(e)}`}
-            onClick={() => setPicked(e)}>
-            {MARK[e.kind] ?? '•'}
+        {marks.map(({ day, list, top }) => (
+          <button key={day} className={`tl-mark tl-${top.kind}`} style={{ left: markPos(day) }}
+            title={list.map(eventText).join('\n')}
+            aria-label={list.map((e) => `${t('sim.day', { n: e.day })}: ${eventText(e)}`).join('; ')}
+            aria-pressed={picked === day} onClick={() => setPicked(picked === day ? null : day)}>
+            {MARK[top.kind] ?? '•'}
           </button>
         ))}
       </div>
       <div className="tl-log">
-        {(picked ? [picked] : latest).map((e, i) => (
+        {shown.map((e, i) => (
           <div key={i}><b>{t('sim.day', { n: e.day })}</b> · {doyLabel(e.doy)} · {eventText(e)}</div>
         ))}
       </div>
