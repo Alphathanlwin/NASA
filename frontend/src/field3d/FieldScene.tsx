@@ -191,10 +191,11 @@ function Rain({ active }: { active: boolean }) {
   )
 }
 
-export default function FieldScene({ sim, action, sweepMode }: {
+export default function FieldScene({ sim, action, sweepMode, showSensors }: {
   sim: SimState
   action: Action | null
   sweepMode: 'cut' | 'sow' | null
+  showSensors: boolean
 }) {
   const flooded = sim.crop === 'rice' && sim.moisture >= 0.88 && sim.stage !== 'harvested'
   return (
@@ -219,6 +220,14 @@ export default function FieldScene({ sim, action, sweepMode }: {
         <Harvester action={action} />
         <Farmer action={action} />
       </Suspense>
+      {/* Example sensor stations; these are not real device locations. */}
+      {showSensors && [[-2, 4.7], [2, 4.7]].map(([x, z]) => (
+        <group key={`${x}-${z}`} position={[x, 0, z]}>
+          <mesh position={[0, 0.52, 0]}><cylinderGeometry args={[0.06, 0.06, 1.04, 8]} /><meshStandardMaterial color="#415548" /></mesh>
+          <mesh position={[0, 1.1, 0]}><boxGeometry args={[0.48, 0.4, 0.22]} /><meshStandardMaterial color="#e5f0dc" /></mesh>
+          <mesh position={[0, 1.45, 0]} rotation-x={-0.35}><boxGeometry args={[0.6, 0.04, 0.4]} /><meshStandardMaterial color="#214c68" /></mesh>
+        </group>
+      ))}
       <Rain active={sim.rainToday >= 3} />
     </Canvas>
   )

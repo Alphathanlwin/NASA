@@ -11,6 +11,7 @@ import { PlanCards, cropName } from './PlanCards'
 import { SimControls, SimParams, SimStatus, SimTimeline } from './SimHud'
 import { SimSummary } from './SimSummary'
 import { WebGLFallback, hasWebGL } from './WebGLFallback'
+import { IoTDemo } from './IoTDemo'
 
 const FieldScene = lazy(() => import('../field3d/FieldScene'))
 
@@ -25,6 +26,7 @@ export function FieldView({ snap, field, plans, onMap }: {
   const list = plans?.plans ?? []
   const api = useSim(field, ctx, list)
   const [webgl] = useState(hasWebGL)
+  const [showSensors, setShowSensors] = useState(false)
 
   const action: Action | null = useMemo(() => {
     if (api.phase === 'harvesting') return { kind: 'cut', crop: 'rice', start: api.since, duration: ACTION_MS.harvest }
@@ -39,7 +41,7 @@ export function FieldView({ snap, field, plans, onMap }: {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return
+      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.tagName === 'BUTTON' || el.tagName === 'SELECT' || el.isContentEditable)) return
       if (e.key === 'm' || e.key === 'M') onMap()
       else if (e.key === ' ') { e.preventDefault(); api.togglePlay() }
       else if (e.key === ']') api.skip(7)
@@ -61,10 +63,10 @@ export function FieldView({ snap, field, plans, onMap }: {
         <div className="fv-canvas">
           {webgl ? (
             <Suspense fallback={<div className="fv-loading">{t('field3d.loading')}</div>}>
-              <FieldScene sim={api.sim} action={action} sweepMode={action ? action.kind : null} />
+              <FieldScene sim={api.sim} action={action} sweepMode={action ? action.kind : null} showSensors={showSensors} />
             </Suspense>
           ) : (
-            <WebGLFallback sim={api.sim} />
+            <WebGLFallback sim={api.sim} showSensors={showSensors} />
           )}
         </div>
 
@@ -87,7 +89,7 @@ export function FieldView({ snap, field, plans, onMap }: {
         {api.phase !== 'harvesting' && api.phase !== 'sowing' && <div className="fv-side">
           {plans && list.length > 0 ? (
             api.phase === 'choose' ? (
-              <PlanCards result={plans} chosenId={api.planId} disabled={api.phase !== 'choose'} onChoose={api.choose} />
+              <PlanCards result={plans} chosenId={api.planId} disabled={api.phase !== 'choose'} onChoose={(plan) => { setShowSensors(true); api.choose(plan) }} />
             ) : (
               <SimParams sim={api.sim} noClim={!clim} />
             )
@@ -104,10 +106,17 @@ export function FieldView({ snap, field, plans, onMap }: {
         )}
       </div>
 
+      <button type="button" className="sensor-toggle" aria-expanded={showSensors} aria-controls="iot-panel" onClick={() => {
+        if (!showSensors) requestAnimationFrame(() => document.getElementById('iot-panel')?.scrollIntoView({ block: 'start' }))
+        setShowSensors(v => !v)
+      }}>
+        {t(showSensors ? 'iot.removeSensors' : 'iot.addSensors')}
+      </button>
       <div className="fv-bottom">
         <SimControls api={api} />
         <SimTimeline sim={api.sim} />
       </div>
+      <IoTDemo key={field.id} visible={showSensors} />
     </section>
   )
 }
