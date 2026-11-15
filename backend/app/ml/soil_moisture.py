@@ -28,8 +28,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[3]
 DATA = ROOT / "data"
 SMAP_FILES = [
-    ROOT / "archive/garvesty/data/raw/appeears/fieldshift-demo-fields-SPL3SMP-E-006-results.csv",
-    ROOT / "archive/garvesty/data/raw/appeears/pawsan-ayeyarwady-SPL3SMP-E-006-results.csv",
+    ROOT / "data/raw/appeears/ml_training/fieldshift-demo-fields-SPL3SMP-E-006-results.csv",
+    ROOT / "data/raw/appeears/ml_training/pawsan-ayeyarwady-SPL3SMP-E-006-results.csv",
 ]
 HISTORY_DIR = DATA / "raw" / "appeears" / "ml_history"   # full 2015- history (fetch_smap_history.py)
 POWER_DIR = DATA / "raw" / "power" / "ml"

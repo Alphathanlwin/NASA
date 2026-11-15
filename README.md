@@ -264,9 +264,7 @@ badge appeared and the scenario controls still recalculated.
 │   ├── project-brief.md      original project specification
 │   ├── submission.md         submission notes and the five-minute judge path
 │   ├── REFERENCES.md         every dataset, method and image credit
-│   ├── field-3d-simulation-plan.md
-│   └── archive/              early design notes
-└── archive/garvesty/         an earlier team prototype, kept for reference
+│   └── field-3d-simulation-plan.md
 ```
 
 ---
