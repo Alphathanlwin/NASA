@@ -287,7 +287,7 @@ export default function App() {
             )}
             {page === 'scenarios' && scenarioPanel}
             {page === 'log' && field.agent_run && (
-              <AgentLog run={field.agent_run} onReplay={() => setRunId((n) => n + 1)} />
+              <AgentLog run={field.agent_run} field={field} onReplay={() => setRunId((n) => n + 1)} />
             )}
           </main>
         )}
