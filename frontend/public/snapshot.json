@@ -801,7 +801,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -1002,7 +1002,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -1195,7 +1195,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Needs a reliable water source until harvest.",
               "Late harvest can run into pre-monsoon storms.",
               "Check for salt intrusion, seed availability and the local market before deciding."
@@ -3406,7 +3406,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -3619,7 +3619,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -3812,7 +3812,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Needs a reliable water source until harvest.",
               "Late harvest can run into pre-monsoon storms.",
               "Check for salt intrusion, seed availability and the local market before deciding."
@@ -6001,7 +6001,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -6202,7 +6202,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -6395,7 +6395,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Needs a reliable water source until harvest.",
               "Late harvest can run into pre-monsoon storms.",
               "Check for salt intrusion, seed availability and the local market before deciding."
@@ -8567,7 +8567,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -8772,7 +8772,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Check how quickly this field drains after the monsoon.",
               "Does not tolerate standing water.",
               "Sow soon after the rice harvest while the soil is still moist.",
@@ -8969,7 +8969,7 @@
             ],
             "local_checks": [
               "Sowing dates are assumptions for the Delta; confirm them for your township.",
-              "Rainfall here is modelled for a grid cell about 55 km wide; check the usual start of pre-monsoon rain locally.",
+              "Rainfall here is a satellite average for an area about 11 km wide; check the usual start of pre-monsoon rain locally.",
               "Needs a reliable water source until harvest.",
               "Late harvest can run into pre-monsoon storms.",
               "Check for salt intrusion, seed availability and the local market before deciding."
