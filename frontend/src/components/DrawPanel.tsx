@@ -2,7 +2,7 @@
 // Overlay on the map while the farmer draws their own field: tap corners, see the area, name it.
 import { useState } from 'react'
 import { t } from '../i18n'
-import { areaAcres } from '../userfields'
+import { areaAcres, outline } from '../userfields'
 import type { LatLng, UserField } from '../userfields'
 
 type Irrigation = UserField['irrigation']
@@ -16,7 +16,7 @@ export function DrawPanel({ draft, onUndo, onCancel, onSave }: {
   const [step, setStep] = useState<'corners' | 'details'>('corners')
   const [name, setName] = useState('')
   const [irrigation, setIrrigation] = useState<Irrigation | null>(null)
-  const acres = Math.round(areaAcres(draft) * 10) / 10
+  const acres = Math.round(areaAcres(outline(draft)) * 10) / 10
   const canFinish = draft.length >= 3
 
   return (

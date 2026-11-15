@@ -79,6 +79,17 @@ export function centroid(points: LatLng[]): LatLng {
   return [points.reduce((s, p) => s + p[0], 0) / n, points.reduce((s, p) => s + p[1], 0) / n]
 }
 
+/** Corners in order around their centre, so tapping them in any order never draws a crossed
+ *  "bow-tie" (4 taps always make the rectangle). Tap order is kept in state so Undo still
+ *  removes the last tap; only the drawn, measured and saved outline uses this order. */
+export function outline(points: LatLng[]): LatLng[] {
+  if (points.length < 4) return points
+  const [cLat, cLon] = centroid(points)
+  const k = Math.cos((cLat * Math.PI) / 180) // degrees of longitude are shorter away from the equator
+  const ang = ([la, lo]: LatLng) => Math.atan2(la - cLat, (lo - cLon) * k)
+  return [...points].sort((a, b) => ang(a) - ang(b))
+}
+
 // --------------------------------------------------------------------------- profiles
 const USER_PROV: Provenance = {
   dataset: 'Farmer-entered', product: 'Field drawn by the farmer on the map', spatial_resolution: 'field boundary',

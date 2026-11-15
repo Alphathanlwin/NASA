@@ -5,6 +5,7 @@ import { DrawPanel } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
+import { FarmerPlanner } from './components/FarmerPlanner'
 import { PlansPanel } from './components/PlansPanel'
 import { HomePage } from './components/HomePage'
 import { Sidebar } from './components/Sidebar'
@@ -13,7 +14,7 @@ import { ScenarioPanel } from './components/ScenarioPanel'
 import { loadSnapshot, runCompare, runPlans } from './data'
 import { setEngineLang } from './engine/engine'
 import type { Snapshot, SnapshotField } from './data'
-import { loadReadings, loadUserFields, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
+import { loadReadings, loadUserFields, outline, profileForUserField, saveReadings, saveUserFields, withReadings } from './userfields'
 import type { LatLng, Readings, UserField } from './userfields'
 import type { Econ, Priorities, Scenario } from './engine/types'
 import { initialLang, setLang, t, townName, fieldName } from './i18n'
@@ -102,7 +103,7 @@ export default function App() {
   }
   const startDrawing = () => { setDrawPts([]); setDrawing(true) }
   const saveDrawn = (name: string, irrigation: UserField['irrigation']) => {
-    const uf: UserField = { id: `MY-${Date.now().toString(36)}`, name, points: drawPts, irrigation, created_at: new Date().toISOString() }
+    const uf: UserField = { id: `MY-${Date.now().toString(36)}`, name, points: outline(drawPts), irrigation, created_at: new Date().toISOString() }
     const next = [...userFields, uf]
     setUserFields(next)
     saveUserFields(next)
@@ -246,8 +247,10 @@ export default function App() {
             )}
             {page === 'planner' && plans && (
               <div className="stack">
-                <PlansPanel result={plans} field={field} priorities={priorities} onPriorities={setPriorities}
-                  econ={econ} onEcon={setEcon} />
+                <FarmerPlanner key={field.id} snap={snap} field={field} econ={econ} onEcon={setEcon} onPriorities={setPriorities}>
+                  {(farmerPlans) => <PlansPanel result={farmerPlans} field={field} priorities={priorities} onPriorities={setPriorities}
+                  econ={econ} onEcon={setEcon} />}
+                </FarmerPlanner>
               </div>
             )}
             {page === 'scenarios' && scenarioPanel}
