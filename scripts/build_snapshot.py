@@ -92,6 +92,32 @@ def main():
                                   separators=(",", ":")), encoding="utf-8")
         print(f"wrote {out.relative_to(ROOT)}: {len(lc['tiles'])} tiles, year {lc['year']}")
 
+    # OpenStreetMap houses and village areas near the reference towns, for the same check
+    bld = DATA / "clean" / "buildings.json"
+    if bld.exists():
+        b = read(bld)
+        # houses snapped to ~20 m squares (one per occupied square), stored as sorted index deltas
+        g = 0.0002
+        cells = {(round(la / g), round(lo / g)) for la, lo in b["buildings"]}
+        la0, lo0 = min(c[0] for c in cells), min(c[1] for c in cells)
+        width = max(c[1] for c in cells) - lo0 + 1
+        idx = sorted((c[0] - la0) * width + (c[1] - lo0) for c in cells)
+        deltas = [idx[0]] + [idx[i] - idx[i - 1] for i in range(1, len(idx))]
+
+        def simplify(v):
+            out_pts = []
+            for la, lo in v:
+                p = [round(la, 4), round(lo, 4)]
+                if not out_pts or out_pts[-1] != p:
+                    out_pts.append(p)
+            return out_pts
+        villages = [s for s in (simplify(v) for v in b["villages"]) if len(s) >= 3]
+        out = OUT.parent / "buildings.json"
+        out.write_text(json.dumps({"source": b["source"], "retrieved_at": b["retrieved_at"], "boxes": b["boxes"],
+                                   "grid": g, "origin": [la0, lo0], "width": width, "cells_delta": deltas,
+                                   "villages": villages}, separators=(",", ":")), encoding="utf-8")
+        print(f"wrote {out.relative_to(ROOT)}: {len(b['buildings'])} buildings in {len(cells)} squares, {len(villages)} village areas")
+
 
 if __name__ == "__main__":
     main()

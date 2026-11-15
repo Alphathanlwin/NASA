@@ -117,7 +117,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
               {examples.map((f) => <option key={f.id} value={f.id}>{f.id} {townName(f.town_id, f.town_name)}</option>)}
               {userFields.map((u) => <option key={u.id} value={u.id}>✎ {u.name}</option>)}
             </select>
-            <span className="tile-sub">{t('field.acres', { a: field.area_acres })} · {t(field.status === 'USER-INPUT' ? 'mine.badge' : 'mine.example')}</span>
+            <span className="tile-sub">{field.status === 'USER-INPUT' ? `${t('field.acres', { a: field.area_acres })} · ${t('mine.badge')}` : t('mine.example')}</span>
           </div>
         </div>
         <Tile icon={<Icon d={ICON.cal} />} label={t('tile.sow')} value={cal?.sow ?? '—'} sub={t('tile.assumed')} tone="amber" />
@@ -135,7 +135,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
             </div>
             {map}
             <div className="glance-facts">
-              <span><Icon d={ICON.area} size={18} /><small>{t('field.area')}</small><b>{t('field.acres', { a: field.area_acres })}</b></span>
+              {field.status === 'USER-INPUT' && <span><Icon d={ICON.area} size={18} /><small>{t('field.area')}</small><b>{t('field.acres', { a: field.area_acres })}</b></span>}
               <span><Icon d={ICON.pin} size={18} /><small>{t('glance.location')}</small><b>{t('glance.near', { town: townName(field.town_id, field.town_name), d: field.town_distance_km })}</b></span>
               <span><Icon d={ICON.db} size={18} /><small>{t('glance.source')}</small><b>{t('glance.sourceVal')}</b></span>
             </div>
@@ -202,7 +202,7 @@ export function HomePage({ snap, field, plans, map, profiles, userFields, select
                 <li key={f.id}>
                   <button className={f.id === selectedId ? 'active' : ''} onClick={() => onSelect(f.id)}>
                     <span>{f.mine ? '✎ ' : ''}{f.label} <small>{f.mine ? t('mine.badge') : t('mine.example')}</small></span>
-                    <span className="fl-right">{t('field.acres', { a: f.acres })}
+                    <span className="fl-right">{f.mine ? t('field.acres', { a: f.acres }) : null}
                       {f.id === selectedId ? <em>{t('fields.selected')}</em> : <span aria-hidden="true">›</span>}</span>
                   </button>
                 </li>

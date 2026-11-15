@@ -2,7 +2,6 @@
 // Left navigation (desktop) that becomes a bottom bar on phones.
 import { t } from '../i18n'
 import type { Key } from '../i18n'
-import { LogoMark } from './Logo'
 
 export type Page = 'home' | 'fields' | 'field3d' | 'planner' | 'scenarios' | 'log'
 
@@ -28,11 +27,7 @@ export function Sidebar({ page, onPage }: { page: Page; onPage: (p: Page) => voi
   return (
     <aside className="side">
       <div className="side-brand">
-        <LogoMark size={42} />
-        <div>
-          <b>{t('app.name')}</b>
-          <span>{t('app.tagline')}</span>
-        </div>
+        <img className="side-logo" src={`${import.meta.env.BASE_URL}garvesty-logo.png`} alt={t('app.name')} width={720} height={333} />
       </div>
 
       <nav className="side-nav" aria-label={t('nav.sections')}>

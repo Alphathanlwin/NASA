@@ -117,6 +117,10 @@ are in `data/sources.json`, `data/SOURCES.md`, and `data/reports/cleaning_report
     418-422. EC Joint Research Centre, from Landsat 1984-2021, CC BY 4.0; occurrence tiles read in
     the browser at about 18 m. Only water seen in most years counts, so paddies flooded in the
     monsoon stay plantable. Catches rivers too narrow for the 500 m land cover.
+22. **Houses, buildings and village areas** - © OpenStreetMap contributors (ODbL), read once through
+    the Overpass API for about 13 km around each reference town by `pipeline/fetch_buildings.py`.
+    A drawn field with a house or building inside it, or mostly inside a village area, is not
+    accepted as farmland. Mapping is by volunteers, so a house that is not mapped is not caught.
 
 ## Data-status vocabulary
 

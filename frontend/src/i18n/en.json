@@ -1,6 +1,5 @@
 {
-  "app.name": "Field Shift",
-  "app.tagline": "Rotation planning with NASA data",
+  "app.name": "Garvesty",
   "app.region": "Ayeyarwady Delta, Myanmar",
   "lang.label": "Language",
   "lang.en": "English",
@@ -658,9 +657,6 @@
   "fp.caution.fertRice": "Rice needs more fertiliser. Budget for urea.",
   "fp.caution.cashRice": "Rice costs more to start. Plan your cash.",
   "fp.caution.pestRice": "Rice after rice gives pests no break. Watch the field closely.",
-  "fp.listen": "Listen",
-  "fp.stop": "Stop",
-  "fp.speak": "Plant {crop} after your rice. Sow around {sow}. Harvest around {harvest}.",
   "fp.s.title": "When",
   "fp.s.sow": "Sow {d}",
   "fp.s.sowSub": "while the soil is still moist",
@@ -730,12 +726,13 @@
   "land.town": "This is a town or built-up area.",
   "land.wetland": "This is wetland or mangrove.",
   "land.other": "This is bare ground, not farmland.",
-  "land.outside": "This spot is outside the Delta area Field Shift has data for.",
-  "land.source": "NASA MODIS land cover {y} (500 m) and JRC Global Surface Water from Landsat (30 m)",
+  "land.outside": "This spot is outside the Delta area Garvesty has data for.",
+  "land.source": "NASA MODIS land cover {y} (500 m), JRC Global Surface Water from Landsat (30 m) and © OpenStreetMap contributors (buildings)",
   "land.ok": "Farmland: crops can be planted here",
   "fert.unit": "Per acre",
   "fert.gives.urea": "Nitrogen (N)",
   "fert.gives.tsp": "Phosphorus (P)",
   "fert.gives.potash": "Potassium (K)",
-  "fert.gives.gypsum": "Calcium and sulphur"
+  "fert.gives.gypsum": "Calcium and sulphur",
+  "land.buildings": "There are houses or buildings inside this field (shown in red). Draw only the farmland."
 }

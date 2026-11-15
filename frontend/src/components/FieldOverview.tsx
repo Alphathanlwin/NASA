@@ -32,7 +32,8 @@ export function FieldOverview({ snap, field, onAnalyse, calendar, readings, onRe
       <section className="card">
         <h3>{field.status === 'USER-INPUT' ? t('mine.heading') : t('field.heading')}</h3>
         <div className="facts">
-          <Fact label={t('field.area')} value={t('field.acres', { a: field.area_acres })} />
+          {/* example shapes are illustrative, so only a field the farmer drew has a measured size */}
+          {field.status === 'USER-INPUT' && <Fact label={t('field.area')} value={t('field.acres', { a: field.area_acres })} />}
           <Fact label={t('field.reference')} value={`${townName(field.town_id, field.town_name)} · ${t('field.distance', { d: field.town_distance_km })}`} />
           <Fact label={t('field.irrigation')} value={field.irrigation} />
           <Fact label={t('field.history')} value={field.status === 'USER-INPUT' ? t('map.noCrop') :

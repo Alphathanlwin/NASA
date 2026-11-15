@@ -1,8 +1,8 @@
 // AI-assisted: Claude Code
 // The answer: one recommended crop, a reason sentence built from the farmer's own answers,
-// a Listen button, the sow -> harvest strip, the validation trail (you / your field / satellite),
+// the sow -> harvest strip, the validation trail (you / your field / satellite),
 // disclosure layers and the "did you plant it?" follow-up. Ends on the action, not a score.
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import type { runPlans, SnapshotField } from '../data'
 import { getLang, t } from '../i18n'
 import type { Key } from '../i18n'
@@ -41,32 +41,6 @@ function Layer({ id, icon, title, open, onToggle, children }: {
   )
 }
 
-function Listen({ text }: { text: string }) {
-  const can = typeof window !== 'undefined' && 'speechSynthesis' in window
-  const [playing, setPlaying] = useState(false)
-  useEffect(() => () => { if (can) window.speechSynthesis.cancel() }, [can])
-  if (!can) return null
-  const toggle = () => {
-    if (playing) { window.speechSynthesis.cancel(); setPlaying(false); return }
-    const u = new SpeechSynthesisUtterance(text)
-    u.lang = getLang() === 'my' ? 'my-MM' : 'en-GB'
-    u.rate = 0.95
-    u.onend = () => setPlaying(false)
-    u.onerror = () => setPlaying(false)
-    setPlaying(true)
-    window.speechSynthesis.speak(u)
-  }
-  return (
-    <div className="fp-listen">
-      <button type="button" className={`fp-speak ${playing ? 'playing' : ''}`} onClick={toggle} aria-pressed={playing}>
-        <Icon name="speaker" size={22} />
-        <span>{playing ? t('fp.stop') : t('fp.listen')}</span>
-        <span className="fp-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>
-      </button>
-    </div>
-  )
-}
-
 function FollowUp({ fieldId, date }: { fieldId: string; date: string }) {
   const [saved, setSaved] = useState(() => loadFollowUp(fieldId))
   const pick = (p: Planted) => { saveFollowUp(fieldId, p); setSaved({ answer: p, at: new Date().toISOString() }) }
@@ -99,7 +73,6 @@ export function AnswerCard({ result, a, field, facts, onRestart }: {
   const reasons = reasonKeys(a, best.dry_crop, delay).map((k) => t(`fp.why.${k}` as Key, { n: delay }))
   const sentence = my ? `${join(reasons)}။` : `${cap(reasons.join('; '))}.`
   const cautions = cautionKeys(a, best.dry_crop)
-  const speech = `${t('fp.speak', { crop: name, sow: best.calendar.sow, harvest: best.calendar.harvest })} ${sentence}`
 
   const ph = field.values.soil_ph?.value ?? null
   const clay = field.values.clay_pct?.value
@@ -124,8 +97,6 @@ export function AnswerCard({ result, a, field, facts, onRestart }: {
       <p className="fp-reason"><b>{t('fp.a.because')}:</b> {sentence}</p>
       {ties.length > 0 && <p className="fp-hint left">{t('fp.a.tie', { other: ties.map((p) => cropName(p.dry_crop)).join(', ') })}</p>}
       {cautions.map((c) => <p key={c} className="fp-caution">{t(`fp.caution.${c}` as Key)}</p>)}
-
-      <Listen text={speech} />
 
       <SeasonStrip sowDay={best.calendar.sow_day} harvestDay={best.calendar.harvest_day}
         sow={best.calendar.sow} harvest={best.calendar.harvest} delay={delay} />
