@@ -4,7 +4,7 @@ reference town's 0.1-degree cell, and build a monthly rainfall climatology.
 
 Why: NASA POWER's corrected precipitation (MERRA-2 based) at the western Delta cells averages
 600-1,100 mm a year at Pathein and Myaungmya, far below the 2,500-3,000 mm the Delta receives.
-IMERG is NASA's satellite rainfall product and is used for rain in the crop suitability list.
+IMERG is NASA's satellite rainfall product and is used for the long-term rain averages (clean_all.py).
 
 Same OPeNDAP access as fetch_imerg.py (Earthdata token, GES DISC agreement accepted).
 

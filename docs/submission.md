@@ -16,8 +16,7 @@
    retrieval time and status. Tap **(?)** next to soil pH for the picture guide.
 4. **Field view**: press **Plant this** on a rotation. The harvester cuts the rice, the farmer sows
    the next crop, and the season runs on NASA normals to a summary against rice-to-rice.
-5. **Crop Planner**: three rotations with reasons; the fertiliser chart for each; scroll down for
-   **Other crops and fruits** ranked for this place.
+5. **Crop Planner**: three rotations with reasons; the fertiliser chart for each.
 6. **Scenarios**: choose a 14-day planting delay. Rice-to-rice falls from 14.7 to 11.2 while the
    legumes hold.
 7. Switch to Burmese with the toggle or `?lang=my`.
@@ -29,7 +28,7 @@
   the last 30 days; monthly 2001-2025 for long-term averages), NASA SMAP soil moisture, MODIS NDVI,
   SoilGrids topsoil, source catalogue and cleaning report.
 - A 3D field built in Blender with a harvester and an animated season; a cited fertiliser guide;
-  a soil pH test guide; 20 other crops and fruits ranked by FAO EcoCrop suitability.
+  a soil pH test guide.
 - A deterministic rules engine with a Python canonical implementation and a parity-tested
   TypeScript port.
 - Twelve hero scenarios and a what-if comparison screen.

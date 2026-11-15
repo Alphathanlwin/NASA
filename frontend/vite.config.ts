@@ -11,7 +11,5 @@ export default defineConfig(({ mode }) => ({
   plugins: [react(), tailwindcss()],
   server: {
     proxy: { '/api': 'http://127.0.0.1:8000' },
-    // the crop shortlist is read from the repo's data/reference folder, one level up
-    fs: { allow: ['..'] },
   },
 }))

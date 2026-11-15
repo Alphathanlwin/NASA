@@ -68,7 +68,7 @@ def main():
         "geojson": geo,
         "fields": fields,
         "climatology": climatology,
-        # IMERG monthly rain (2001-2025) for the crop suitability list; POWER rain is too low in the west Delta
+        # IMERG monthly rain normals (2001-2025), kept with the snapshot for reference; POWER rain is too low in the west Delta
         "rain_climatology_imerg": (read(DATA / "clean" / "imerg_monthly_climatology.json")
                                    if (DATA / "clean" / "imerg_monthly_climatology.json").exists() else None),
         "towns": [{k: t[k] for k in ("id", "name", "lat", "lon")} for t in read(DATA / "reference" / "towns.json")["towns"]],

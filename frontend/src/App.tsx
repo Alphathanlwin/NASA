@@ -6,7 +6,6 @@ import { FieldOverview } from './components/FieldOverview'
 import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
 import { PlansPanel } from './components/PlansPanel'
-import { OtherCrops } from './components/OtherCrops'
 import { HomePage } from './components/HomePage'
 import { Sidebar } from './components/Sidebar'
 import type { Page } from './components/Sidebar'
@@ -249,7 +248,6 @@ export default function App() {
               <div className="stack">
                 <PlansPanel result={plans} field={field} priorities={priorities} onPriorities={setPriorities}
                   econ={econ} onEcon={setEcon} />
-                <OtherCrops snap={snap} field={field} />
               </div>
             )}
             {page === 'scenarios' && scenarioPanel}
