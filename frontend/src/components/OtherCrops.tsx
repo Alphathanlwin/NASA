@@ -42,7 +42,6 @@ export function OtherCrops({ snap, field }: Props) {
         <h3>{t('other.title')}</h3>
         <span className="note small">{t('other.place', { town: townName(town, field.town_name ?? town) })}</span>
       </div>
-      <p className="note">{t('other.lead')}</p>
       <ol className="other-list">
         {ranked.map((r) => (
           <li key={r.key} className={r.score >= 80 ? 'good' : r.score >= 40 ? 'fair' : 'poor'}>
