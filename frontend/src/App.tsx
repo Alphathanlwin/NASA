@@ -5,7 +5,8 @@ import { DrawPanel, NotPlantable } from './components/DrawPanel'
 import { FieldOverview } from './components/FieldOverview'
 import { FieldView } from './components/FieldView'
 import { MapView } from './components/MapView'
-import { FarmerPlanner } from './components/FarmerPlanner'
+import { confirmedAnswers, FarmerPlanner } from './components/FarmerPlanner'
+import { prioritiesFor, scenarioFor } from './planner/flow'
 import { PlansPanel } from './components/PlansPanel'
 import { HomePage } from './components/HomePage'
 import { Sidebar } from './components/Sidebar'
@@ -137,6 +138,12 @@ export default function App() {
     return runPlans(snap, field, priorities, econ)
   }, [snap, field, priorities, econ, lang])  // lang: reason text is written in the current language
 
+  // Read on entry so the simulation uses this field's last confirmed farmer answers.
+  const farmAnswers = useMemo(() => page === 'field3d' && selectedId ? confirmedAnswers(selectedId) : null, [page, selectedId])
+  const farmPlans = useMemo(() => snap && field && farmAnswers
+    ? runPlans(snap, field, prioritiesFor(farmAnswers), econ, scenarioFor(farmAnswers)) : plans,
+  [snap, field, farmAnswers, econ, plans, lang])
+
   const comparison = useMemo(() => {
     if (!snap || !field || Object.keys(draft).length === 0) return null
     return runCompare(snap, field, draft, priorities, econ)
@@ -264,7 +271,7 @@ export default function App() {
               </div>
             )}
             {page === 'field3d' && (
-              <FieldView key={field.id} snap={snap} field={field} plans={plans} onMap={() => setPage(backPage === 'field3d' ? 'home' : backPage)} />
+              <FieldView key={field.id} snap={snap} field={field} plans={farmPlans} usesFarmerAnswers={!!farmAnswers} scenario={farmAnswers ? scenarioFor(farmAnswers) : undefined} onMap={() => setPage(backPage === 'field3d' ? 'home' : backPage)} />
             )}
             {page === 'planner' && plans && !fieldLand.plantable && (
               <NotPlantable ground={fieldLand.ground} year={land?.year} />

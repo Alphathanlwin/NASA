@@ -133,7 +133,7 @@ export function SimTimeline({ sim }: { sim: SimState }) {
         ))}
       </div>
       <div className="tl-log">
-        {(picked ? [picked] : latest).map((e, i) => (
+        {(picked && sim.events.includes(picked) ? [picked] : latest).map((e, i) => (
           <div key={i}><b>{t('sim.day', { n: e.day })}</b> · {doyLabel(e.doy)} · {eventText(e)}</div>
         ))}
       </div>

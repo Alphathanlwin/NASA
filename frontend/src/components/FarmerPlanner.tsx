@@ -20,8 +20,16 @@ import { PriorityInterview } from './PriorityInterview'
 
 type Saved = { step: number; answers: Answers; done?: boolean }
 const KEY = 'fieldshift.planner.v1'
-const loadAll = (): Record<string, Saved> => { try { return JSON.parse(localStorage.getItem(KEY) ?? '{}') } catch { return {} } }
-const store = (id: string, v: Saved) => { try { localStorage.setItem(KEY, JSON.stringify({ ...loadAll(), [id]: v })) } catch { /* blocked storage */ } }
+const sessionSaved: Record<string, Saved> = {}
+const loadAll = (): Record<string, Saved> => { try { return { ...(JSON.parse(localStorage.getItem(KEY) ?? '{}') ?? {}), ...sessionSaved } } catch { return sessionSaved } }
+const store = (id: string, v: Saved) => { sessionSaved[id] = v; try { localStorage.setItem(KEY, JSON.stringify(loadAll())) } catch { /* blocked storage */ } }
+
+export function confirmedAnswers(id: string): Answers | null {
+  const saved = loadAll()[id]
+  const a = saved?.answers
+  return saved?.done && a && (!a.priority || ['money', 'soil', 'water', 'safe'].includes(a.priority)) &&
+    Array.isArray(a.disasters) && a.prices && a.limits ? a : null
+}
 
 export function FarmerPlanner({ snap, field, econ, onPriorities, children }: {
   snap: Snapshot

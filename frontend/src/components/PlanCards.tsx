@@ -16,8 +16,9 @@ export function cropName(id: string | null | undefined) {
   return s === `crop.${id}` ? id : s
 }
 
-export function PlanCards({ result, chosenId, disabled, onChoose }: {
+export function PlanCards({ result, usesFarmerAnswers, chosenId, disabled, onChoose }: {
   result: Result
+  usesFarmerAnswers?: boolean
   chosenId: string | null
   disabled: boolean
   onChoose: (plan: Plan) => void
@@ -29,6 +30,7 @@ export function PlanCards({ result, chosenId, disabled, onChoose }: {
       <div className="plan-cards-head">
         <b>{t('field3d.cardsTitle')}</b>
         <span>{t('field3d.cardsSub')}</span>
+        {usesFarmerAnswers && <span>{t('field3d.savedAnswers')}</span>}
       </div>
       {plans.map((p, i) => {
         const chosen = p.id === chosenId

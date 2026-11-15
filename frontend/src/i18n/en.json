@@ -341,6 +341,7 @@
   "field3d.agent": "Field agent",
   "field3d.cardsTitle": "Choose the next crop",
   "field3d.cardsSub": "Ranked by the engine for this field. Pick one to plant it.",
+  "field3d.savedAnswers": "Uses your saved planner answers. Update them if conditions change.",
   "field3d.plant": "Plant this",
   "field3d.usual": "Your usual rotation",
   "field3d.rank": "Rank {n}",

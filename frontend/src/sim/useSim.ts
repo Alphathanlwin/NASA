@@ -1,6 +1,6 @@
 // AI-assisted: Claude Code
 // React glue for the field simulation: action phases, play loop, skip controls.
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { step, stepToEnd, stepToNextStage, summarise, withSchedule } from './model'
 import { demoState, scheduleFor } from './presets'
 import type { FieldLike } from './presets'
@@ -24,7 +24,7 @@ interface Machine {
 }
 
 /** Kept per field so leaving for the map and coming back resumes where the user was. */
-const cache = new Map<string, Machine>()
+const cache = new Map<string, { key: string; machine: Machine }>()
 
 const reducedMotion = () =>
   typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
@@ -34,38 +34,31 @@ const PLAY_MS = 450
 
 export function useSim(field: FieldLike, ctx: SimContext, plans: PlanLike[]) {
   const fresh = useCallback((): Machine => ({ phase: 'choose', sim: demoState(field), planId: null, playing: false, since: 0 }), [field])
-  const [m, setM] = useState<Machine>(() => cache.get(field.id) ?? fresh())
-  const timers = useRef<number[]>([])
+  const cacheKey = JSON.stringify([field, ctx, plans])
+  const [m, setM] = useState<Machine>(() => cache.get(field.id)?.key === cacheKey ? cache.get(field.id)!.machine : fresh())
   // FieldView is keyed by field id, so a new field always mounts a new hook; no reset effect needed.
 
   useEffect(() => {
-    cache.set(field.id, { ...m, playing: false })
-  }, [m, field.id])
-
-  const clearTimers = () => {
-    timers.current.forEach((id) => window.clearTimeout(id))
-    timers.current = []
-  }
-  useEffect(() => clearTimers, [])
-
-  const later = (ms: number, fn: () => void) => {
-    timers.current.push(window.setTimeout(fn, reducedMotion() ? 0 : ms))
-  }
+    cache.set(field.id, { key: cacheKey, machine: { ...m, playing: false } })
+  }, [m, cacheKey, field.id])
 
   const choose = (plan: PlanLike) => {
-    clearTimers()
     const sim = withSchedule(demoState(field), scheduleFor(plan))
     setM({ phase: 'harvesting', sim, planId: plan.id, playing: false, since: performance.now() })
-    later(ACTION_MS.harvest, () => {
-      setM((cur) => {
-        const sch = cur.sim.schedule!
-        return { ...cur, phase: 'sowing', since: performance.now(), sim: step(cur.sim, ctx, sch.sowDay - 1 - cur.sim.day) }
-      })
-      later(ACTION_MS.sow, () => {
-        setM((cur) => ({ ...cur, phase: 'growing', sim: step(cur.sim, ctx, 1) }))
-      })
-    })
   }
+
+  useEffect(() => {
+    if (m.phase !== 'harvesting' && m.phase !== 'sowing') return
+    const phase = m.phase
+    const duration = phase === 'harvesting' ? ACTION_MS.harvest : ACTION_MS.sow
+    const remaining = Math.max(0, duration - (performance.now() - m.since))
+    const id = window.setTimeout(() => setM(cur => {
+      if (cur.phase !== phase || !cur.sim.schedule) return cur
+      if (phase === 'harvesting') return { ...cur, phase: 'sowing', since: performance.now(), sim: step(cur.sim, ctx, cur.sim.schedule.sowDay - 1 - cur.sim.day) }
+      return { ...cur, phase: 'growing', sim: step(cur.sim, ctx, 1) }
+    }), reducedMotion() ? 0 : remaining)
+    return () => window.clearTimeout(id)
+  }, [m.phase, m.since, ctx])
 
   const apply = (fn: (s: SimState) => SimState) => {
     setM((cur) => {
@@ -80,7 +73,6 @@ export function useSim(field: FieldLike, ctx: SimContext, plans: PlanLike[]) {
   const toHarvest = () => apply((s) => stepToEnd(s, ctx))
   const togglePlay = () => setM((cur) => (cur.phase === 'growing' ? { ...cur, playing: !cur.playing } : cur))
   const restart = () => {
-    clearTimers()
     setM(fresh())
   }
 
